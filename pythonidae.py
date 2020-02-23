@@ -2,8 +2,10 @@
 # coding=utf-8
 
 
+import io
 import os
 import random
+from contextlib import redirect_stdout
 
 import discord
 from discord.ext import commands
@@ -12,9 +14,28 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD_TESTING')
+GUILD = os.getenv('DISCORD_GUILD')
 
 bot = commands.Bot(command_prefix='!')
+
+
+@bot.command(name='builtin')
+async def show_builtin(ctx, cmd: str = None):
+    builtins = sorted(k for k, v in vars(__builtins__).items() if k.islower() and k.isalpha() and getattr(v, '__module__', '') == 'builtins')
+    usage = '```\n' + 'Usage: `!builtin COMMAND`\n\n    Currently available commands:\n\n' + ' '.join(builtins) + '```'
+    if not cmd:
+        response = usage
+    if cmd in builtins:
+        f = io.StringIO()
+        with redirect_stdout(f):
+            help(cmd)
+        output_string = f.getvalue()
+        output_list = output_string.split('\n')
+        output_string = '\n'.join(output_list[0:min(30, len(output_list))])
+        response = f'```{output_string}```'
+    else:
+        response = usage
+    await ctx.send(response)
 
 
 @bot.command(name='create-channel')
@@ -23,7 +44,7 @@ async def create_channel(ctx, channel_name='real-python'):
     guild = ctx.guild
     existing_channel = discord.utils.get(guild.channels, name=channel_name)
     if not existing_channel:
-        print(f'creating a new channel: {channel_name}')
+        print(f'creating a new channel: {channel_name}', flush=True)
         await guild.create_text_channel(channel_name)
 
 
