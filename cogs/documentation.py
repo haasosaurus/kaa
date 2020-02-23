@@ -11,6 +11,16 @@ from discord.ext import commands
 class DocumentationCog(commands.Cog, name="Documentation Commands"):
     """DocumentationCog"""
 
+
+    builtins = (
+        'abs', 'delattr', 'hash', 'memoryview', 'set', 'all', 'dict', 'help', 'min', 'setattr', 'any',
+        'dir', 'hex', 'next', 'slice', 'ascii', 'divmod', 'id', 'object', 'sorted', 'bin', 'enumerate',
+        'input', 'oct', 'staticmethod', 'bool', 'eval', 'int', 'open', 'str', 'breakpoint', 'exec',
+        'isinstance', 'ord', 'sum', 'bytearray', 'filter', 'issubclass', 'pow', 'super', 'bytes',
+        'float', 'iter', 'print', 'tuple', 'callable', 'format', 'len', 'property', 'type', 'chr',
+        'frozenset', 'list', 'range', 'vars', 'classmethod', 'getattr', 'locals', 'repr', 'zip',
+        'compile', 'globals', 'map', 'reversed', '__import__', 'complex', 'hasattr', 'max', 'round')
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -18,11 +28,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
     async def show_builtin(self, ctx, cmd: str = None):
         """display python's help() for a built in function"""
 
-        builtins = sorted(k for k, v in vars(__builtins__).items() if k.islower() and k.isalpha() and getattr(v, '__module__', '') == 'builtins')
-        usage = '```\n' + 'Usage: `!builtin COMMAND`\n\n    Currently available commands:\n\n' + ' '.join(builtins) + '```'
+        usage = '```\n' + 'Usage: `!builtin COMMAND`\n\n    Currently available commands:\n\n' + ' '.join(self.builtins) + '```'
         if not cmd:
             response = usage
-        if cmd in builtins:
+        elif cmd in self.builtins:
             f = io.StringIO()
             with redirect_stdout(f):
                 help(cmd)
