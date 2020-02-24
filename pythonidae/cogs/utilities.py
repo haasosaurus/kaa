@@ -8,9 +8,6 @@ class UtilitiesCog(commands.Cog, name="Utilities Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    @commands.guild_only()
-
     @commands.command(name='save', aliases=['PythonBot'])
     async def save_link(self, ctx, category: str, link: str):
         """save link"""
