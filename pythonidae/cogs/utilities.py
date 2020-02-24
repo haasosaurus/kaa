@@ -27,7 +27,7 @@ class UtilitiesCog(commands.Cog, name="Utilities Commands"):
         
         value_input_option = 'RAW'
         lastrow = len(response['values'])
-        new_values = [[link, category, ctx.author]]
+        new_values = [[link, category, str(ctx.author)]]
         new_body = {'values' : new_values}
         new_range = 'A' + str(lastrow + 2) + ':C'
         update_request = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=new_range, valueInputOption=value_input_option, body=new_body)
