@@ -16,7 +16,7 @@ class UtilitiesCog(commands.Cog, name="Utilities Commands"):
         elif not link: 
             await ctx.send('Link Missing - Link not saved')
         credentials = None
-
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/path/to/file.json"
         service = discovery.build('sheets', 'v4', credentials=credentials)
         # ID of spreadsheet
         spreadsheet_id = '1uX64HjNS9QTvyfgOmz7rJ26azw4wVcaQ_a6ZBUQmZ_c'
