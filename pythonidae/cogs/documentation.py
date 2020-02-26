@@ -28,7 +28,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
     async def show_builtin(self, ctx, cmd: str = None):
         """display python's help() for a built in function"""
 
-        usage = '```\n' + 'Usage: `!builtin COMMAND`\n\n    Currently available commands:\n\n' + ' '.join(self.builtins) + '```'
+        usage = '**```\n' + 'Usage: `!builtin COMMAND`\n\nCurrently available commands:\n\n' + ' '.join(self.builtins) + '```**'
         if not cmd:
             response = usage
         elif cmd in self.builtins:
