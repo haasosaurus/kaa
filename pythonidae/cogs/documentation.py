@@ -1,7 +1,8 @@
 # coding=utf-8
 
 
-import io
+import builtins
+import inspect
 from contextlib import redirect_stdout
 
 # import discord
@@ -11,34 +12,41 @@ from discord.ext import commands
 class DocumentationCog(commands.Cog, name="Documentation Commands"):
     """DocumentationCog"""
 
-
-    builtins = (
-        'abs', 'delattr', 'hash', 'memoryview', 'set', 'all', 'dict', 'help', 'min', 'setattr', 'any',
-        'dir', 'hex', 'next', 'slice', 'ascii', 'divmod', 'id', 'object', 'sorted', 'bin', 'enumerate',
-        'input', 'oct', 'staticmethod', 'bool', 'eval', 'int', 'open', 'str', 'breakpoint', 'exec',
-        'isinstance', 'ord', 'sum', 'bytearray', 'filter', 'issubclass', 'pow', 'super', 'bytes',
-        'float', 'iter', 'print', 'tuple', 'callable', 'format', 'len', 'property', 'type', 'chr',
-        'frozenset', 'list', 'range', 'vars', 'classmethod', 'getattr', 'locals', 'repr', 'zip',
-        'compile', 'globals', 'map', 'reversed', '__import__', 'complex', 'hasattr', 'max', 'round')
-
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='builtin')  # aliases=['alias1', 'alias2']
-    async def show_builtin(self, ctx, cmd: str = None):
-        """display python's help() for a built in function"""
+    @commands.command(name='docs', aliases=['builtin'])
+    async def show_docs(self, ctx, cmd: str = None):
+        """display documentation for a built in function or type"""
 
-        usage = '**```\n' + 'Usage: `!builtin COMMAND`\n\nCurrently available commands:\n\n' + ' '.join(self.builtins) + '```**'
+        usage = (
+            '**```\n' + 'Usage: `!docs COMMAND`\n\nCurrently available commands:\n\n' +
+            '  '.join(sorted(builtins.__dict__.keys(), key=lambda x: x.lower())) + '```**'
+        )
         if not cmd:
             response = usage
-        elif cmd in self.builtins:
-            f = io.StringIO()
-            with redirect_stdout(f):
-                help(cmd)
-            output_string = f.getvalue()
-            output_list = output_string.split('\n')
-            output_string = '\n'.join(output_list[0:min(30, len(output_list))])
-            response = f'```{output_string}```'
+        elif cmd in vars(builtins):
+            target = vars(builtins)[cmd]
+            method_list = [method for method in dir(target) if not method.startswith('__')]
+            if method_list:
+                methods = '\n\nMethods:\n    ' + '  '.join(method_list) + '\n'
+            else:
+                methods = ''
+            response = '**```'
+            try:
+                response_body = cmd + str(inspect.signature(target)) + '\n    ' + target.__doc__
+                response += response_body
+                if methods:
+                    response += methods
+            except (ValueError, TypeError):
+                response_body = inspect.getdoc(target)
+                if response_body:
+                    response += response_body
+                    if methods:
+                        response += methods
+                else:
+                    response += 'docs not found, sorry...'
+            response += '```**'
         else:
             response = usage
         await ctx.send(response)
