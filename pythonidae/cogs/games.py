@@ -11,18 +11,18 @@ class GamesCog(commands.Cog, name="Game Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='roll_dice', help='simulates rolling dice')
-    async def roll(self, ctx, number_of_dice: int = None, number_of_sides: int = None):
-        number_of_dice = number_of_dice or 1
-        number_of_sides = number_of_sides or 6
-        if number_of_dice > 100 or number_of_sides > 1000:
-            response = 'number of dice must be <= 100, number of sides must be <= 1000'
-        else:
+    @commands.command(name='roll_dice', help='simulates rolling a variable amount of dice with a variable amount of sides')
+    async def roll(self, ctx, amount: int = None, sides: int = None):
+        amount = amount or 1
+        sides = sides or 6
+        if (0 < amount <= 100) and (0 < sides <= 1000):
             dice = [
-                str(random.choice(range(1, number_of_sides + 1)))
-                for _ in range(number_of_dice)
+                str(random.choice(range(1, sides + 1)))
+                for _ in range(amount)
             ]
-            response = '```' + ', '.join(dice) + '```'
+            response = '**`' + ', '.join(dice) + '`**'
+        else:
+            response = '**`ERROR: AMOUNT and SIDES must be in these ranges: 0 < AMOUNT <= 100, 0 < SIDES <= 1000`**'
         await ctx.send(response)
 
 
