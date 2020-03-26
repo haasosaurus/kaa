@@ -122,7 +122,14 @@ class OwnerCog(commands.Cog, name="Owner Commands"):
                             words[i] = 'I'
                     target_server = discord.utils.get(self.bot.guilds, id=self.servers[target])
                     if target_server:
-                        await target_server.system_channel.send(' '.join(words))
+                        if target == 'other':
+                            channel = discord.utils.get(target_server.text_channels, name='off-topic-chat')
+                            if channel:
+                                await channel.send(' '.join(words))
+                            else:
+                                await ctx.send('**`Error: channel not found`**')
+                        else:
+                            await target_server.system_channel.send(' '.join(words))
                     else:
                         await ctx.send('**`Error: failed to initialize \'target_server\' with \'discord.utils.get\'`**')
 
