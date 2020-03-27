@@ -164,6 +164,15 @@ __**Well liked IDEs for coding in Python**__
 '''
         await ctx.send(msg)
 
+    @commands.command(help='display project idea resources')
+    async def projects(self, ctx):
+        msg = '''\
+:link: Mega Project List <https://github.com/karan/Projects> (very good)
+:link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
+:link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>\
+'''
+        await ctx.send(msg)
+
 
 def setup(bot):
     bot.add_cog(ResourceCog(bot))
