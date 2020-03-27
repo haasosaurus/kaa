@@ -111,7 +111,7 @@ __**Python Practice Websites**__
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display python game development resources')
+    @commands.command(aliases=['gamedev'], help='display python game development resources')
     async def game_dev(self, ctx):
         msg = '''\
 __**Pygame Resources**__
@@ -120,7 +120,9 @@ __**Pygame Resources**__
 :link: Pygame state engine example <https://gist.github.com/iminurnamez/8d51f5b40032f106a847>
 __**Game Dev Assets - Free**__
 :link: Kenney Assets <https://kenney.nl/assets> (best)
-:link: OpenGameArt <https://opengameart.org/>\
+:link: OpenGameArt <https://opengameart.org/>
+__**Terminal-based game resources**__
+:link: blessed <https://github.com/jquast/blessed> (python curses wrapper with enhancements)\
 '''
         await ctx.send(msg)
 
