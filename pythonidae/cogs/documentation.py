@@ -46,7 +46,7 @@ from discord.ext import commands
 class DocumentationCog(commands.Cog, name="Documentation Commands"):
     """DocumentationCog"""
 
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.modules = {
 
@@ -84,8 +84,14 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'more_itertools': more_itertools,
             'numpy': numpy,
             'pandas': pandas,
-            'pygame': pygame,
         }
+
+
+        self.standard_module_names = list(self.modules.keys())
+        pygame_module_names = [x for x in vars(pygame) if not any((x.startswith('__'), x.isupper(), x.startswith('K_')))]
+        pygame_modules = {'pygame.' + mdl: getattr(pygame, mdl) for mdl in pygame_module_names}
+        self.pygame_module_names = ['pygame.' + mdl for mdl in pygame_module_names]
+        self.modules.update(pygame_modules)
 
     @commands.command(aliases=['docs'])
     async def documentation(
@@ -97,15 +103,18 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
     ) -> None:
         """display documentation for a built in function or type"""
 
-        response = ''
-        usage = '**`Usage: !docs MODULE TYPE|FUNCTION [METHOD]`**'
-
         if not module:
-            response = (
-                usage + '\n\n' + '```Currently available modules:\n\n' +
-                '  '.join(sorted(self.modules, key=lambda x: x.lower())) + '```'
+            await self.send_objs_methods(
+                ctx,
+                self.standard_module_names,
+                title='Currently available modules:'
             )
-            await ctx.send(response)
+            await self.send_objs_methods(
+                ctx,
+                self.pygame_module_names,
+                title='Pygame modules:'
+            )
+            await self.send_usage(ctx)
             return
 
         if module == 'py':
@@ -118,172 +127,166 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             module = 'pandas'
 
         if module not in self.modules:
-            response = (
-                f'**`ERROR: MODULE: {module} is unsupported`**\n\n' + usage + '\n\n' +
-                '```Currently available modules:\n\n' +
-                '  '.join(sorted(self.modules, key=lambda x: x.lower())) + '```'
+            error_msg = f'**`ERROR: MODULE: {module} is unsupported`**'
+            await ctx.send(error_msg)
+            await self.send_objs_methods(
+                ctx,
+                self.standard_module_names,
+                title='Currently available modules:'
             )
-            await ctx.send(response)
+            await self.send_objs_methods(
+                ctx,
+                self.pygame_module_names,
+                title='Pygame modules:'
+            )
+            await self.send_usage(ctx)
             return
 
         target_module = self.modules[module]
-
-        if not obj:
-            obj_list = [x for x in dir(target_module) if not x.startswith('__')]
-            obj_list = sorted(obj_list, key=lambda x: x.lower())
-            objs = '  '.join(obj_list)
-
-            response_header = f'**`ERROR: No TYPE|FUNCTION specified for MODULE: {module}`**\n\n'
-            response_body = usage + '\n'
-
-            obj_header = '```\nHere is a list of its TYPEs|FUNCTIONs:\n\n'
-            obj_body = objs
-            obj_footer = '```'
-
-            response = response_header + response_body + obj_header + obj_body + obj_footer
-
-            try:
-                await ctx.send(response)
-                return
-            except discord.HTTPException:
-                slices = 2
-                while True:
-                    index = len(obj_list) // slices
-                    if len(' '.join(obj_list)[:index]) < 1800:
-                        break
-                    slices += 1
-
-                msg = response_header + response_body
-                await ctx.send(msg)
-
-                sliced_objs = more_itertools.sliced(obj_list, len(obj_list) // slices)
-                for i, sliced_obj in enumerate(sliced_objs):
-                    if i == 0:
-                        msg = obj_header + ' '.join(sliced_obj) + obj_footer
-                    else:
-                        msg = '```TYPEs|FUNCTIONs continued:\n\n' + ' '.join(sliced_obj) + obj_footer
-                    await ctx.send(msg)
-                return
-
-        if obj not in vars(target_module):
-            objs = (x for x in dir(target_module) if not x.startswith('__'))
-            response = (
-                f'**`ERROR: TYPE|FUNCTION: {obj} not found in MODULE {module}`**\n\n' +
-                '```Here is a list of its TYPEs|FUNCTIONs:\n\n' +
-                '  '.join(sorted(objs, key=lambda x: x.lower())) + '```'
-            )
-            await ctx.send(response)
+        if inspect.isroutine(target_module):
+            await self.send_docs_and_methods(ctx, target_module, module)
             return
 
-        target_obj = vars(target_module)[obj]
+        if not obj:
+            error_msg = f'**`ERROR: No TYPE|FUNCTION specified for MODULE: {module}`**'
+            obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
+            obj_list = await self.make_members_list(target_module, module)
+            await ctx.send(error_msg)
+            await ctx.send(obj_list_header)
+            await self.send_objs_methods(ctx, obj_list)
+            await self.send_usage(ctx)
+            return
+
+        if obj not in dir(target_module):
+            error_msg = f'**`ERROR: TYPE|FUNCTION: {obj} not found in MODULE {module}`**'
+            obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
+            obj_list = await self.make_members_list(target_module, module)
+            await ctx.send(error_msg)
+            await ctx.send(obj_list_header)
+            await self.send_objs_methods(ctx, obj_list)
+            await self.send_usage(ctx)
+            return
+
+        target_obj = getattr(target_module, obj)
         target = None
         target_name = ''
 
+        if method and method not in dir(target_obj):
+            error_msg = f'**`ERROR: METHOD: {method} not found in TYPE|FUNCTION {obj}`**'
+            obj_list_header = f"**`{obj}'s METHODs:`**"
+            obj_list = await self.make_members_list(target_obj, obj)
+            await ctx.send(error_msg)
+            await ctx.send(obj_list_header)
+            await self.send_objs_methods(ctx, obj_list, title='Methods:')
+            await self.send_usage(ctx)
+            return
+
         if method:
-            if module == 'pandas' and method in dir(target_obj):
-                target = getattr(target_obj, method)
-                target_name = method
-            elif method in vars(target_obj):
-                target = vars(target_obj)[method]
-                target_name = method
-            else:
-                methods = (x for x in dir(target_obj) if not x.startswith('__'))
-                response = (
-                    f'**`ERROR: METHOD: {method} not found in TYPE|FUNCTION {obj}`**\n\n' +
-                    '```Here is a list of its METHODS:\n\n' +
-                    '  '.join(sorted(methods, key=lambda x: x.lower())) + '```'
-                )
-                await ctx.send(response)
-                return
+            target = getattr(target_obj, method)
+            target_name = method
         else:
             target = target_obj
             target_name = obj
 
         if not target:
-            response = '**`ERROR: I don\'t have a target even though I should, sorry about that...`**'
-            await ctx.send(response)
+            error_msg = "**`ERROR: failed to acquire target, sorry about that...`**"
+            await ctx.send(error_msg)
             return
 
-        response = f'{module}.{obj}'
-        method_list = []
+        await self.send_docs_and_methods(ctx, target, target_name, obj, method)
+
+    async def send_docs_and_methods(self, ctx, target, target_name, obj=None, method=None):
+        docs = await self.make_docs(target, target_name, obj, method)
+        if not docs:
+            error_msg = f'**`ERROR: docs for {target_name} not found, sorry...`**'
+            await ctx.send(error_msg)
+            return
+        method_list = await self.make_members_list(target, target_name)
+        await self.send_docs(ctx, docs)
+        if method_list:
+            await self.send_objs_methods(ctx, method_list, title='Methods:')
+
+    async def make_docs(self, target, target_name, obj=None, method=None):
+        if obj:
+            docs_sig_begin = f'{obj}'
+        else:
+            docs_sig_begin = target_name
         if method:
-            response += '.' + method
-            methods = ''
-        else:
-            method_gen = (x for x in dir(target) if not x.startswith('__'))
-            method_list = sorted(method_gen, key=lambda x: x.lower())
-            if method_list:
-                methods = '  '.join(method_list)
-            else:
-                methods = ''
+            docs_sig_begin += '.' + method
+        docs = ''
 
         try:
-            response_body = str(inspect.signature(target)) + '\n    ' + target.__doc__
-            response += response_body
+            docs_sig = str(inspect.signature(target))
+            docs_body = inspect.getdoc(target)
+            docs = docs_sig_begin + docs_sig + '\n\n' + docs_body
         except (ValueError, TypeError):
-            response_body = inspect.getdoc(target)
-            if response_body:
-                if (target_name + '(') not in response_body:
-                    response += '(?)'
-                response += '\n\n'
-                response += response_body
+            docs_sig = docs_sig_begin + '(?)'
+            docs_body = inspect.getdoc(target)
+            if docs_body:
+                if (target_name + '(') not in docs_body:
+                    docs = docs_sig + '\n\n'
+                docs = docs_body
             else:
-                response = '```' + response + '```\n**`ERROR: docs not found, sorry...`**'
-                await ctx.send(response)
-                return
+                return ''
+        return docs
 
-        if methods:
-            msg = '```\n' + response + '\n\nMethods:\n    ' + methods + '```'
+    async def make_members_list(self, obj, obj_name: str) -> list:
+        if hasattr(obj, '__dict__'):
+            member_list = [x for x in vars(obj) if not x.startswith('__') and not x.isupper()]
         else:
-            msg = '```\n' + response + '```'
-        try:
-            await ctx.send(msg)
-        except discord.HTTPException:
-            if len(response) > 1900:
-                response_list = response.strip().split('\n')
-                slices = 2
-                sliced_strs = None
-                while True:
-                    sliced_objs = more_itertools.sliced(response_list, len(response_list) // slices)
-                    sliced_strs = ['\n'.join(x) for x in sliced_objs]
-                    if all(len(x) < 1990 for x in sliced_strs):
-                        break
-                    slices += 1
-                for sliced_str in sliced_strs:
-                    if not sliced_str.isspace():
-                        msg = '```\n' + sliced_str + '```'
-                        await ctx.send(msg)
+            member_list = [x for x in dir(obj) if not x.startswith('__') and not x.isupper()]
+        if obj_name == 'pygame':
+            member_list = [x for x in member_list if not x.startswith('K_')]
+        return tuple(member_list)
 
-            if len(methods) < 1990:
-                await ctx.send(methods)
-            else:
-                slices = 2
-                sliced_strs = None
-                while True:
-                    sliced_objs = more_itertools.sliced(method_list, len(method_list) // slices)
-                    sliced_strs = ['  '.join(x) for x in sliced_objs]
-                    if all(len(x) < 1970 for x in sliced_strs):
-                        break
-                    slices += 1
-                for i, sliced_str in enumerate(sliced_strs):
-                    if i == 0:
-                        msg = '```\nMethods:\n    ' + sliced_str + '```'
-                    else:
-                        msg = '```\nMethods continued:\n    ' + sliced_str + '```'
+    async def send_docs(self, ctx, docs: str) -> None:
+        if len(docs) < 1900:
+            await ctx.send('```\n' + docs + '```')
+        else:
+            docs_list = docs.strip().split('\n')
+            slices = 2
+            docs_slices = None
+            while True:
+                docs_list_slices = more_itertools.sliced(docs_list, len(docs_list) // slices)
+                docs_slices = ['\n'.join(x) for x in docs_list_slices]
+                if all(len(x) < 1990 for x in docs_slices):
+                    break
+                slices += 1
+            for docs in docs_slices:
+                if not docs.isspace():
+                    msg = '```\n' + docs + '```'
                     await ctx.send(msg)
-                return
 
-    async def send_methods(self, method_list):
-        pass
+    async def send_objs_methods(self, ctx, msg_list: list, title: str = None) -> None:
+        msg_list = list(msg_list)
+        if title:
+            msg_list.insert(0, title + '\n\n')
+        msg = sorted(msg_list, key=lambda x: x.lower())
+        msg = '```\n' + '  '.join(msg_list) + '```'
+        if len(msg) < 1990:
+            await ctx.send(msg)
+        else:
+            slices = 2
+            msg_slices = None
+            while True:
+                msg_list_slices = more_itertools.sliced(msg_list, len(msg_list) // slices)
+                msg_slices = ['  '.join(x) for x in msg_list_slices]
+                if all(len(x) < 1970 for x in msg_slices):
+                    break
+                slices += 1
+            for msg in msg_slices:
+                msg = '```\n' + msg + '```'
+                await ctx.send(msg)
+
+    async def send_usage(self, ctx) -> None:
+        usage = '**`Usage: !docs MODULE TYPE|FUNCTION [METHOD]`**'
+        await ctx.send(usage)
 
     @commands.command(hidden=True)
-    async def this(self, ctx):
-        msg = '```' + codecs.decode(this.s, 'rot13') + '```'
+    async def this(self, ctx) -> None:
+        msg = '```\n' + codecs.decode(this.s, 'rot13') + '```'
         await ctx.send(msg)
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(DocumentationCog(bot))
-
-
-# 2 python processes, one using 32kb memory and another using 34kb memoery
