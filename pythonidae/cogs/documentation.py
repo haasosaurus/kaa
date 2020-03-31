@@ -232,11 +232,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
 
     async def make_members_list(self, obj, obj_name: str) -> list:
         if hasattr(obj, '__dict__'):
-            member_list = [x for x in vars(obj) if not x.startswith('__') and not x.isupper()]
+            members = vars(obj)
         else:
-            member_list = [x for x in dir(obj) if not x.startswith('__') and not x.isupper()]
-        if obj_name == 'pygame':
-            member_list = [x for x in member_list if not x.startswith('K_')]
+            members = dir(obj)
+        member_list = [x for x in members if not x.startswith('__') and not x.isupper()]
         return tuple(member_list)
 
     async def send_docs(self, ctx, docs: str) -> None:
