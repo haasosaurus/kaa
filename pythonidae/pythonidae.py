@@ -33,6 +33,8 @@ def load_extensions(bot):
         'cogs.games',
         'cogs.resources',
         'cogs.troll',
+        'cogs.countdown',
+        'cogs.listener',
     ]
     for extension in initial_extensions:
         try:
