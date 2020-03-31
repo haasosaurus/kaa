@@ -104,6 +104,11 @@ class OwnerCog(commands.Cog, name="Owner Commands"):
             self.servers = json.load(servers_file)
         await ctx.send('**`SUCCESS - loaded server dict`**')
 
+    @commands.command(help='just a test command, currently prints CWD')
+    @commands.is_owner()
+    async def test(self, ctx):
+        print(str(pathlib.Path.cwd()), flush=True)
+
     @commands.command(name='say', hidden=True)
     @commands.is_owner()
     async def say(self, ctx, *args):
