@@ -7,54 +7,73 @@ import os
 from discord.ext import commands
 from googleapiclient import discovery
 
+from utils import print_context
+
 
 class ResourceCog(commands.Cog, name='Resource Commands'):
+    """
+    original purpose:
+    someday it will take resources and their categories as input
+    give resources based on search categories
 
-    def __init__(self, bot):
+    currently temporary hardcoded resource links due to people
+    """
+
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-    @commands.command(name='save_resource', help='!save_resource CATEGORY URL')
-    async def save_resource(self, ctx, category: str = None, link: str = None):
+
+    @commands.command(help='!save_resource CATEGORY URL')
+    @print_context
+    async def resource_save(
+            self,
+            ctx: commands.Context,
+            category: str = None,
+            link: str = None
+    ) -> None:
         """save link to resources"""
 
         if not link:
-            await ctx.send(
-                'Link and/or Category Missing - Link not saved' +
-                '`' * 3 + 'Usage: !save_resource CATEGORY URL' + '`' * 3
-                )
-        else:
-            # need to check that the resource isn't already there?
-            category = category.lower()
-            service = discovery.build(
-                'sheets',
-                'v4',
-                credentials=None
-            )
-            spreadsheet_id = os.getenv('SPREADSHEET_ID')
-            request = service.spreadsheets().values().get(
-                spreadsheetId=spreadsheet_id,
-                range='A2:C',
-                majorDimension='ROWS'
-            )
-            response = request.execute()
+            error_msg = '**`Link and/or Category Missing - Link not saved`**'
+            usage = '**`Usage: !save_resource CATEGORY URL`**'
+            await ctx.send(error_msg)
+            await ctx.send(usage)
+            return
 
-            # get last row of google sheet to prevent overwriting
-            lastrow = len(response['values'])
-            new_values = [[link, category, str(ctx.author)]]
-            new_body = {'values' : new_values}
-            new_range = 'A' + str(lastrow + 2) + ':C'
-            update_request = service.spreadsheets().values().update(
-                spreadsheetId=spreadsheet_id,
-                range=new_range,
-                valueInputOption='RAW',
-                body=new_body
-            )
+        # need to check that the resource isn't already there?
+        category = category.lower()
+        service = discovery.build(
+            'sheets',
+            'v4',
+            credentials=None
+        )
+        spreadsheet_id = os.getenv('SPREADSHEET_ID')
+        request = service.spreadsheets().values().get(
+            spreadsheetId=spreadsheet_id,
+            range='A2:C',
+            majorDimension='ROWS'
+        )
+        response = request.execute()
 
-            # new_response = update_request.execute()
-            update_request.execute()
-            await ctx.send('Link successfully saved to ' + category + '!')
+        # get last row of google sheet to prevent overwriting
+        lastrow = len(response['values'])
+        new_values = [[link, category, str(ctx.author)]]
+        new_body = {'values' : new_values}
+        new_range = 'A' + str(lastrow + 2) + ':C'
+        update_request = service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=new_range,
+            valueInputOption='RAW',
+            body=new_body
+        )
+        update_request.execute()
 
-    @commands.command(help='display python reference links')
-    async def reference(self, ctx):
+        await ctx.send('Link successfully saved to ' + category + '!')
+
+    @commands.command()
+    @print_context
+    async def reference(self, ctx: commands.Context) -> None:
+        """display python reference links"""
+
         msg='''\
 __**Python Reference Materials**__
 :link: Python 3 Official Documentation <https://docs.python.org/3/>
@@ -64,8 +83,11 @@ __**Python Reference Materials**__
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display python standard library curriculum')
-    async def curriculum(self, ctx):
+    @commands.command()
+    @print_context
+    async def curriculum(self, ctx: commands.Context) -> None:
+        """display python standard library curriculum"""
+
         msg = '''\
 __**Python Standard Library - Reading order - Beginner**__
 1) :link: Automate the Boring Stuff with Python, 2nd Edition: <https://automatetheboringstuff.com/> (free)
@@ -91,8 +113,11 @@ __**Alternate download methods**__
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display list of websites for practicing python')
-    async def practice(self, ctx):
+    @commands.command()
+    @print_context
+    async def practice(self, ctx: commands.Context) -> None:
+        """display list of websites for practicing python"""
+
         msg='''\
 __**Python Practice Websites**__
 :link: Project Euler <https://www.projecteuler.net/> (Math problems)
@@ -111,8 +136,11 @@ __**Python Practice Websites**__
 '''
         await ctx.send(msg)
 
-    @commands.command(aliases=['gamedev'], help='display python game development resources')
-    async def game_dev(self, ctx):
+    @commands.command()
+    @print_context
+    async def gamedev(self, ctx: commands.Context) -> None:
+        """display python game development resources"""
+
         msg = '''\
 __**Pygame Resources**__
 :link: Pygame - Documentation <https://www.pygame.org/docs/>
@@ -127,8 +155,11 @@ __**Terminal-based game resources**__
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display some useful vs code extensions')
-    async def vscode(self, ctx):
+    @commands.command()
+    @print_context
+    async def vscode(self, ctx: commands.Context) -> None:
+        """display some useful vs code extensions"""
+
         msg = '''\
 __**Helpful Visual Studio Code extensions**__
 **Python Specific - Assorted**
@@ -155,8 +186,11 @@ Visual Studio IntelliCode - Microsoft (alternative to jedi/pylint etc)\
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display list of quality IDEs')
-    async def ides(self, ctx):
+    @commands.command()
+    @print_context
+    async def ides(self, ctx: commands.Context) -> None:
+        """display list of quality IDEs"""
+
         msg = '''\
 __**Well liked IDEs for coding in Python**__
 :link: Visual Studio Code <https://code.visualstudio.com/download> (free, fairly lightweight and extensible, my choice)
@@ -167,8 +201,11 @@ __**Well liked IDEs for coding in Python**__
 '''
         await ctx.send(msg)
 
-    @commands.command(help='display project idea resources')
-    async def projects(self, ctx):
+    @commands.command()
+    @print_context
+    async def projects(self, ctx: commands.Context) -> None:
+        """display project idea resources"""
+
         msg = '''\
 :link: Mega Project List <https://github.com/karan/Projects> (very good)
 :link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
@@ -177,5 +214,5 @@ __**Well liked IDEs for coding in Python**__
         await ctx.send(msg)
 
 
-def setup(bot):
+def setup(bot: commands.Bot) -> None:
     bot.add_cog(ResourceCog(bot))

@@ -17,12 +17,15 @@ import functools
 import inspect
 import itertools
 import json
+import logging
 import math
+import numbers
 import operator
 import pathlib
 import pprint
 import random
 import re
+import requests
 import statistics
 import string
 import this
@@ -42,11 +45,13 @@ import pygame
 import discord
 from discord.ext import commands
 
+from utils import print_context
+
 
 class DocumentationCog(commands.Cog, name="Documentation Commands"):
     """DocumentationCog"""
 
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.modules = {
 
@@ -66,12 +71,15 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'inspect': inspect,
             'itertools': itertools,
             'json': json,
+            'logging': logging,
             'math': math,
+            'numbers': numbers,
             'operator': operator,
             'pathlib': pathlib,
             'pprint': pprint,
             'random': random,
             're': re,
+            'requests': requests,
             'statistics': statistics,
             'string': string,
             'time': time,
@@ -84,19 +92,25 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'more_itertools': more_itertools,
             'numpy': numpy,
             'pandas': pandas,
+            'discord': discord,
+            'discord.ext.commands': discord.ext.commands,
         }
-
-
         self.standard_module_names = list(self.modules.keys())
-        pygame_module_names = [x for x in vars(pygame) if not any((x.startswith('__'), x.isupper(), x.startswith('K_')))]
-        pygame_modules = {'pygame.' + mdl: getattr(pygame, mdl) for mdl in pygame_module_names}
-        self.pygame_module_names = ['pygame.' + mdl for mdl in pygame_module_names]
-        self.modules.update(pygame_modules)
+        checker = lambda x: any((
+            x.startswith('__'),
+            x.isupper(),
+            x.startswith('K_')
+        ))
+        pg_module_names = [x for x in vars(pygame) if not checker(x)]
+        pg_modules = {'pygame.' + mdl: getattr(pygame, mdl) for mdl in pg_module_names}
+        self.pygame_module_names = ['pygame.' + mdl for mdl in pg_module_names]
+        self.modules.update(pg_modules)
 
     @commands.command(aliases=['docs'])
+    @print_context
     async def documentation(
             self,
-            ctx,
+            ctx: commands.Context,
             module: str = None,
             obj: str = None,
             method: str = None,
@@ -104,12 +118,12 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         """display documentation for a built in function or type"""
 
         if not module:
-            await self.send_objs_methods(
+            await self.send_members(
                 ctx,
                 self.standard_module_names,
                 title='Currently available modules:'
             )
-            await self.send_objs_methods(
+            await self.send_members(
                 ctx,
                 self.pygame_module_names,
                 title='Pygame modules:'
@@ -129,12 +143,12 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         if module not in self.modules:
             error_msg = f'**`ERROR: MODULE: {module} is unsupported`**'
             await ctx.send(error_msg)
-            await self.send_objs_methods(
+            await self.send_members(
                 ctx,
                 self.standard_module_names,
                 title='Currently available modules:'
             )
-            await self.send_objs_methods(
+            await self.send_members(
                 ctx,
                 self.pygame_module_names,
                 title='Pygame modules:'
@@ -153,7 +167,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             obj_list = await self.make_members_list(target_module, module)
             await ctx.send(error_msg)
             await ctx.send(obj_list_header)
-            await self.send_objs_methods(ctx, obj_list)
+            await self.send_members(ctx, obj_list)
             await self.send_usage(ctx)
             return
 
@@ -163,7 +177,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             obj_list = await self.make_members_list(target_module, module)
             await ctx.send(error_msg)
             await ctx.send(obj_list_header)
-            await self.send_objs_methods(ctx, obj_list)
+            await self.send_members(ctx, obj_list)
             await self.send_usage(ctx)
             return
 
@@ -177,7 +191,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             obj_list = await self.make_members_list(target_obj, obj)
             await ctx.send(error_msg)
             await ctx.send(obj_list_header)
-            await self.send_objs_methods(ctx, obj_list, title='Methods:')
+            await self.send_members(ctx, obj_list, title='Methods:')
             await self.send_usage(ctx)
             return
 
@@ -195,7 +209,16 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
 
         await self.send_docs_and_methods(ctx, target, target_name, obj, method)
 
-    async def send_docs_and_methods(self, ctx, target, target_name, obj=None, method=None):
+    async def send_docs_and_methods(
+            self,
+            ctx: commands.Context,
+            target,
+            target_name: str,
+            obj=None,
+            method=None
+    ) -> None:
+        """final method to send everything"""
+
         docs = await self.make_docs(target, target_name, obj, method)
         if not docs:
             error_msg = f'**`ERROR: docs for {target_name} not found, sorry...`**'
@@ -204,9 +227,17 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         method_list = await self.make_members_list(target, target_name)
         await self.send_docs(ctx, docs)
         if method_list:
-            await self.send_objs_methods(ctx, method_list, title='Methods:')
+            await self.send_members(ctx, method_list, title='Methods:')
 
-    async def make_docs(self, target, target_name, obj=None, method=None):
+    async def make_docs(
+            self,
+            target,
+            target_name: str,
+            obj=None,
+            method=None
+    ) -> str:
+        """make the docs and return it as a string"""
+
         if obj:
             docs_sig_begin = f'{obj}'
         else:
@@ -231,6 +262,8 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         return docs
 
     async def make_members_list(self, obj, obj_name: str) -> list:
+        """return a list of all the public members of an objest"""
+
         if hasattr(obj, '__dict__'):
             members = vars(obj)
         else:
@@ -246,7 +279,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             slices = 2
             docs_slices = None
             while True:
-                docs_list_slices = more_itertools.sliced(docs_list, len(docs_list) // slices)
+                docs_list_slices = more_itertools.sliced(
+                    docs_list,
+                    len(docs_list) // slices
+                )
                 docs_slices = ['\n'.join(x) for x in docs_list_slices]
                 if all(len(x) < 1990 for x in docs_slices):
                     break
@@ -256,11 +292,17 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
                     msg = '```\n' + docs + '```'
                     await ctx.send(msg)
 
-    async def send_objs_methods(self, ctx, msg_list: list, title: str = None) -> None:
-        msg_list = list(msg_list)
+    async def send_members(
+            self,
+            ctx: commands.Context,
+            msg_list: list,
+            title: str = None
+    ) -> None:
+        """send list of an object's members, slicing it if needed"""
+
+        msg_list = sorted(msg_list, key=lambda x: x.lower())
         if title:
             msg_list.insert(0, title + '\n\n')
-        msg = sorted(msg_list, key=lambda x: x.lower())
         msg = '```\n' + '  '.join(msg_list) + '```'
         if len(msg) < 1990:
             await ctx.send(msg)
@@ -268,7 +310,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             slices = 2
             msg_slices = None
             while True:
-                msg_list_slices = more_itertools.sliced(msg_list, len(msg_list) // slices)
+                msg_list_slices = more_itertools.sliced(
+                    msg_list,
+                    len(msg_list) // slices
+                )
                 msg_slices = ['  '.join(x) for x in msg_list_slices]
                 if all(len(x) < 1970 for x in msg_slices):
                     break
@@ -277,15 +322,20 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
                 msg = '```\n' + msg + '```'
                 await ctx.send(msg)
 
-    async def send_usage(self, ctx) -> None:
+    async def send_usage(self, ctx: commands.Context) -> None:
+        """send usage information"""
+
         usage = '**`Usage: !docs MODULE TYPE|FUNCTION [METHOD]`**'
         await ctx.send(usage)
 
     @commands.command(hidden=True)
-    async def this(self, ctx) -> None:
+    @print_context
+    async def this(self, ctx: commands.Context) -> None:
+        """send this"""
+
         msg = '```\n' + codecs.decode(this.s, 'rot13') + '```'
         await ctx.send(msg)
 
 
-def setup(bot) -> None:
+def setup(bot: commands.Bot) -> None:
     bot.add_cog(DocumentationCog(bot))

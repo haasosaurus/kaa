@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix='!')
 
 
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     """http://discordpy.readthedocs.io/en/rewrite/api.html#discord.on_ready"""
 
     print(f'Logged in as: {bot.user.name} - {bot.user.id}')
@@ -25,7 +25,7 @@ async def on_ready():
         print(f'    Name: {guild.name}, Id: {guild.id}')
 
 
-def load_extensions(bot):
+def load_extensions(bot: commands.Bot) -> None:
     initial_extensions = [
         'cogs.documentation',
         'cogs.members',
@@ -39,12 +39,17 @@ def load_extensions(bot):
     for extension in initial_extensions:
         try:
             bot.load_extension(extension)
-        except Exception as e:  # pylint: disable=broad-except
+        except (
+                commands.ExtensionNotFound,
+                commands.ExtensionAlreadyLoaded,
+                commands.NoEntryPointError,
+                commands.ExtensionFailed
+        ):
             print(f'Failed to load extension {extension}.', file=sys.stderr)
             traceback.print_exc()
 
 
-def main(bot):
+def main(bot: commands.Bot) -> None:
     load_extensions(bot)
     load_dotenv()
     token = os.getenv('DISCORD_TOKEN')
