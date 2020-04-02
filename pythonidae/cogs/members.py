@@ -4,24 +4,63 @@
 import discord
 from discord.ext import commands
 
+from utils import print_context
+
 
 class MembersCog(commands.Cog, name="Member Commands"):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @commands.command()
     @commands.guild_only()
-    async def joined(self, ctx, *, member: discord.Member):
+    @print_context
+    async def joined(
+            self,
+            ctx: commands.Context,
+            *,
+            member: discord.Member
+    ) -> None:
         """Says when a member joined."""
 
         await ctx.send(f'{member.display_name} joined on {member.joined_at}')
 
-    @commands.command(name='pythonbot', aliases=['PythonBot'])
-    async def cool_bot(self, ctx):
+    @joined.error
+    async def joined_handler(
+            self,
+            ctx: commands.Context,
+            error: discord.DiscordException
+    ) -> None:
+        """display when a member joined the server"""
+
+        if isinstance(error, commands.BadArgument):
+            arg = ctx.message.clean_content.split()[-1]
+            matches = [x for x in ctx.guild.members if x.display_name.lower() == arg.lower()]
+            if not matches:
+                msg = 'member not found'
+            elif len(matches) == 1:
+                msg = 'this command is case-sensitive'
+                idiots = ['SeeTheSaenz#5583', 'Marshall#8362', 'sansoo#6454']
+                msg += ', idiot...' if str(ctx.author) in idiots else '...'
+            else:
+                msg = 'multiple matches found, but your case is wrong for all of them...'
+            await ctx.send(msg)
+
+    @commands.command(aliases=['PythonBot'])
+    @print_context
+    async def pythonbot(self, ctx: commands.Context, *args: str) -> None:
         """insult discobot"""
 
-        await ctx.send('I am smarter than DiscoBot')
+        if not args:
+            await ctx.send('I am smarter than DiscoBot')
+
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    @print_context
+    async def test(self, ctx: commands.Context) -> None:
+        """just a test command"""
+
+        await ctx.send('testing...')
 
 
-def setup(bot):
+def setup(bot: commands.Bot) -> None:
     bot.add_cog(MembersCog(bot))
