@@ -40,11 +40,13 @@ import more_itertools
 import numpy
 import pandas
 import pygame
+import tqdm
 
-# discord modules
+# third-party modules - discord
 import discord
 from discord.ext import commands
 
+# local modules
 from utils import print_context
 
 
@@ -92,16 +94,13 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'more_itertools': more_itertools,
             'numpy': numpy,
             'pandas': pandas,
+            'tqdm': tqdm,
             'discord': discord,
             'discord.ext.commands': discord.ext.commands,
         }
         self.standard_module_names = list(self.modules.keys())
-        checker = lambda x: any((
-            x.startswith('__'),
-            x.isupper(),
-            x.startswith('K_')
-        ))
-        pg_module_names = [x for x in vars(pygame) if not checker(x)]
+        pg_name_checker = lambda x: any((x.startswith('__'), x.isupper(), x.startswith('K_')))
+        pg_module_names = [x for x in vars(pygame) if not pg_name_checker(x)]
         pg_modules = {'pygame.' + mdl: getattr(pygame, mdl) for mdl in pg_module_names}
         self.pygame_module_names = ['pygame.' + mdl for mdl in pg_module_names]
         self.modules.update(pg_modules)
@@ -162,7 +161,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             return
 
         if not obj:
-            error_msg = f'**`ERROR: No TYPE|FUNCTION specified for MODULE: {module}`**'
+            error_msg = f'**`ERROR: No member specified for {module}`**'
             obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
             obj_list = await self.make_members_list(target_module, module)
             await ctx.send(error_msg)
@@ -172,7 +171,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             return
 
         if obj not in dir(target_module):
-            error_msg = f'**`ERROR: TYPE|FUNCTION: {obj} not found in MODULE {module}`**'
+            error_msg = f'**`ERROR: {obj} not found in {module}`**'
             obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
             obj_list = await self.make_members_list(target_module, module)
             await ctx.send(error_msg)
@@ -186,7 +185,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         target_name = ''
 
         if method and method not in dir(target_obj):
-            error_msg = f'**`ERROR: METHOD: {method} not found in TYPE|FUNCTION {obj}`**'
+            error_msg = f'**`ERROR: {method} not found in {obj}`**'
             obj_list_header = f"**`{obj}'s METHODs:`**"
             obj_list = await self.make_members_list(target_obj, obj)
             await ctx.send(error_msg)
@@ -203,7 +202,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             target_name = obj
 
         if not target:
-            error_msg = "**`ERROR: failed to acquire target, sorry about that...`**"
+            error_msg = "**`ERROR: failed to acquire target, sorry about that`**"
             await ctx.send(error_msg)
             return
 
@@ -221,7 +220,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
 
         docs = await self.make_docs(target, target_name, obj, method)
         if not docs:
-            error_msg = f'**`ERROR: docs for {target_name} not found, sorry...`**'
+            error_msg = f'**`ERROR: docs for {target_name} not found, sorry`**'
             await ctx.send(error_msg)
             return
         method_list = await self.make_members_list(target, target_name)
@@ -268,10 +267,13 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             members = vars(obj)
         else:
             members = dir(obj)
-        member_list = [x for x in members if not x.startswith('__') and not x.isupper()]
+        private_or_upper = lambda x: any((x.startswith('__'), x.isupper()))
+        member_list = [x for x in members if not private_or_upper(x)]
         return tuple(member_list)
 
     async def send_docs(self, ctx, docs: str) -> None:
+        """send documenation string, slicing it if needed"""
+
         if len(docs) < 1900:
             await ctx.send('```\n' + docs + '```')
         else:
