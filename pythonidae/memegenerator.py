@@ -26,7 +26,7 @@ class MemeGenerator:
         img_size = [300, 200]
         tile_width = 300
         text = skill.upper() + ' : ' + level
-        text_width = self.skyrim_font.getsize(text)[0]
+        text_width, text_height = self.skyrim_font.getsize(text)
         tiles = 0
         while text_width > (img_size[0] - 100):
             img_size[0] += 300
@@ -36,7 +36,7 @@ class MemeGenerator:
             img.paste(self.skyrim_bg, (x, 0))
         draw = ImageDraw.Draw(img)
         posx = (img.width - text_width) / 2
-        posy = (img.height - text_width) / 2
+        posy = (img.height - text_height) / 2
         draw.text((posx + 3, posy + 3), text, fill='black', font=self.skyrim_font)
         draw.text((posx, posy), text, fill='white', font=self.skyrim_font)
 
