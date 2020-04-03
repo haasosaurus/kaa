@@ -35,6 +35,7 @@ def load_extensions(bot: commands.Bot) -> None:
         'cogs.troll',
         'cogs.countdown',
         'cogs.listener',
+        'cogs.memes',
     ]
     for extension in initial_extensions:
         try:
