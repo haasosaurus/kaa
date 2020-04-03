@@ -18,34 +18,32 @@ class MemeGenerator:
         self.toystory_font = ImageFont.truetype('impact.ttf', 45)
         self.toystory_bg = Image.open('cogs/meme-templates/woody-buzz.jpg')
 
-    def skyrim(self, status: str, level: str) -> io.BytesIO:
+    def skyrim(self, skill: str, level: str) -> io.BytesIO:
         """skyrim skill level meme"""
 
-        final_size = [300, 200]
-        imgx = 300
-        final_text = status.upper() + ' : ' + level
-        offset_counter = 0
-        while (self.get_size(final_text)[0] > (final_size[0] - 100) ):
-            final_size[0] += 300
-            offset_counter += 1
-        final_image = Image.new('RGB', final_size, color = '#FFF')
-        count = 0
-        for x in range(0, offset_counter + 1):
-            final_image.paste(self.skyrim_bg, (count, 0))
-            count += imgx
-        draw = ImageDraw.Draw(final_image)
-        posx = (final_image.width - self.get_size(final_text)[0]) / 2
-        posy = (final_image.height - self.get_size(final_text)[1]) / 2
-        draw.text((posx + 3, posy + 3), final_text, fill='black', font=self.skyrim_font)
-        draw.text((posx, posy), final_text, fill='white', font=self.skyrim_font)
+        skill = skill[:100]
+        level = level[:100]
+        img_size = [300, 200]
+        tile_width = 300
+        text = skill.upper() + ' : ' + level
+        text_width = self.skyrim_font.getsize(text)[0]
+        tiles = 0
+        while text_width > (img_size[0] - 100):
+            img_size[0] += 300
+            tiles += 1
+        img = Image.new('RGB', img_size, color = '#FFF')
+        for x in range(0, tile_width * (tiles + 1), tile_width):
+            img.paste(self.skyrim_bg, (x, 0))
+        draw = ImageDraw.Draw(img)
+        posx = (img.width - text_width) / 2
+        posy = (img.height - text_width) / 2
+        draw.text((posx + 3, posy + 3), text, fill='black', font=self.skyrim_font)
+        draw.text((posx, posy), text, fill='white', font=self.skyrim_font)
 
         buf = io.BytesIO()
-        final_image.save(buf, format='png')
+        img.save(buf, format='png')
         buf.seek(0)
         return buf
-
-    def get_size(self, text):
-        return self.skyrim_font.getsize(text)
 
     def oneDoesNotSimply(self, text) -> io.BytesIO:
         """
@@ -53,6 +51,7 @@ class MemeGenerator:
         More : https://knowyourmeme.com/memes/one-does-not-simply-walk-into-mordor
         """
 
+        text = text[:100]
         img = self.simply_bg.copy()
         draw = ImageDraw.Draw(img)
 
@@ -69,6 +68,7 @@ class MemeGenerator:
         More : https://knowyourmeme.com/memes/ancient-aliens
         """
 
+        text = text[:100]
         img = self.aliens_bg.copy()
         draw = ImageDraw.Draw(img)
         w, h = draw.textsize(text, self.aliens_font)
@@ -81,6 +81,7 @@ class MemeGenerator:
     def toyStoryMeme(self, text: str) -> io.BytesIO:
         """toystory meme"""
 
+        text = text[:100]
         img = self.toystory_bg.copy()
         draw = ImageDraw.Draw(img)
         w, h = draw.textsize(text, self.toystory_font)
