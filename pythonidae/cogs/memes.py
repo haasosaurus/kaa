@@ -11,8 +11,10 @@ from memegenerator import MemeGenerator
 from utils import print_context
 
 
-class GamesCog(commands.Cog, name="Zi Memes"):
+class GamesCog(commands.Cog, name='Memes'):
 	def __init__(self, bot: commands.Bot) -> None:
+		"""initializer"""
+
 		self.bot = bot
 		self.generator = MemeGenerator()
 
@@ -22,7 +24,8 @@ class GamesCog(commands.Cog, name="Zi Memes"):
 			self,
 			ctx: commands.Context,
 			skill: str,
-			level: str
+			level: str,
+			*args: str
 	) -> None:
 		"""!skyrim SKILL LEVEL"""
 
@@ -47,7 +50,7 @@ class GamesCog(commands.Cog, name="Zi Memes"):
 		img_buf = self.generator.historyAliensGuy(text)
 		await ctx.send(file=discord.File(fp=img_buf, filename='image.png'))
 
-	@commands.command(usage='!toystory *WORDS')
+	@commands.command(aliases=['buzz'], usage='!toystory *WORDS')
 	@print_context
 	async def toystory(self, ctx: commands.Context, *words: str) -> None:
 		"""!toystory *WORDS"""
