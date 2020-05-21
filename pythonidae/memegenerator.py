@@ -8,7 +8,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 class MemeGenerator:
-    def __init__(self):
+    def __init__(self) -> None:
+        """initializer"""
+
         self.skyrim_font = ImageFont.truetype('impact.ttf', 60)
         self.skyrim_bg = Image.open('cogs/meme-templates/skyrimStatusMemeBackground.png', 'r')
         self.aliens_font = ImageFont.truetype('impact.ttf', 50)
@@ -23,46 +25,62 @@ class MemeGenerator:
 
         skill = skill[:100]
         level = level[:100]
-        img_size = [300, 200]
-        tile_width = 300
+        img_width = 300
+        img_height = 200
+        tile_width = img_width
         text = skill.upper() + ' : ' + level
         text_width, text_height = self.skyrim_font.getsize(text)
         tiles = 0
-        while text_width > (img_size[0] - 100):
-            img_size[0] += 300
+        while text_width > (img_width - 100):
+            img_width += 300
             tiles += 1
-        img = Image.new('RGB', img_size, color = '#FFF')
+        img = Image.new('RGB', (img_width, img_height), color = '#FFF')
         for x in range(0, tile_width * (tiles + 1), tile_width):
             img.paste(self.skyrim_bg, (x, 0))
         draw = ImageDraw.Draw(img)
-        posx = (img.width - text_width) / 2
-        posy = (img.height - text_height) / 2
-        draw.text((posx + 3, posy + 3), text, fill='black', font=self.skyrim_font)
-        draw.text((posx, posy), text, fill='white', font=self.skyrim_font)
-
+        text_x = (img.width - text_width) / 2
+        text_y = (img.height - text_height) / 2
+        draw.text(
+            (text_x + 3, text_y + 3),
+            text,
+            fill='black',
+            font=self.skyrim_font
+        )
+        draw.text(
+            (text_x, text_y),
+            text,
+            fill='white',
+            font=self.skyrim_font
+        )
         buf = io.BytesIO()
         img.save(buf, format='png')
         buf.seek(0)
         return buf
 
-    def oneDoesNotSimply(self, text) -> io.BytesIO:
+    def oneDoesNotSimply(self, text: str) -> io.BytesIO:
         """
         The 'one does not simply' meme from Lord of the Rings.
-        More : https://knowyourmeme.com/memes/one-does-not-simply-walk-into-mordor
+        More:
+        https://knowyourmeme.com/memes/one-does-not-simply-walk-into-mordor
         """
 
         text = text[:100]
         img = self.simply_bg.copy()
         draw = ImageDraw.Draw(img)
-
         w, h = draw.textsize(text, self.simply_font)
-        self.draw_text_with_outline(draw, text, img.width / 2 - w / 2, 280, self.simply_font)
+        self.draw_text_with_outline(
+            draw,
+            text,
+            img.width / 2 - w / 2,
+            280,
+            self.simply_font
+        )
         buf = io.BytesIO()
         img.save(buf, format='png')
         buf.seek(0)
         return buf
 
-    def historyAliensGuy(self, text) -> io.BytesIO:
+    def historyAliensGuy(self, text: str) -> io.BytesIO:
         """
         History.com's Aliens guy42
         More : https://knowyourmeme.com/memes/ancient-aliens
@@ -72,7 +90,13 @@ class MemeGenerator:
         img = self.aliens_bg.copy()
         draw = ImageDraw.Draw(img)
         w, h = draw.textsize(text, self.aliens_font)
-        self.draw_text_with_outline(draw, text, img.width / 2 - w / 2, 377, self.aliens_font)
+        self.draw_text_with_outline(
+            draw,
+            text,
+            img.width / 2 - w / 2,
+            377,
+            self.aliens_font
+        )
         buf = io.BytesIO()
         img.save(buf, format='png')
         buf.seek(0)
@@ -86,8 +110,20 @@ class MemeGenerator:
         draw = ImageDraw.Draw(img)
         w, h = draw.textsize(text, self.toystory_font)
         w1, h1 = draw.textsize(text + ' Everywhere', self.toystory_font)
-        self.draw_text_with_outline(draw, str(text).capitalize(), img.width / 2 - w / 2, 2, self.toystory_font)
-        self.draw_text_with_outline(draw, str(text).capitalize() + ' Everywhere', img.width / 2 - w1 / 2, 250, self.toystory_font)
+        self.draw_text_with_outline(
+            draw,
+            str(text).capitalize(),
+            img.width / 2 - w / 2,
+            2,
+            self.toystory_font
+        )
+        self.draw_text_with_outline(
+            draw,
+            str(text).capitalize() + ' Everywhere',
+            img.width / 2 - w1 / 2,
+            250,
+            self.toystory_font
+        )
         buf = io.BytesIO()
         img.save(buf, format='png')
         buf.seek(0)
