@@ -11,6 +11,8 @@ class ListenerCog(commands.Cog, name='Listener'):
     """this cog listens for events"""
 
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
         self.servers = None
 
@@ -33,7 +35,7 @@ class ListenerCog(commands.Cog, name='Listener'):
         enabled = ['test', 'main', 'rust']
         servers = {self.servers[x] for x in enabled if x in self.servers}
         if server.id in servers:
-            await server.system_channel.send(f'welcome {member.name}')
+            await server.system_channel.send(f'welcome **{member.name}**')
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: discord.Member) -> None:
@@ -54,7 +56,8 @@ class ListenerCog(commands.Cog, name='Listener'):
         enabled = ['test', 'main', 'rust']
         servers = {self.servers[x] for x in enabled if x in self.servers}
         if server.id in servers:
-            await server.system_channel.send(f'goodbye forever {member.name}')
+            # await server.system_channel.send(f'goodbye forever {member.name}')
+            await server.system_channel.send(f'goodbye forever **{str(member)}**')
 
 
 def setup(bot: commands.Bot) -> None:
