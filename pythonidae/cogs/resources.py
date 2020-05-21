@@ -20,6 +20,8 @@ class ResourceCog(commands.Cog, name='Resource Commands'):
     """
 
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
 
     @commands.command(help='!save_resource CATEGORY URL')
@@ -197,7 +199,7 @@ __**Well liked IDEs for coding in Python**__
 :link: PyCharm <https://www.jetbrains.com/pycharm/download/> (community edition is free, probably the best/easiest)
 :link: Jupyter <https://jupyter.org/install> (good replacement for Python Interactive Shell)
 :link: Spyder <https://docs.spyder-ide.org/installation.html> (Good for data science, made with Python)
-:link: Sublime Text 3 <https://www.sublimetext.com/3> (unlimed free trial, crackable, fast, lightweight, and extensible)\
+:link: Sublime Text 3 <https://www.sublimetext.com/3> (unlimited free trial, crackable, fast, lightweight, and extensible)\
 '''
         await ctx.send(msg)
 
