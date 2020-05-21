@@ -9,11 +9,13 @@ from discord.ext import commands
 from utils import print_context
 
 
-class GamesCog(commands.Cog, name="Game Commands"):
+class GamesCog(commands.Cog, name='Game Commands'):
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
 
-    @commands.command(aliases=['dice'], usage='!roll AMOUNT SIDES')
+    @commands.command(aliases=['dice', 'roll_dice'], usage='!roll AMOUNT SIDES')
     @print_context
     async def roll(
             self,
