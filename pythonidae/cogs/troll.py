@@ -7,11 +7,13 @@ from discord.ext import commands
 from utils import print_context
 
 
-class TrollCog(commands.Cog, name="Troll Commands"):
+class TrollCog(commands.Cog, name='Troll Commands'):
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
 
-    @commands.command(help='shame people for their laziness')
+    @commands.command(help='shame people for their laziness', aliases=['lmgtfy'])
     @print_context
     async def google(self, ctx: commands.Context, *args: str) -> None:
         """
