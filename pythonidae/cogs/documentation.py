@@ -14,11 +14,13 @@ import datetime
 import decimal
 import enum
 import functools
+import gc
 import inspect
 import itertools
 import json
 import logging
 import math
+import netifaces
 import numbers
 import operator
 import pathlib
@@ -26,6 +28,7 @@ import pprint
 import random
 import re
 import requests
+import scapy.all
 import statistics
 import string
 import this
@@ -50,10 +53,12 @@ from discord.ext import commands
 from utils import print_context
 
 
-class DocumentationCog(commands.Cog, name="Documentation Commands"):
+class DocumentationCog(commands.Cog, name='Documentation Commands'):
     """DocumentationCog"""
 
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
         self.modules = {
 
@@ -70,11 +75,13 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'decimal': decimal,
             'enum': enum,
             'functools': functools,
+            'gc': gc,
             'inspect': inspect,
             'itertools': itertools,
             'json': json,
             'logging': logging,
             'math': math,
+            'netifaces': netifaces,
             'numbers': numbers,
             'operator': operator,
             'pathlib': pathlib,
@@ -82,6 +89,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             'random': random,
             're': re,
             'requests': requests,
+            'scapy.all': scapy.all,
             'statistics': statistics,
             'string': string,
             'time': time,
@@ -138,6 +146,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             module = 'numpy'
         elif module == 'pd':
             module = 'pandas'
+        elif module == 'ni':
+            module = 'netifaces'
+        elif module == 'scapy':
+            module = 'scapy.all'
 
         if module not in self.modules:
             error_msg = f'**`ERROR: MODULE: {module} is unsupported`**'
@@ -161,10 +173,10 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             return
 
         if not obj:
-            error_msg = f'**`ERROR: No member specified for {module}`**'
+            # error_msg = f'**`ERROR: No member specified for {module}`**'
             obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
             obj_list = await self.make_members_list(target_module, module)
-            await ctx.send(error_msg)
+            # await ctx.send(error_msg)
             await ctx.send(obj_list_header)
             await self.send_members(ctx, obj_list)
             await self.send_usage(ctx)
@@ -202,7 +214,7 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
             target_name = obj
 
         if not target:
-            error_msg = "**`ERROR: failed to acquire target, sorry about that`**"
+            error_msg = '**`ERROR: failed to acquire target, sorry about that`**'
             await ctx.send(error_msg)
             return
 
@@ -268,7 +280,11 @@ class DocumentationCog(commands.Cog, name="Documentation Commands"):
         else:
             members = dir(obj)
         private_or_upper = lambda x: any((x.startswith('__'), x.isupper()))
-        member_list = [x for x in members if not private_or_upper(x)]
+        if obj == builtins:
+            exp = lambda x: type(vars(builtins)[x]) == type and issubclass(vars(builtins)[x], BaseException)
+            member_list = [x for x in members if not private_or_upper(x) and not exp(x)]
+        else:
+            member_list = [x for x in members if not private_or_upper(x)]
         return tuple(member_list)
 
     async def send_docs(self, ctx, docs: str) -> None:
