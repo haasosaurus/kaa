@@ -12,9 +12,11 @@ from dotenv import load_dotenv
 
 from utils import print_context
 
-class OwnerCog(commands.Cog, name="Owner Commands"):
+class OwnerCog(commands.Cog, name='owner'):
 
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
         self.servers = None
 
@@ -129,14 +131,6 @@ class OwnerCog(commands.Cog, name="Owner Commands"):
     @commands.command(hidden=True)
     @commands.is_owner()
     @print_context
-    async def help_owner(self, ctx: commands.Context) -> None:
-        """display help for all commands, even hidden ones"""
-
-        await ctx.send('not implemented')
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
     async def say(
             self,
             ctx: commands.Context,
@@ -155,16 +149,14 @@ class OwnerCog(commands.Cog, name="Owner Commands"):
             await ctx.send('**`ERROR: Unknown target server`**')
             return
 
-        for i, word in enumerate(words):
-            if word == 'i':
-                words[i] = 'I'
+        words = ['I' if word == 'i' else word for i, word in enumerate(words)]
 
         target_server = discord.utils.get(
             self.bot.guilds,
             id=self.servers[target]
         )
         if not target_server:
-            msg = "**`ERROR: discord.utils.get did not get target_server`**"
+            msg = '**`ERROR: discord.utils.get did not get target_server`**'
             await ctx.send(msg)
             return
 
