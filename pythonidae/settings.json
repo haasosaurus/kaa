@@ -1,0 +1,16 @@
+{
+    "alt_settings_file_path": "alt_settings.json",
+    "server_nicks": {  // key is string, val is server id
+        //"server_nick1": 1234567890
+    },
+    "user_nicks": {  // key is string, val is user id
+        //"user_nick1": 1234567890
+    },
+    "resource_servers": [  // which servers have permission to save resources
+        //"server_nick1"
+    ],
+    "user_blacklist": [],  // users banned from using bot commands
+    "google_api_cred_path": "",  // path/to/google_api_credentials.json
+    "google_sheets_id": "",
+    "discord_token": ""
+}
