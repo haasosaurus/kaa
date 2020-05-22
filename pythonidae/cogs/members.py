@@ -7,8 +7,10 @@ from discord.ext import commands
 from utils import print_context
 
 
-class MembersCog(commands.Cog, name="Member Commands"):
+class MembersCog(commands.Cog, name='Member Commands'):
     def __init__(self, bot: commands.Bot) -> None:
+        """initializer"""
+
         self.bot = bot
 
     @commands.command()
@@ -59,7 +61,21 @@ class MembersCog(commands.Cog, name="Member Commands"):
     async def test(self, ctx: commands.Context) -> None:
         """just a test command"""
 
-        await ctx.send('testing...')
+        for member in ctx.guild.members:
+            if member.name in []:
+                print(member.name, member.id, flush=True)
+        # await ctx.send('testing...')
+
+    # @commands.command(hidden=True)
+    # @commands.is_owner()
+    # @print_context
+    # async def help_owner(self, ctx: commands.Context) -> None:
+    #     """display help for all commands, even hidden ones"""
+
+
+    #     pages = self.bot.formatter.format_help_for(ctx, self.bot)
+    #     await ctx.send(pages)
+    #     # await ctx.send('not implemented')
 
 
 def setup(bot: commands.Bot) -> None:
