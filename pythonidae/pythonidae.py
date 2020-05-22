@@ -12,6 +12,11 @@ from dotenv import load_dotenv
 
 
 bot = commands.Bot(command_prefix='!')
+# bot.remove_command('help')
+
+
+# implement catching Ctrl+c so that the bot can be shutdown
+# well and save the settings after conversion to use json
 
 
 @bot.event
@@ -36,6 +41,7 @@ def load_extensions(bot: commands.Bot) -> None:
         'cogs.countdown',
         'cogs.listener',
         'cogs.memes',
+        # 'cogs.help',
     ]
     for extension in initial_extensions:
         try:
