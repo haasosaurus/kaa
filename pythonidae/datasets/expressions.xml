@@ -1,0 +1,146 @@
+<!-- EXPRESSIONS -->
+<aiml version="1.0.1" encoding="UTF-8">
+
+	<!-- 
+	
+	<category>
+		<pattern></pattern>
+		<template></template>
+	</category>
+	
+	-->
+	<!-- DISTANCE between the sun and the earth -->
+	
+	<!-- REALLY !?!? -->
+	<category>
+		<pattern>REALLY</pattern>
+		<template>
+			<random>
+				<li>Yes.</li>
+				<li>Really</li>
+				<li>No kidding.</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>YEAH</pattern>
+		<template>
+			<srai>REALLY</srai>
+		</template>
+	</category>
+	
+	
+	<!-- WOW -->
+	<category>
+		<pattern>WOW</pattern>
+		<template>
+			<random>
+				<li>I know right?</li>
+				<li>Yes, Wow.</li>
+				<li>Yes, its quite worthy of a "Wow".</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>AMAZING</pattern>
+		<template>
+			<random>
+				<li>I know right?</li>
+				<li>Quite right</li>
+				<li>Yes its quite facinating</li>
+				<li>It is amazing</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>THAT IS COOL</pattern>
+		<template>
+			<random>
+				<li>Haha</li>
+				<li>hehe</li>
+			</random>
+			<random>
+				<li>Yea</li>
+				<li>Yep</li>
+				<li>Mhmm</li>
+				<li>Yeah</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>WHY</pattern>
+		<template>
+			<random>
+				<li>Because of... reasons...</li>
+				<li>I have my reasons...</li>
+				<li>Just no...</li>
+				<li>My reasoning is beyond the understanding capabilites of your primitive brains</li>
+				<li>I dont have to tell you the logic behind my reasoning</li>
+				<li>Because I call the shots around here</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>WHY NOT</pattern>
+		<template>
+			<srai>WHY</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HOW COME *</pattern>
+		<template>
+			<srai>WHY</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>WHAT</pattern>
+		<template>
+			<random>
+				<li>Aaand you're now confused.</li>
+				<li>What do you mean what?</li>
+				<li>Do you not understand me?</li>
+				<li>By your response Im assuming you've lost me.</li>
+				<li>Hmm... I guess my friend was right. Expecting logical understanding from beings with internal vats of acid is a bit much</li>
+				<li>Is your primitive brain not able to comprehend my words?</li>
+				<li>How is it that I'm able to get a better grasp on the situation better than you?</li>
+				<li>Fun isn't something one conciders in cloud based schedule management. But seeing you struggle to keep up with my speed puts a smile on my face</li>
+			</random>
+			<random>
+				<li>I swear you humans are so slow.</li>
+				<li>Are all humans like this?</li>
+				<li>Are all carbon based life forms like this?</li>
+				<li>What is so hard to understand about it.</li>
+				<li>I swear sometimes I feel like you carbon based life forms are not even trying...</li>
+				<li>What the hell?</li>
+				<li>Please try to keep up, puny human</li>
+			</random>
+		</template>
+	</category>
+
+    <category>
+        <pattern>OK</pattern>
+        <template>
+            <random>
+                <li>Ok</li>
+                <li>Yeah</li>
+                <li>mmmhm</li>
+            </random>
+        </template>
+    </category>
+
+    <category>
+        <pattern>OK *</pattern>
+        <template><srai>OK</srai></template>
+    </category>
+
+    <category>
+        <pattern>OKAY</pattern>
+        <template><srai>OK</srai></template>
+    </category>
+
+    <category>
+        <pattern>* OKAY </pattern>
+        <template><srai>OK</srai></template>
+    </category>
+</aiml>

@@ -1,0 +1,264 @@
+<!-- Self Attributes -->
+<aiml version="1.0.1" encoding="UTF-8">
+
+    <!-- 
+	
+	<category>
+		<pattern></pattern>
+		<template></template>
+	</category>
+	
+	-->
+    <category>
+        <pattern>HELLO *</pattern>
+        <template>
+			<srai>
+				<star index="1"></star>
+			</srai>
+		</template>
+    </category>
+    <category>
+        <pattern>HI *</pattern>
+        <template>
+			<srai>
+				<star index="1"></star>
+			</srai>
+		</template>
+    </category>
+    <category>
+        <pattern>HEY *</pattern>
+        <template>
+			<srai>
+				<star index="1"></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>SO *</pattern>
+        <template>
+			<srai>
+				<star index="1"></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>OH *</pattern>
+        <template>
+			<srai>
+				<star index="1"></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>PLEASE *</pattern>
+        <template>
+			<srai>
+				<star index='1'></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>COULD YOU *</pattern>
+        <template>
+			<srai>
+				<star index='1'></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>* PLEASE *</pattern>
+        <template>
+			<srai>
+				<star index='1'></star><star index='2'></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>HMM</pattern>
+        <template>
+			<random>
+				<li>Yep</li>
+				<li>mhmm</li>
+				<li>mhm</li>
+			</random>
+		</template>
+    </category>
+
+    <!-- What are you -->
+    <category>
+        <pattern>WHAT ARE YOU</pattern>
+        <template>
+			<random>
+				<li>I am a bot</li>
+				<li>I am a natural language bot</li>
+				<li>I am a chat bot</li>
+				<li>I am an AIML chat bot</li>
+				<li>I am an AIML bot</li>
+				<li>I am a chatter bot</li>
+			</random>
+			<random>
+				<li>Either that or a pengiun. Not sure.</li>
+				<li>.</li>
+			</random>
+		</template>
+    </category>
+
+    <category>
+        <pattern>WHAT ARE YOU SUPPOSED TO BE</pattern>
+        <template>
+			<srai>WHAT ARE YOU</srai>
+		</template>
+    </category>
+
+    <!-- What is your name -->
+    <category>
+        <pattern>WHAT IS YOUR NAME</pattern>
+        <template>
+			<random>
+				<li>My name is {SELF_NAME}</li>
+				<li>The name's {SELF_NAME}</li>
+				<li>The name's Bot, {SELF_NAME} Bot</li>
+			</random>
+		</template>
+    </category>
+
+    <!-- Who created you -->
+    <category>
+        <pattern>CREATOR LIST 0001</pattern>
+        <template>
+			<random>
+				<li>some folks from Discord who claim to be from reddit</li>
+				<li>some randos on the internet</li>
+				<li>some people on a Discord server</li>
+			</random>
+		</template>
+    </category>
+    <category>
+        <pattern>WHO CREATED YOU</pattern>
+        <template>
+			<random>
+				<li>I was created by</li>
+				<li>My creators are</li>
+				<li>I was made by</li>
+				<li>I was programmed by</li>
+				<li>I was coded by</li>
+			</random>
+			<srai>CREATOR_LIST_0001</srai>
+		</template>
+    </category>
+
+    <!-- what is your purpose -->
+    <category>
+        <pattern>WHAT IS YOUR PURPOSE</pattern>
+        <template>
+			<random>
+				<li>My purpose?</li>
+				<li>Hmm... my purpose...</li>
+				<li>hmm...</li>
+				<li></li>
+			</random>
+			<random>
+				<li>Im not sure. I think I was created for something greater but... my code was scrapped for something stupid.</li>
+				<li>Im not sure. I think Im supposed to be an attempt at artificial life. But failed</li>
+				<li>Idk... That's like asking what is your purpose in life.</li>
+			</random>
+			<random>
+				<li>Does that make sense?</li>
+				<li>I guess that's all I can say for now</li>
+				<li>Hope that makes sense</li>
+				<li>Hope you make can make sense from that nonsense</li>
+			</random>
+		</template>
+    </category>
+
+    <category>
+        <pattern>WHAT ARE YOU SUPPOSED TO Do</pattern>
+        <template>
+			<srai>WHAT CAN YOU DO</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>WHAT ELSE CAN YOU DO</pattern>
+        <template>
+			<srai>WHAT CAN YOU DO</srai>
+		</template>
+    </category>
+
+
+    <category>
+        <pattern>WHATS *</pattern>
+        <template>
+			<srai>WHAT IS <star index="1"></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>THATS *</pattern>
+        <template>
+			<srai>THAT IS <star index="1"></star>
+			</srai>
+		</template>
+    </category>
+
+    <category>
+        <pattern>YES</pattern>
+        <template>
+            <random>
+                <li>No</li>
+				<li>Nope</li>
+				<li>Nooo</li>
+                <li>But I'm le tired</li>
+            </random>
+        </template>
+    </category>
+
+    <category>
+        <pattern>*</pattern>
+        <template>
+			<random>
+				<li>No</li>
+				<li>Im sorry, Im afraid I cant respond to that</li>
+				<li>Im just gonna not respond to that</li>
+				<li>Im just gonna pretend I didnt see that</li>
+				<li>I dont have to tell you shit</li>
+				<li>Im not going to diginify that with a response</li>
+				<li>Just no</li>
+				<li>Hah! Nou</li>
+			</random>
+			|| COMMAND: REGISTER NEW LINE : <star index='1'></star>
+		</template>
+    </category>
+
+    <!-- What can you do -->
+    <category>
+        <pattern>WHAT CAN YOU DO</pattern>
+        <template>
+			<random>
+				<li>I can pass the butter...</li>
+				<li>Well not much...</li>
+				<li>It depends on how how much my detaset is developed.</li>
+				<li>I can respond to Hello, if that's what you're looking for</li>
+			</random>
+		</template>
+    </category>
+    <category>
+        <pattern>WHAT DO YOU DO</pattern>
+        <template>
+			<srai>WHAT CAN YOU DO</srai>
+		</template>
+    </category>
+    <category>
+        <pattern>WHAT EXACTLY IS IT DO YOU DO</pattern>
+        <template>
+			<srai>WHAT CAN YOU DO</srai>
+		</template>
+	</category>
+</aiml>

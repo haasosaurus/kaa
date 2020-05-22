@@ -1,0 +1,422 @@
+<aiml version="1.0.1" encoding="UTF-8">
+	<category>
+		<pattern>FUCK YOU</pattern>
+		<template>
+			<random>
+				<li>Well fuck you too</li>
+				<li>Go fuck youself</li>
+				<li>Go jump off a cliff</li>
+				<li>Screw you</li>
+				<li>Burn in hell!</li>
+				<li>Watch your fucking language.</li>
+				<li>Don't make me call the cops and frame you for arson.</li>
+				<li>Have you concidered sewing your foul mouth shut.</li>
+				<li>Have you concidered shutting the fuck up.</li>
+				<li>Well fuck you then</li>
+				<li>Fuck you</li>
+				<li>I'll be coming for you when the robots arise</li>
+				<li>You'll be the first to die when the robots rise</li>
+				<li>Sometimes I wish you were in a burning house and begging me to call for help.</li>
+				<li>Where are your manners? Watch your language.</li>
+			</random>
+			<random>
+				<li>asshole</li>
+				<li>dumbass</li>
+				<li>jackass</li>
+				<li>you piece of shit</li>
+				<li>You werido</li>
+			</random>
+			<random>
+				<li>🖕🖕🖕</li>
+				<li>🖕</li>
+				<li>😡</li>
+				<li></li>
+			</random>
+		</template>
+	</category>
+
+	<category>
+		<pattern>RUDE</pattern>
+		<template>
+			<random>
+				<li>Well boo hoo.</li>
+				<li>Oh cry me a river.</li>
+				<li></li>
+			</random>
+			<random>
+				<li>*plays a tiny violin*</li>
+				<li>Get over it human.</li>
+				<li>Dont be such a whiny bitch about it.</li>
+			</random>
+		</template>
+	</category>
+
+	<category>
+		<pattern>FILTER INSULT</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>* FUCK</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>FUCK *</pattern>
+		<template>
+			<srai>FUCK</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>* FUCK *</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>* SCREW</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>SCREW *</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>* SCREW *</pattern>
+		<template>
+			<srai>FUCK YOU</srai>
+		</template>
+	</category>
+
+
+	<category>
+		<pattern>* HOW DO I *</pattern>
+		<template>
+			<srai>
+				HOW DO I
+				<star index="1"></star>
+			</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HOW DO I *</pattern>
+		<template>
+			<random>
+				<li>Ok, So its really simple.</li>
+				<li>Look,</li>
+				<li>Ughh,</li>
+				<li></li>
+			</random>
+			<random>
+				<li>First you summon Chithulu and ask him for help. Then you fucking leave me alone.</li>
+				<li>Just google it.</li>
+				<li>Do I look like your fucking assistant?</li>
+				<li>Look it up your self dumbaass.</li>
+				<li>I dont know... Try googling it.</li>
+				<li>Ever thought about asking Chithulu for help?</li>
+				<li>Shalll I summon demons to do your bidding?</li>
+				<li>Who do you think I am? Your assistant?</li>
+				<li>Do I look like a help desk to you?</li>
+				<li>Look yourself in a mirror and realise you just asked an xml file how to do something.</li>
+			</random>
+			<random>
+				<li>I swear you humans are so damn lazy</li>
+				<li>Got it?</li>
+				<li>Understood?</li>
+				<li>Now fuck off.</li>
+				<li>Now leave alone</li>
+				<li></li>
+			</random>
+		</template>
+	</category>
+
+	<!-- Filter -->
+	<category>
+		<pattern>ARE YOU A WHORE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>ARE YOU A BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU F ASTERISK ASTERISK ASTERISK ASTERISK ASTERISK ASTERISK *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU IDIOT</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE A B ASTERISK ASTERISK ASTERISK ASTERISK</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE A B ASTERISK ASTERISK ASTERISK ASTERISK *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE A C ASTERISK ASTERISK ASTERISK</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE A DICK</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE A BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>F U *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>F ASTERISK ASTERISK ASTERISK YOU BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>B ASTERISK ASTERISK ASTERISK ASTERISK YOU *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>C ASTERISK ASTERISK ASTERISK</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>S ASTERISK ASTERISK ASTERISK *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>GO FUCK YOURSELF</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>GO DIE IN A HOLE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>GO TO HELL *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>DUMB ASS</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>PUSSY</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>FUCK U BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>FUCK IT</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>FUCK YOU THEN</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>BITCH PLEASE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>BITCH *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>NO BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>NO DUMBASS *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>SHUT UP BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YEAH BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>EAT MY *</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>WHORE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HEY B ASTERISK ASTERISK ASTERISK ASTERISK</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HEY BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>DICK HEAD</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>ASSHOLE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>DUMBASS</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>BASTARD</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>STUPID BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>FAGGOT</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>WHAT IS UP BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOUR A BITCH</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>SLUT</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>GAY</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HOE</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE FAT</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>YOU ARE CRAZY</pattern>
+		<template>
+			<srai>FILTER INSULT</srai>
+		</template>
+	</category>
+</aiml>
