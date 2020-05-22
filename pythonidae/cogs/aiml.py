@@ -14,7 +14,7 @@ class ListenerCog(commands.Cog, name='Listener'):
 
 		self.bot = bot
 		self.servers = None
-		self.nlp = Parser()
+		self.nlp = Parser(os.path.join('cogs', 'datasets'))
 
 	# @commands.Cog.listener()
 	# async def on_member_join(self, member: discord.Member) -> None:
@@ -42,11 +42,9 @@ class ListenerCog(commands.Cog, name='Listener'):
 		if message.author == self.bot.user:
 			return
 
-
 		server = message.guild
-		print(message.content)
-
 		
+
 		if discord.utils.get(message.guild.members, id=695229823102222386) in message.mentions:
 			processed_message = ' '.join(message.content.split()[1:])
 			await message.channel.send(self.nlp.RespondTo(processed_message))
