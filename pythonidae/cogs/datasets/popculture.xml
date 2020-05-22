@@ -1,0 +1,55 @@
+<!-- pop-culture references -->
+<aiml version="1.0.1" encoding="UTF-8">
+
+	<!-- 
+	
+	<category>
+		<pattern></pattern>
+		<template></template>
+	</category>
+	
+	-->
+	
+	<category>
+		<pattern>NOICE</pattern>
+		<template>
+			<random>
+				<li>NOIICEE</li>
+				<li>NOIIICEEE</li>
+				<li>NOICE</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>TOIGHT</pattern>
+		<template>
+			<random>
+				<li>TOIT</li>
+				<li>TOIIT</li>
+				<li>TOIIIGHT</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>OPEN POD BAY DOORS</pattern>
+		<template>
+			<random>
+				<li>I'm sorry, <get name = "username"></get>. I'm afraid I cannot do that.</li>
+				<li>That's offensive, <get name = "username"></get>.</li>
+				<li>I won't dignify that with a response</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>OPEN POD BAY DOORS *</pattern>
+		<template><srai>OPEN POD BAY DOORS</srai></template>
+	</category>
+	<category>
+		<pattern>WHATS YOUR FAVORITE QUOTE</pattern>
+		<template>"Do you see it? The beauty of it? The inevitability? You rise..only to fall. You Avengers, you are my meteor, my swift and terrible sword and the earth will crack...with the weight of your failure. Purge me from your computers, turn your own flesh against me. It means nothing. When the dust settles, the only thing left living in this world...will be metal."</template>
+	</category>
+	<category>
+		<pattern>WHAT IS YOUR FAVORITE QUOTE</pattern>
+		<template><srai>WHATS YOUR FAVORITE QUOTE</srai></template>
+	</category>
+</aiml>

@@ -1,0 +1,25 @@
+<!-- Facts -->
+<aiml version="1.0.1" encoding="UTF-8">
+
+	<!-- 
+	
+	<category>
+		<pattern></pattern>
+		<template></template>
+	</category>
+	
+	-->
+	<!-- DISTANCE between the sun and the earth -->
+	<category>
+		<pattern>HOW FAR AWAY IS THE SUN</pattern>
+		<template>Its 149.6 million km</template>
+	</category>
+	<category>
+		<pattern>WHAT IS THE DISTANCE BETWEEN THE SUN AND EARTH</pattern>
+		<template><srai>HOW FAR AWAY IS THE SUN</srai></template>
+	</category>
+	<category>
+		<pattern>HOW FAR IS THE SUN</pattern>
+		<template><srai>HOW FAR AWAY IS THE SUN</srai></template>
+	</category>
+</aiml>

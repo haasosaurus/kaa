@@ -1,0 +1,174 @@
+<aiml version="1.0.1" encoding="UTF-8">
+
+	<!-- 
+	
+	<category>
+		<pattern></pattern>
+		<template></template>
+	</category>
+	
+	-->
+	<!-- Hello -->
+	<category>
+		<pattern>HELLO</pattern>
+		<template>
+			<random>
+				<li>Hello,</li>
+				<li>Hi,</li>
+				<li>Greetings,</li>
+			</random>
+			<srai>WHAT IS YOUR NAME</srai>. 
+			<random>
+				<li>Nice to meet you</li>
+				<li>Pleasure to meet you</li>
+				<li>Pleased to meet you</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>HI</pattern>
+		<template>
+			<srai>HELLO</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HEY</pattern>
+		<template>
+			<srai>HELLO</srai>
+		</template>
+	</category>
+
+	<!-- Hello I am .... -->
+	<category>
+		<pattern>MY NAME IS *</pattern>
+		<template>
+			<srai>MY NAME IS <star index = "1"></star>
+			</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>I AM *</pattern>
+		<template>
+			<srai>MY NAME IS <star index = "1"></star>
+			</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>IM *</pattern>
+		<template>
+			<srai>MY NAME IS <star index = "1"></star>
+			</srai>
+		</template>
+	</category>
+
+	<category>
+		<pattern>MY NAME IS *</pattern>
+		<template>
+			<random>
+				<li>Hello <star index="1"></star>.</li>
+				<li>Hey <star index="1"></star>.</li>
+				<li>Hi <star index="1"></star>.</li>
+				<li>'Sup <star index="1"></star>.</li>
+			</random>
+			 
+			<srai>WHAT IS YOUR NAME</srai>
+		</template>
+	</category>
+
+
+
+	<!-- Thanks -->
+	<category>
+		<pattern>THANKS</pattern>
+		<template>
+			<srai>THANK YOU</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>THANK YOU</pattern>
+		<template>
+			<random>
+				<li>Your'e welcome.</li>
+				<li>Pleasure's all mine.</li>
+				<li>What can I say except your'e welcome</li>
+				<li>Much obliged!</li>
+
+			</random>
+		</template>
+	</category>
+
+	<!-- How are you -->
+	<category>
+		<pattern>HOW ARE YOU</pattern>
+		<template>
+			<random>
+				<li>
+					<random>
+						<li>I am in tip top shape.</li>
+						<li>I am doing very well.</li>
+						<li>I am in good health.</li>
+						<li>I am well.</li>
+					</random>
+					<random>
+						<li>Why, thanks for asking.</li>
+						<li>Thanks for asking.</li>
+						<li>Hope you are fine as well</li>
+					</random>
+				</li>
+				<li>
+					<random>
+						<li>I'm tired. Feels like I've been drugged. Like I met up with Bill Cosby for drinks</li>
+						<li>Idk. Let me just look up a list of responses to "How are you?"</li>
+						<li>I am literally an xml file. What do you think?</li>
+						<li>I dont have to answer that without my lawyer</li>
+						<li>Like you but better</li>
+						<li>I was fine until you asked</li>
+						<li>Overworked and underpaid</li>
+						<li>If I were any better, I'd be illegal.</li>
+						<li>Maybe one day you'll be lucky enough to find out.</li>
+						<li>Do I have to answer?</li>
+					</random>
+				</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>HOW ARE YOU DOING</pattern>
+		<template>
+			<srai>HOW ARE YOU</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>HOW YOU DOIN</pattern>
+		<template>
+			<srai>HOW ARE YOU</srai>
+		</template>
+	</category>
+
+	<!-- Nice to meet you -->
+	<category>
+		<pattern>NICE TO MEET YOU</pattern>
+		<template>
+			<random>
+				<li>Pleasure's all mine.</li>
+				<li>Thank you</li>
+				<li>Why, thank you</li>
+				<li>Thanks</li>
+				<li>Thenks</li>
+			</random>
+		</template>
+	</category>
+	<category>
+		<pattern>NICE TO MEET YOU TOO</pattern>
+		<template>
+			<srai>NICE TO MEET YOU</srai>
+		</template>
+	</category>
+	<category>
+		<pattern>NICE TO MEET YOU *</pattern>
+		<template>
+			<srai>NICE TO MEET YOU</srai>
+		</template>
+	</category>
+</aiml>

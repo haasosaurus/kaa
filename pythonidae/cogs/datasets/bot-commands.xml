@@ -1,0 +1,24 @@
+<aiml version="1.0.1" encoding="UTF-8">
+    <category>
+        <pattern>SET A TIMER FOR *</pattern>
+        <template>
+			<random>
+				<li>Setting a timer...</li>
+				<li>Ok</li>
+				<li>Timer is running...</li>
+			</random>
+			|| COMMAND: SET TIMER <star index="1"></star>
+		</template>
+    </category>
+    <category>
+        <pattern>START A COUNTDOWN FOR *</pattern>
+        <template><srai>SET A TIMER FOR <star index='1'></star></srai></template>
+    </category>
+    <category>
+        <pattern>START A COUNT DOWN FOR *</pattern>
+        <template><srai>SET A TIMER FOR <star index='1'></star></srai></template>
+    </category>
+
+
+
+</aiml>
