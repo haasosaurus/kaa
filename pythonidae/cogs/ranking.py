@@ -1,6 +1,17 @@
 # coding=utf-8
 
 
+#---------------------------- ideas ----------------------------#
+# limit giving points to once a minute
+# put a time when last points given as a column
+# put a ban thing in the database as a column
+# implement ban and unban methods
+# implement leaderboard method, call it points_top
+# implement set_points method
+# implement exception handling
+#---------------------------------------------------------------#
+
+
 import asyncio
 import pathlib
 import sqlite3
@@ -18,82 +29,108 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
         """initializer"""
 
         self.bot = bot
-        db_path = pathlib.Path('./points_db.sqlite3').expanduser().resolve()
+        self.db_path = pathlib.Path('./points_db.sqlite3').resolve()
 
-
-        self.points = {}
-        for guild in bot.guilds:
-            if guild.id not in self.points:
-                    self.points.update({guild.id:{}})
-            for member in guild.members:
-                if member not in self.points[guild.id]:
-                    self.points[guild.id].update({member.id: 0})
-
-
-    # async def db_connect(self):
-    #     conn = sqlite3.connect(self.db_path)
-    #     return conn
-
+    async def db_connect(self):
+        con = sqlite3.connect(self.db_path)
+        return con
 
     @commands.command()
-    # @commands.is_owner()
+    @commands.is_owner()
     @print_context
-    async def give_points(
+    async def points_give(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
             points: int = None,
             reason: str = 'no reason'
     ) -> None:
-        """give points to a member"""
+        """give a member points"""
 
         if not member:
             await ctx.send('**`member not specified or not found`**')
             return
-
         if not points:
             await ctx.send('**`points not specified or points was 0`**')
             return
-
         if not -100 <= points <= 100:
             await ctx.send('**`points not in valid range -100 <= points <= 100`**')
             return
-
-        if ctx.author.id == member.id:
+        if ctx.author.id == member.id and ctx.author.id != self.bot.owner_id:
             await ctx.send("**`You can't high-five yourself!`**")
             return
 
+        con = await self.db_connect()
+        with con:
+            cur = con.cursor()
 
-        gid = ctx.guild.id
-        # con = await self.db_connect()
-        # with con:
-        #     cur = con.cursor()
-        #     s = f'CREATE TABLE IF NOT EXISTS {gid} ...;'
-        #     cur.execute('SELECT from ')
+            # create server table if needed
+            create_server_table = f'''
+                CREATE TABLE IF NOT EXISTS server_{ctx.guild.id} (
+                member_id integer PRIMARY KEY,
+                points integer NOT NULL DEFAULT 0
+                )'''
+            cur.execute(create_server_table)
 
+            # create member row if needed
+            cur.execute(
+                f'INSERT OR IGNORE INTO server_{ctx.guild.id} (member_id) VALUES(?)',
+                (member.id,)
+            )
 
+            # update points for member
+            cur.execute(
+                f'UPDATE server_{ctx.guild.id} SET points = points + ? WHERE member_id = ?',
+                (points, member.id)
+            )
 
+            # get member's new point total
+            cur.execute(
+                f'SELECT * from server_{ctx.guild.id} where member_id = ?',
+                (member.id, )
+            )
+            total_points = cur.fetchone()[1]
 
-        if member.id not in self.points[gid]:
-            self.points[gid].update({member.id: 0})
-        self.points[gid][member.id] += points
-        await ctx.send(f'**`{points} points were given to {member} for {reason}!`**')
+            await ctx.send(
+                f'**`{points} points were given to {member.display_name} for {reason}! '
+                f'They now have {total_points} points!`**'
+            )
 
     @commands.command()
     @print_context
-    async def show_points(
+    async def points_show(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
     ) -> None:
         """display a member's points"""
 
-        # doesn't work
-        if not member:
-            await ctx.send('**`member not found`**')
-            return
+        con = await self.db_connect()
+        with con:
+            cur = con.cursor()
 
-        await ctx.send(f"**`{str(member)}'s points: {self.points[ctx.guild.id][member.id]}`**")
+            # create server table if needed
+            create_server_table = f'''
+                CREATE TABLE IF NOT EXISTS server_{ctx.guild.id} (
+                member_id integer PRIMARY KEY,
+                points integer NOT NULL DEFAULT 0
+                )'''
+            cur.execute(create_server_table)
+
+            # create member row if needed
+            cur.execute(
+                f'INSERT OR IGNORE INTO server_{ctx.guild.id} (member_id) VALUES(?)',
+                (member.id,)
+            )
+
+            # get member's point total
+            cur.execute(
+                f'SELECT * from server_{ctx.guild.id} where member_id = ?',
+                (member.id, )
+            )
+            total_points = cur.fetchone()[1]
+
+            await ctx.send(f'**`{member.display_name} has {total_points} points`**')
 
 
 def setup(bot: commands.Bot) -> None:
