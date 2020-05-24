@@ -1,12 +1,14 @@
 import discord
 import os
-import aiml
 import threading
+
+import aiml
+
 from discord.ext import commands
 from dotenv import load_dotenv
 
 
-class ListenerCog(commands.Cog, name='Listener'):
+class SpeechCog(commands.Cog, name='AIML'):
 	"""this cog listens for events"""
 
 	def __init__(self, bot: commands.Bot) -> None:
@@ -43,14 +45,14 @@ class ListenerCog(commands.Cog, name='Listener'):
 			return
 
 		server = message.guild
-		
 
-		if discord.utils.get(message.guild.members, id=695229823102222386) in message.mentions:
+
+		if discord.utils.get(message.guild.members, id=680692520141062154) in message.mentions:
 			processed_message = ' '.join(message.content.split()[1:])
 			await message.channel.send(self.nlp.RespondTo(processed_message))
 
 def setup(bot: commands.Bot) -> None:
-	bot.add_cog(ListenerCog(bot))
+	bot.add_cog(SpeechCog(bot))
 
 
 class Parser:
@@ -71,7 +73,7 @@ class Parser:
 
 	def RespondTo(self, message):
 		response = self.kernel.respond(message)
-		if "{SELF_NAME}" in response: response = response.replace("{SELF_NAME}", "Ark")
+		if "{SELF_NAME}" in response: response = response.replace("{SELF_NAME}", "PythonBot")
 		if '||' in response:
 			command = response[response.index("||"):][12:]
 			command_thread = threading.Thread(target=self.HandleCommand, args=(command,))
@@ -85,4 +87,3 @@ class Parser:
 	def HandleCommand(self, command):
 		# Handle the command here
 		print("Command : " + command)
-
