@@ -35,15 +35,15 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
         con = sqlite3.connect(self.db_path)
         return con
 
-    @commands.command()
-    @commands.is_owner()
+    @commands.command(aliases=['give_points', 'point_give', 'give_point'])
+    # @commands.is_owner()
     @print_context
     async def points_give(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
             points: int = None,
-            reason: str = 'no reason'
+            *reason: str,
     ) -> None:
         """give a member points"""
 
@@ -91,12 +91,17 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
             )
             total_points = cur.fetchone()[1]
 
+            # create remaining elements of and send result message
+            if not reason:
+                reason = 'no reason'
+            else:
+                reason = ' '.join(reason)
             await ctx.send(
                 f'**`{points} points were given to {member.display_name} for {reason}! '
                 f'They now have {total_points} points!`**'
             )
 
-    @commands.command()
+    @commands.command(aliases=['show_points', 'show_point', 'point_show'])
     @print_context
     async def points_show(
             self,
@@ -130,6 +135,7 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
             )
             total_points = cur.fetchone()[1]
 
+            # send result message
             await ctx.send(f'**`{member.display_name} has {total_points} points`**')
 
 
