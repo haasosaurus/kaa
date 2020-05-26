@@ -24,7 +24,7 @@ class MembersCog(commands.Cog, name='Member Commands'):
     ) -> None:
         """Says when a member joined."""
 
-        await ctx.send(f'{member.display_name} joined on {member.joined_at}')
+        await ctx.send(f'**`{member.display_name} joined on {member.joined_at}`**')
 
     @joined.error
     async def joined_handler(
@@ -61,10 +61,11 @@ class MembersCog(commands.Cog, name='Member Commands'):
     async def test(self, ctx: commands.Context) -> None:
         """just a test command"""
 
-        for member in ctx.guild.members:
-            if member.name in []:
-                print(member.name, member.id, flush=True)
-        # await ctx.send('testing...')
+        await ctx.send('**`testing...`**')
+
+
+    #---------- temporarily here so owner cog can be reloaded if this doesn't work ----------#
+    # disabled for the time being
 
     # @commands.command(hidden=True)
     # @commands.is_owner()
@@ -72,10 +73,10 @@ class MembersCog(commands.Cog, name='Member Commands'):
     # async def help_owner(self, ctx: commands.Context) -> None:
     #     """display help for all commands, even hidden ones"""
 
-
     #     pages = self.bot.formatter.format_help_for(ctx, self.bot)
     #     await ctx.send(pages)
     #     # await ctx.send('not implemented')
+    #----------------------------------------------------------------------------------------#
 
 
 def setup(bot: commands.Bot) -> None:
