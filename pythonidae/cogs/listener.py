@@ -27,15 +27,23 @@ class ListenerCog(commands.Cog, name='Listener'):
             return
         print('SUCCESS: loaded server dict', flush=True)
 
-        server = member.guild
-        if not server:
-            print('ERROR: server not found for member', flush=True)
-            return
+        #--- this is probably not needed ---#
+        # if not server:
+        #     print('ERROR: server not found for member', flush=True)
+        #     return
 
+        server = member.guild
         enabled = ['test', 'main', 'rust']
         servers = {self.servers[x] for x in enabled if x in self.servers}
         if server.id in servers:
             await server.system_channel.send(f'welcome **{member.name}**')
+
+        # set default role for new members
+        default_role = 'RegularElites'  # add this to the settings file, option for each server
+        if server.id == self.servers['main']:
+            role = discord.utils.get(server.roles, name=default_role)
+            if role:
+                await member.add_roles(role)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member: discord.Member) -> None:
