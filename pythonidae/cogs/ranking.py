@@ -4,7 +4,6 @@
 #---------------------------- ideas ----------------------------#
 # limit giving points to once a minute
 # put a time when last points given as a column
-# put a ban thing in the database as a column
 # implement ban and unban methods
 # implement leaderboard method, call it points_top
 # implement set_points method
@@ -29,14 +28,25 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
         """initializer"""
 
         self.bot = bot
+        self.blacklist = set()
         self.db_path = pathlib.Path('./points_db.sqlite3').resolve()
+
+    @commands.command(hidden=True)
+    @commands.guild_only()
+    @commands.is_owner()
+    @print_context
+    async def points_blacklist(self, ctx: commands.Context, member: discord.Member) -> None:
+        self.blacklist.add(member.id)
+        await ctx.send('**`lol`**')
 
     async def db_connect(self):
         con = sqlite3.connect(self.db_path)
         return con
 
     @commands.command(aliases=['give_points', 'point_give', 'give_point'])
+    @commands.guild_only()
     # @commands.is_owner()
+    @commands.cooldown(1, 90, commands.BucketType.user)
     @print_context
     async def points_give(
             self,
@@ -47,13 +57,15 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
     ) -> None:
         """give a member points"""
 
+        if ctx.author.id in self.blacklist:
+            return
         if not member:
             await ctx.send('**`member not specified or not found`**')
             return
         if not points:
             await ctx.send('**`points not specified or points was 0`**')
             return
-        if not -100 <= points <= 100:
+        if not -100 <= points <= 100 and ctx.author.id != self.bot.owner_id:
             await ctx.send('**`points not in valid range -100 <= points <= 100`**')
             return
         if ctx.author.id == member.id and ctx.author.id != self.bot.owner_id:
@@ -102,6 +114,7 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
             )
 
     @commands.command(aliases=['show_points', 'show_point', 'point_show'])
+    @commands.guild_only()
     @print_context
     async def points_show(
             self,
