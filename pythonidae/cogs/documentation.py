@@ -178,7 +178,10 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
             obj_list = await self.make_members_list(target_module, module)
             # await ctx.send(error_msg)
             await ctx.send(obj_list_header)
-            await self.send_members(ctx, obj_list)
+            if module == 'scapy.all':
+                await ctx.send('**`scapy stuff too long to list`**')
+            else:
+                await self.send_members(ctx, obj_list)
             await self.send_usage(ctx)
             return
 
@@ -188,7 +191,10 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
             obj_list = await self.make_members_list(target_module, module)
             await ctx.send(error_msg)
             await ctx.send(obj_list_header)
-            await self.send_members(ctx, obj_list)
+            if module == 'scapy.all':
+                await ctx.send('**`scapy stuff too long to list`**')
+            else:
+                await self.send_members(ctx, obj_list)
             await self.send_usage(ctx)
             return
 
