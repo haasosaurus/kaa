@@ -41,15 +41,21 @@ class SpeechCog(commands.Cog, name='AIML'):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
+		"""message listener"""
+
+		# await self.bot.process_commands(message)
+
 		if message.author == self.bot.user:
 			return
 
 		server = message.guild
 
+		#------ temporarily disabled speech in direct messages ------#
+		if server:
+			if discord.utils.get(message.guild.members, id=680692520141062154) in message.mentions:
+				processed_message = ' '.join(message.content.split()[1:])
+				await message.channel.send(self.nlp.RespondTo(processed_message))
 
-		if discord.utils.get(message.guild.members, id=680692520141062154) in message.mentions:
-			processed_message = ' '.join(message.content.split()[1:])
-			await message.channel.send(self.nlp.RespondTo(processed_message))
 
 def setup(bot: commands.Bot) -> None:
 	bot.add_cog(SpeechCog(bot))
