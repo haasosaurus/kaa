@@ -1,16 +1,42 @@
 {
-    "alt_settings_file_path": "alt_settings.json",
-    "server_nicks": {  // key is string, val is server id
-        //"server_nick1": 1234567890
+    "alt_settings_path": "alt_settings.json",
+    "guilds": {
+        "example": {
+            "id": 1234567890,
+            "resource_blacklist": [123],
+            "ranking_blacklist": [456],
+            "send_welcome": true,
+            "send_goodbye": true,
+            "prefix_override": ["&"],
+            "prefix_extra": ["lol_"],
+            "modify_resources": true,
+            "default_role": "SomeRoleName"
+        }
     },
-    "user_nicks": {  // key is string, val is user id
-        //"user_nick1": 1234567890
+    "users": {
+        "tony": {
+            "id": 123,
+            "custom_prefixes": []
+        }
     },
-    "resource_servers": [  // which servers have permission to save resources
-        //"server_nick1"
-    ],
-    "user_blacklist": [],  // users banned from using bot commands
-    "google_api_cred_path": "",  // path/to/google_api_credentials.json
-    "google_sheets_id": "",
-    "discord_token": ""
+    "user_blacklist": [123],
+    "google_api_cred_path": "path/to/file.json",
+    "google_sheets_id": "abcxyz123",
+    "send_welcome_default": true,
+    "send_goodbye_default": true,
+    "prefix_default": ["!"],
+    "default_extensions": [
+        "cogs.countdown",
+        "cogs.documentation",
+        "cogs.errorhandler",
+        "cogs.games",
+        "cogs.listener",
+        "cogs.members",
+        "cogs.memes",
+        "cogs.owner",
+        "cogs.ranking",
+        "cogs.resources",
+        "cogs.speech",
+        "cogs.troll"
+    ]
 }
