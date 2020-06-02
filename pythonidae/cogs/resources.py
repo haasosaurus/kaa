@@ -81,8 +81,7 @@ __**Python Reference Materials**__
 :link: Python 3 Official Documentation <https://docs.python.org/3/>
 :link: Python Notes for Professionals <https://books.goalkicker.com/PythonBook/>
 :link: Learn Python in Y minutes <https://learnxinyminutes.com/docs/python/>
-:link: Real Python <https://www.realpython.com/>\
-'''
+:link: Real Python <https://www.realpython.com/>'''
         await ctx.send(msg)
 
     @commands.command()
@@ -111,8 +110,7 @@ __**Python Standard Library - Video courses - Intermediate / Advanced**__
 3) :link: Python 3: Deep Dive (Part 3 - Hash Maps) <https://www.udemy.com/course/python-3-deep-dive-part-3/>
 4) :link:  Python 3: Deep Dive (Part 4 - OOP) <https://www.udemy.com/course/python-3-deep-dive-part-4/>
 __**Alternate download methods**__
-:link: Library Genesis <http://gen.lib.rus.ec/>\
-'''
+:link: Library Genesis <http://gen.lib.rus.ec/>'''
         await ctx.send(msg)
 
     @commands.command()
@@ -134,8 +132,7 @@ __**Python Practice Websites**__
 :link: Topcoder <https://www.topcoder.com/>
 :link: Advent of Code <https://adventofcode.com/>
 :link: CSES Problem Set <https://cses.fi/problemset/list/>
-:link: CodinGame <https://www.codingame.com/home>\
-'''
+:link: CodinGame <https://www.codingame.com/home>'''
         await ctx.send(msg)
 
     @commands.command()
@@ -153,8 +150,7 @@ __**Game Dev Assets - Free**__
 :link: Kenney Assets <https://kenney.nl/assets> (best)
 :link: OpenGameArt <https://opengameart.org/>
 __**Terminal-based game resources**__
-:link: blessed <https://github.com/jquast/blessed> (python curses wrapper with enhancements)\
-'''
+:link: blessed <https://github.com/jquast/blessed> (python curses wrapper with enhancements)'''
         await ctx.send(msg)
 
     @commands.command()
@@ -184,8 +180,7 @@ Git History - Don Jayamanne
 **Themes**
 Dracula Official - Dracula Theme
 **Advanced** (don't use unless you're good at troubleshooting)
-Visual Studio IntelliCode - Microsoft (alternative to jedi/pylint etc)\
-'''
+Visual Studio IntelliCode - Microsoft (alternative to jedi/pylint etc)'''
         await ctx.send(msg)
 
     @commands.command()
@@ -199,8 +194,7 @@ __**Well liked IDEs for coding in Python**__
 :link: PyCharm <https://www.jetbrains.com/pycharm/download/> (community edition is free, probably the best/easiest)
 :link: Jupyter <https://jupyter.org/install> (good replacement for Python Interactive Shell)
 :link: Spyder <https://docs.spyder-ide.org/installation.html> (Good for data science, made with Python)
-:link: Sublime Text 3 <https://www.sublimetext.com/3> (unlimited free trial, crackable, fast, lightweight, and extensible)\
-'''
+:link: Sublime Text 3 <https://www.sublimetext.com/3> (unlimited free trial, crackable, fast, lightweight, and extensible)'''
         await ctx.send(msg)
 
     @commands.command()
@@ -211,8 +205,7 @@ __**Well liked IDEs for coding in Python**__
         msg = '''\
 :link: Mega Project List <https://github.com/karan/Projects> (very good)
 :link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
-:link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>\
-'''
+:link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>'''
         await ctx.send(msg)
 
     @commands.command(aliases=['discord.py'])
@@ -226,13 +219,34 @@ __**discord.py resources**__
 :link: discord.ext.commands documentation <https://discordpy.readthedocs.io/en/latest/ext/commands/index.html>
 :link: realpython discord bot tutorial <https://realpython.com/how-to-make-a-discord-bot-python/>
 :link: discord.py cogs example <https://gist.github.com/OneEyedKnight/f0411f9a5e9dea23b96be0bf6dd86d2d>
+:link: error handling cog example <https://gist.github.com/pauloLuz2002/15fa6e8807245f2f41644a767188bd0a#file-error_handler-py>
 **assorted other discord.py stuff**
 :link: my discod python bot repo <https://github.com/haasosaurus/pythonidae/>
 **async stuff (you need to know a little about async for making a discord bot)**
 :link: python asyncio module docs <https://docs.python.org/3/library/asyncio.html>
 :link: python & async simplified <https://www.aeracode.org/2018/02/19/python-async-simplified/>
-:link: realpython - Async IO in Python: A Complete Walkthrough <https://realpython.com/async-io-python/>\
-'''
+:link: realpython - Async IO in Python: A Complete Walkthrough <https://realpython.com/async-io-python/>'''
+        await ctx.send(msg)
+
+    @commands.command()
+    @print_context
+    async def downloading(self, ctx: commands.Context) -> None:
+        """display some helpful download site links"""
+
+        msg = '''\
+__**download links**__
+:link: rarbg <https://rarbg.to/>
+:link: btdigg <https://en.btdig.com/> (dht search)
+:link: skytorrents <https://www.skytorrents.org/> (meta search)
+:link: torrentz2 <https://torrentz2.eu/> (meta search)
+:link: pirate bay <https://thepiratebay.org/>
+:link: 1337x <https://1337x.to/>
+:link: torrentdownloads <https://www.torrentdownloads.me/>
+:link: limetorrents <https://www.limetorrents.cc/>
+:link: zooqle <https://zooqle.com/>
+:link: glodls <https://glodls.to/>
+:link: demonoid <https://www.demonoid.is/>
+:link: library genesis <http://gen.lib.rus.ec/> (ebooks)'''
         await ctx.send(msg)
 
 
