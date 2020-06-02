@@ -163,6 +163,14 @@ class OwnerCog(commands.Cog, name='owner'):
         msg = ' '.join(words)
         await target_server.system_channel.send(msg)
 
+    # @commands.command(hidden=True)
+    # @commands.is_owner()
+    # @print_context
+    # async def test(self, ctx: commands.Context) -> None:
+    #     """just a test command"""
+
+    #     await ctx.send('**`testing...`**')
+
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(OwnerCog(bot))
