@@ -7,11 +7,9 @@
 # implement ban and unban methods
 # implement leaderboard method, call it points_top
 # implement set_points method
-# implement exception handling
 #---------------------------------------------------------------#
 
 
-import asyncio
 import pathlib
 import sqlite3
 
@@ -35,15 +33,23 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
     @commands.guild_only()
     @commands.is_owner()
     @print_context
-    async def points_blacklist(self, ctx: commands.Context, member: discord.Member) -> None:
+    async def points_blacklist(
+            self,
+            ctx: commands.Context,
+            member: discord.Member
+    ) -> None:
+        """blacklist a member from using the points system"""
+
         self.blacklist.add(member.id)
-        await ctx.send('**`lol`**')
+        await ctx.send(f'**`member "{member.display_name}" has been blacklisted`**')
 
     async def db_connect(self):
         con = sqlite3.connect(self.db_path)
         return con
 
-    @commands.command(aliases=['give_points', 'point_give', 'give_point'])
+    @commands.command(
+        aliases=['give_points', 'point_give', 'give_point'],
+        cooldown_after_parsing=True)
     @commands.guild_only()
     # @commands.is_owner()
     @commands.cooldown(1, 90, commands.BucketType.user)
@@ -113,7 +119,23 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
                 f'They now have {total_points} points!`**'
             )
 
-    @commands.command(aliases=['show_points', 'show_point', 'point_show'])
+    @points_give.error
+    async def points_give_handler(
+            self,
+            ctx: commands.Context,
+            error: discord.DiscordException
+    ) -> None:
+        """error handler for points_give"""
+
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(f'**`{error}`**')
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send("**`you can't do that yet`**")
+
+    @commands.command(
+        aliases=['show_points', 'show_point', 'point_show'],
+        ignore_extra=True,
+    )
     @commands.guild_only()
     @print_context
     async def points_show(
@@ -150,6 +172,17 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
 
             # send result message
             await ctx.send(f'**`{member.display_name} has {total_points} points`**')
+
+    @points_show.error
+    async def points_show_handler(
+            self,
+            ctx: commands.Context,
+            error: discord.DiscordException
+    ) -> None:
+        """error handler for points_show"""
+
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(f'**`{error}`**')
 
 
 def setup(bot: commands.Bot) -> None:
