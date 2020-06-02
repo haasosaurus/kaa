@@ -24,7 +24,7 @@ class MembersCog(commands.Cog, name='Member Commands'):
     ) -> None:
         """Says when a member joined."""
 
-        await ctx.send(f'**`{member.display_name} joined on {member.joined_at}`**')
+        await ctx.send(f'**`{member.display_name} joined at {member.joined_at}`**')
 
     @joined.error
     async def joined_handler(
@@ -38,18 +38,16 @@ class MembersCog(commands.Cog, name='Member Commands'):
             arg = ctx.message.clean_content.split()[-1]
             matches = [x for x in ctx.guild.members if x.display_name.lower() == arg.lower()]
             if not matches:
-                msg = 'member not found'
+                msg = f'**`{error}`**'
             elif len(matches) == 1:
-                msg = 'this command is case-sensitive'
-                idiots = ['SeeTheSaenz#5583', 'Marshall#8362', 'sansoo#6454']
-                msg += ', idiot...' if str(ctx.author) in idiots else '...'
+                msg = '**`this command is case-sensitive`**'
             else:
-                msg = 'multiple matches found, but your case is wrong for all of them...'
+                msg = '**`multiple matches found, but your case is wrong for all of them`**'
             await ctx.send(msg)
 
-    @commands.command(aliases=['PythonBot'])
+    @commands.command(hidden=True)
     @print_context
-    async def pythonbot(self, ctx: commands.Context, *args: str) -> None:
+    async def discobot(self, ctx: commands.Context, *args: str) -> None:
         """insult discobot"""
 
         if not args:
@@ -61,22 +59,9 @@ class MembersCog(commands.Cog, name='Member Commands'):
     async def test(self, ctx: commands.Context) -> None:
         """just a test command"""
 
+        # for member in ctx.guild.members:
+        #     print(f'{member.name}: {member.id}')
         await ctx.send('**`testing...`**')
-
-
-    #---------- temporarily here so owner cog can be reloaded if this doesn't work ----------#
-    # disabled for the time being
-
-    # @commands.command(hidden=True)
-    # @commands.is_owner()
-    # @print_context
-    # async def help_owner(self, ctx: commands.Context) -> None:
-    #     """display help for all commands, even hidden ones"""
-
-    #     pages = self.bot.formatter.format_help_for(ctx, self.bot)
-    #     await ctx.send(pages)
-    #     # await ctx.send('not implemented')
-    #----------------------------------------------------------------------------------------#
 
 
 def setup(bot: commands.Bot) -> None:
