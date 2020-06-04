@@ -1,8 +1,6 @@
 # coding=utf-8
 
 
-import os
-
 # import discord
 from discord.ext import commands
 from googleapiclient import discovery
@@ -48,7 +46,7 @@ class ResourceCog(commands.Cog, name='Resource Commands'):
             'v4',
             credentials=None
         )
-        spreadsheet_id = os.getenv('SPREADSHEET_ID')
+        spreadsheet_id = self.bot.settings['google_sheets_id']
         request = service.spreadsheets().values().get(
             spreadsheetId=spreadsheet_id,
             range='A2:C',
@@ -203,6 +201,7 @@ __**Well liked IDEs for coding in Python**__
         """display project idea resources"""
 
         msg = '''\
+__**project ideas**__
 :link: Mega Project List <https://github.com/karan/Projects> (very good)
 :link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
 :link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>'''
@@ -219,7 +218,7 @@ __**discord.py resources**__
 :link: discord.ext.commands documentation <https://discordpy.readthedocs.io/en/latest/ext/commands/index.html>
 :link: realpython discord bot tutorial <https://realpython.com/how-to-make-a-discord-bot-python/>
 :link: discord.py cogs example <https://gist.github.com/OneEyedKnight/f0411f9a5e9dea23b96be0bf6dd86d2d>
-:link: error handling cog example <https://gist.github.com/pauloLuz2002/15fa6e8807245f2f41644a767188bd0a#file-error_handler-py>
+:link: error handling cog example <https://gist.github.com/pauloLuz2002/15fa6e8807245f2f41644a767188bd0a>
 **assorted other discord.py stuff**
 :link: my discod python bot repo <https://github.com/haasosaurus/pythonidae/>
 **async stuff (you need to know a little about async for making a discord bot)**
