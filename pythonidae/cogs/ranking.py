@@ -7,6 +7,11 @@
 # implement ban and unban methods
 # implement leaderboard method, call it points_top
 # implement set_points method
+# make this into a command group, like:
+#     !points give Tony -1 good reason
+#     !points show Tony
+# clean up sql implementation
+# fix blacklist command
 #---------------------------------------------------------------#
 
 
