@@ -1,9 +1,6 @@
 # coding=utf-8
 
 
-import io
-import random
-
 import discord
 from discord.ext import commands
 
