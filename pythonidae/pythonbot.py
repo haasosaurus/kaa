@@ -2,6 +2,7 @@
 # coding=utf-8
 
 
+import copy
 import json
 import pathlib
 import sys
@@ -89,6 +90,22 @@ class PythonBot(commands.Bot):
             ):
                 print(f'Failed to load extension {extension}.', file=sys.stderr)
                 traceback.print_exc()
+
+    async def get_guild_settings(self, obj):
+        guild_id = None
+        if isinstance(obj, str):
+            for guild_settings in self.settings['guilds'].values():
+                if guild_settings['nick'] == obj:
+                    return copy.deepcopy(guild_settings)
+            return None
+        elif isinstance(obj, discord.Member):
+            guild_id = obj.guild.id
+        if not guild_id:
+            return None
+        for guild_settings in self.settings['guilds'].values():
+            if guild_settings['id'] == guild_id:
+                return copy.deepcopy(guild_settings)
+        return None
 
     async def on_ready(self) -> None:
         """
