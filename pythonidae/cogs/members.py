@@ -32,7 +32,7 @@ class MembersCog(commands.Cog, name='Member Commands'):
             ctx: commands.Context,
             error: discord.DiscordException
     ) -> None:
-        """display when a member joined the server"""
+        """error handling for joined command"""
 
         if isinstance(error, commands.BadArgument):
             arg = ctx.message.clean_content.split()[-1]
@@ -40,7 +40,8 @@ class MembersCog(commands.Cog, name='Member Commands'):
             if not matches:
                 msg = f'**`{error}`**'
             elif len(matches) == 1:
-                msg = '**`this command is case-sensitive`**'
+                member = matches[0]
+                msg = f'**`{member.display_name} joined at {member.joined_at}`**'
             else:
                 msg = '**`multiple matches found, but your case is wrong for all of them`**'
             await ctx.send(msg)
@@ -52,6 +53,17 @@ class MembersCog(commands.Cog, name='Member Commands'):
 
         if not args:
             await ctx.send('I am smarter than DiscoBot')
+
+    @commands.command(hidden=True)
+    @print_context
+    async def hello(self, ctx: commands.Context) -> None:
+        """A simple command which only responds to the owner of the bot."""
+
+        if ctx.author.id == self.bot.owner_id:
+            msg = 'Hello father'
+        else:
+            msg = f'Hello {ctx.author.display_name}'
+        await ctx.send(msg)
 
     @commands.command(hidden=True)
     @commands.is_owner()
