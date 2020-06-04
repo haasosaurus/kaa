@@ -2,6 +2,7 @@
     "alt_settings_path": "alt_settings.json",
     "guilds": {
         "example": {
+            "nick": "ex",
             "id": 1234567890,
             "resource_blacklist": [123],
             "ranking_blacklist": [456],
