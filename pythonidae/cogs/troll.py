@@ -13,14 +13,20 @@ class TrollCog(commands.Cog, name='Troll Commands'):
 
         self.bot = bot
 
-    @commands.command(help='shame people for their laziness', aliases=['lmgtfy'])
+    @commands.command(
+        help='shame people for their laziness',
+        aliases=['lmgtfy'],
+    )
     @print_context
-    async def google(self, ctx: commands.Context, *args: str) -> None:
+    async def google(self, ctx: commands.Context, *keywords: str) -> None:
         """
         generate LMGTFY links when people try to make you their google bot
         """
 
-        msg = ':link: <https://lmgtfy.com/?q=' + '+'.join(args) + '>'
+        if not keywords:
+            msg = '**`USAGE: !google OBVIOUS SEARCH KEYWORDS`**'
+        else:
+            msg = ':link: <https://lmgtfy.com/?q=' + '+'.join(keywords) + '>'
         await ctx.send(msg)
 
 
