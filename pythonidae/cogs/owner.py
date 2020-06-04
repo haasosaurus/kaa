@@ -1,9 +1,6 @@
 # coding=utf-8
 
 
-import json
-import os
-import pathlib
 import sys
 
 import discord
@@ -11,6 +8,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from utils import print_context
+
 
 class OwnerCog(commands.Cog, name='owner'):
 
@@ -93,14 +91,6 @@ class OwnerCog(commands.Cog, name='owner'):
     @commands.command(hidden=True)
     @commands.is_owner()
     @print_context
-    async def hello(self, ctx: commands.Context) -> None:
-        """A simple command which only responds to the owner of the bot."""
-
-        await ctx.send('Hello father')
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
     async def flush(self, ctx: commands.Context) -> None:
         """flushes the buffers"""
 
@@ -111,65 +101,36 @@ class OwnerCog(commands.Cog, name='owner'):
     @commands.command(hidden=True)
     @commands.is_owner()
     @print_context
-    async def reload_env(self, ctx: commands.Context) -> None:
-        """reload .env file"""
-
-        load_dotenv()
-        await ctx.send('**`SUCCESS - reloaded env`**')
-
-    @commands.command(aliases=['reload_server_dict'], hidden=True)
-    @commands.is_owner()
-    @print_context
-    async def load_server_dict(self, ctx: commands.Context) -> None:
-        """load/reload the json server configuration file"""
-
-        path = pathlib.Path(os.getenv('DISCORD_SERVERS_JSON')).resolve()
-        with path.open('r') as servers_file:
-            self.servers = json.load(servers_file)
-        await ctx.send('**`SUCCESS - loaded server dict`**')
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
     async def say(
             self,
             ctx: commands.Context,
             target: str = None,
+            channel: str = None,
             *words: str
     ) -> None:
         """makes pythonbot speak on target server"""
 
         if not words:
-            await ctx.send('**`Usage: !say SERVER *WORDS`**')
+            await ctx.send('**`Usage: !say SERVER CHANNEL *WORDS`**')
             return
 
-        if not self.servers:
-            await self.load_server_dict(ctx)
-        if target not in self.servers:
-            await ctx.send('**`ERROR: Unknown target server`**')
+        guild_settings = await self.bot.get_guild_settings(target)
+        if not guild_settings:
+            await ctx.send('**`ERROR: target settings not found`**')
             return
 
-        words = ['I' if word == 'i' else word for i, word in enumerate(words)]
-
-        target_server = discord.utils.get(
-            self.bot.guilds,
-            id=self.servers[target]
-        )
-        if not target_server:
-            msg = '**`ERROR: discord.utils.get did not get target_server`**'
-            await ctx.send(msg)
+        guild = discord.utils.get(self.bot.guilds, id=guild_settings['id'])
+        if not guild:
+            await ctx.send('**`ERROR: target not found`**')
             return
 
-        msg = ' '.join(words)
-        await target_server.system_channel.send(msg)
+        channel = discord.utils.get(guild.text_channels, name=channel.lower())
+        if not channel:
+            await ctx.send('**`ERROR: channel not found`**')
+            return
 
-    # @commands.command(hidden=True)
-    # @commands.is_owner()
-    # @print_context
-    # async def test(self, ctx: commands.Context) -> None:
-    #     """just a test command"""
-
-    #     await ctx.send('**`testing...`**')
+        msg = ' '.join('I' if word == 'i' else word for word in words)
+        await channel.send(msg)
 
 
 def setup(bot: commands.Bot) -> None:
