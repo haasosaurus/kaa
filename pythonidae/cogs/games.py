@@ -15,9 +15,13 @@ class GamesCog(commands.Cog, name='Game Commands'):
 
         self.bot = bot
 
-    @commands.command(aliases=['dice', 'roll_dice'], usage='!roll AMOUNT SIDES')
+    @commands.command(
+        aliases=['dice', 'roll', 'roll_dice'],
+        usage='!roll AMOUNT SIDES',
+
+    )
     @print_context
-    async def roll(
+    async def dice_roll(
             self,
             ctx: commands.Context,
             amount: int = None,
@@ -25,16 +29,22 @@ class GamesCog(commands.Cog, name='Game Commands'):
     ) -> None:
         """simulates rolling AMOUNT dice with SIDES sides"""
 
-        amount = amount or 1
-        sides = sides or 6
-        if (0 < amount <= 100) and (0 < sides <= 1000):
-            dice = [
-                str(random.choice(range(1, sides + 1)))
-                for _ in range(amount)
-            ]
+        amount = amount if amount else 1
+        sides = sides if sides else 6
+        if (0 < amount <= 100) and (1 < sides <= 1000):
+            dice = [str(random.randint(1, sides)) for _ in range(amount)]
             msg = '**`' + ', '.join(dice) + '`**'
         else:
-            msg = '**`ERROR: ranges are: 0 < AMOUNT <= 100, 0 < SIDES <= 1000`**'
+            msg = '**`ERROR: ranges are: 0 < AMOUNT <= 100, 1 < SIDES <= 1000`**'
+        await ctx.send(msg)
+
+    @commands.command(aliases=['coin', 'flip', 'flip_coin'])
+    @print_context
+    async def coin_flip(self, ctx: commands.Context) -> None:
+        """simulates flipping a coin"""
+
+        side = random.choice(['heads', 'tails'])
+        msg = f'**`{side}`**'
         await ctx.send(msg)
 
 
