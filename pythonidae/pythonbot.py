@@ -2,6 +2,7 @@
 # coding=utf-8
 
 
+import asyncio
 import copy
 import json
 import pathlib
@@ -16,9 +17,10 @@ class PythonBot(commands.Bot):
     """commands.Bot sublass, trying to clean things up around here"""
 
     def __init__(self):
-        commands.Bot.__init__(self, command_prefix=self.prefixes_for, case_insensitive=True)
+        commands.Bot.__init__(self, command_prefix=PythonBot.prefixes_for, case_insensitive=True)
         self.settings = self.load_settings()
         self.load_extensions()
+        self._owner = None
 
     # test this to make sure it's using the cache
     @staticmethod
@@ -91,6 +93,12 @@ class PythonBot(commands.Bot):
                 print(f'Failed to load extension {extension}.', file=sys.stderr)
                 traceback.print_exc()
 
+    async def get_owner(self):
+        if not self._owner:
+            app_info = await self.application_info()
+            self._owner = app_info.owner
+        return self._owner
+
     async def get_guild_settings(self, obj):
         guild_id = None
         if isinstance(obj, str):
@@ -114,8 +122,10 @@ class PythonBot(commands.Bot):
         filled up.
         """
 
+        print('\n------ startup complete ------')
         print(f'discord.py version: {discord.__version__}')
         print(f"logged in as: '{self.user.name}', id: {self.user.id}")
         print('member of these servers:')
         for guild in self.guilds:
             print(f"    name: '{guild.name}', id: {guild.id}")
+        print(flush=True)
