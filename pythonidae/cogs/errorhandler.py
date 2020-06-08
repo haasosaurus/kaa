@@ -3,6 +3,7 @@ import sys
 from discord.ext import commands
 import discord
 
+
 """
 If you are not using this inside a cog, add the event decorator e.g:
 @bot.event
@@ -20,6 +21,7 @@ e.g: on_command_error(self, error, ctx)
 For a list of exceptions:
 http://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html#errors
 """
+
 
 class CommandErrorHandler(commands.Cog):
     def __init__(self, bot):
