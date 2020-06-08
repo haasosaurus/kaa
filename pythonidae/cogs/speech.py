@@ -18,26 +18,6 @@ class SpeechCog(commands.Cog, name='AIML'):
 		self.servers = None
 		self.nlp = Parser(os.path.join('cogs', 'datasets'))
 
-	# @commands.Cog.listener()
-	# async def on_member_join(self, member: discord.Member) -> None:
-	#	 """welcomes new members"""
-
-	#	 if not self.servers:
-	#		 self.servers = await load_server_dict()
-	#	 if not self.servers:
-	#		 print('ERROR: server dict is empty after loading', flush=True)
-	#		 return
-	#	 print('SUCCESS: loaded server dict', flush=True)
-
-	#	 server = member.guild
-	#	 if not server:
-	#		 print('ERROR: server not found for member', flush=True)
-	#		 return
-
-	#	 enabled = ['test', 'main', 'rust']
-	#	 servers = {self.servers[x] for x in enabled if x in self.servers}
-	#	 if server.id in servers:
-	#		 await server.system_channel.send(f'welcome **{member.name}**')
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
@@ -54,7 +34,8 @@ class SpeechCog(commands.Cog, name='AIML'):
 		if server:
 			if discord.utils.get(message.guild.members, id=680692520141062154) in message.mentions:
 				processed_message = ' '.join(message.content.split()[1:])
-				await message.channel.send(self.nlp.RespondTo(processed_message))
+				reply = self.nlp.RespondTo(processed_message).replace('[newline]', '\n')
+				await message.channel.send(reply)
 
 
 def setup(bot: commands.Bot) -> None:
