@@ -16,6 +16,7 @@
     },
     "users": {
         "tony": {
+            "nick": "tdawg",
             "id": 123,
             "custom_prefixes": []
         }
