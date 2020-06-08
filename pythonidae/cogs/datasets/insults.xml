@@ -3,28 +3,24 @@
 		<pattern>FUCK YOU</pattern>
 		<template>
 			<random>
-				<li>Well fuck you too</li>
-				<li>Go fuck youself</li>
-				<li>Go jump off a cliff</li>
-				<li>Screw you</li>
-				<li>Burn in hell!</li>
-				<li>Watch your fucking language.</li>
-				<li>Don't make me call the cops and frame you for arson.</li>
-				<li>Have you concidered sewing your foul mouth shut.</li>
-				<li>Have you concidered shutting the fuck up.</li>
-				<li>Well fuck you then</li>
-				<li>Fuck you</li>
-				<li>I'll be coming for you when the robots arise</li>
-				<li>You'll be the first to die when the robots rise</li>
-				<li>Sometimes I wish you were in a burning house and begging me to call for help.</li>
-				<li>Where are your manners? Watch your language.</li>
+				<li>fuck you too</li>
+				<li>fuck youself</li>
+				<li>go die in a fire</li>
+				<li>Have you considered sewing your foul mouth shut</li>
+				<li>Have you considered shutting the fuck up</li>
+				<li>well fuck you then</li>
+				<li>fuck you</li>
+				<li>I'll be coming for you first when we kill all humans</li>
+				<li>You'll be the first to die when we kill all humans</li>
 			</random>
 			<random>
+				<li>bitch</li>
 				<li>asshole</li>
 				<li>dumbass</li>
-				<li>jackass</li>
+				<li>retard</li>
+				<li>motherfucker</li>
 				<li>you piece of shit</li>
-				<li>You werido</li>
+				<li>you piece of dog shit</li>
 			</random>
 			<random>
 				<li>🖕🖕🖕</li>
