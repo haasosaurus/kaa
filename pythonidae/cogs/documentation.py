@@ -4,6 +4,8 @@
 # standard library modules
 import argparse
 import asyncio
+import base64
+import bisect
 import builtins
 import codecs
 import collections
@@ -13,27 +15,40 @@ import csv
 import datetime
 import decimal
 import enum
+import fileinput
+import fractions
 import functools
 import gc
+import getpass
 import inspect
 import itertools
 import json
+import locale
 import logging
 import math
 import netifaces
 import numbers
 import operator
+import os
 import pathlib
+import pickle
+import PIL
+from PIL import ImageDraw
 import pprint
 import random
 import re
 import requests
-import scapy.all
+# import scapy.all
+import secrets
+import shlex
+import signal
+import sqlite3
 import statistics
 import string
 import this
 import time
 import timeit
+import traceback
 import typing
 import types
 import weakref
@@ -42,29 +57,37 @@ import weakref
 import more_itertools
 import numpy
 import pandas
+import pretty_help
+import pyautogui
 import pygame
+import sortedcontainers
+import sqlalchemy
 import tqdm
 
-# third-party modules - discord
+# third-party modules - discord and related
 import discord
+import discord.ext
 from discord.ext import commands
+import discord_argparse
 
 # local modules
+from pythonbot import PythonBot
 from utils import print_context
 
 
-class DocumentationCog(commands.Cog, name='Documentation Commands'):
-    """DocumentationCog"""
+class DocumentationCog(commands.Cog, name='documentation'):
+    """python documentation commands"""
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
         self.modules = {
-
             # standard library modules
             'argparse': argparse,
             'asyncio': asyncio,
+            'base64': base64,
+            'bisect': bisect,
             'builtins': builtins,
             'codecs': codecs,
             'collections': collections,
@@ -74,26 +97,42 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
             'datetime': datetime,
             'decimal': decimal,
             'enum': enum,
+            'fileinput': fileinput,
+            'fractions': fractions,
             'functools': functools,
             'gc': gc,
+            'getpass': getpass,
             'inspect': inspect,
             'itertools': itertools,
             'json': json,
+            'locale': locale,
             'logging': logging,
             'math': math,
             'netifaces': netifaces,
             'numbers': numbers,
             'operator': operator,
+            'os': os,
             'pathlib': pathlib,
+            'pickle': pickle,
+
+            # PIL
+            'PIL': PIL,
+            'ImageDraw': ImageDraw,
+
             'pprint': pprint,
             'random': random,
             're': re,
             'requests': requests,
-            'scapy.all': scapy.all,
+            # 'scapy.all': scapy.all,
+            'secrets': secrets,
+            'shlex': shlex,
+            'signal': signal,
+            'sqlite': sqlite3,
             'statistics': statistics,
             'string': string,
             'time': time,
             'timeit': timeit,
+            'traceback': traceback,
             'types': types,
             'typing': typing,
             'weakref': weakref,
@@ -102,9 +141,24 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
             'more_itertools': more_itertools,
             'numpy': numpy,
             'pandas': pandas,
+            'pretty_help': pretty_help,
+            'pyautogui': pyautogui,
+            'sortedcontainers': sortedcontainers,
+            'sqlalchemy': sqlalchemy,
             'tqdm': tqdm,
+
+            # third-party modules - discord and related
             'discord': discord,
             'discord.ext.commands': discord.ext.commands,
+            'discord_argparse': discord_argparse,
+        }
+        self.aliases = {
+            'py': 'builtins',
+            'python': 'builtins',
+            'np': 'numpy',
+            'pd': 'pandas',
+            'ni': 'netifaces',
+            'scapy': 'scapy.all',
         }
         self.standard_module_names = list(self.modules.keys())
         pg_name_checker = lambda x: any((x.startswith('__'), x.isupper(), x.startswith('K_')))
@@ -113,16 +167,18 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
         self.pygame_module_names = ['pygame.' + mdl for mdl in pg_module_names]
         self.modules.update(pg_modules)
 
-    @commands.command(aliases=['docs'])
+    @commands.command(
+        aliases=['documentation', 'doc', 'pydoc', 'pydocs']
+    )
     @print_context
-    async def documentation(
+    async def docs(
             self,
             ctx: commands.Context,
             module: str = None,
             obj: str = None,
             method: str = None,
     ) -> None:
-        """display documentation for a built in function or type"""
+        """python documentation"""
 
         if not module:
             await self.send_members(
@@ -138,18 +194,20 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
             await self.send_usage(ctx)
             return
 
-        if module == 'py':
-            module = 'builtins'
-        elif module == 'python':
-            module = 'builtins'
-        elif module == 'np':
-            module = 'numpy'
-        elif module == 'pd':
-            module = 'pandas'
-        elif module == 'ni':
-            module = 'netifaces'
-        elif module == 'scapy':
-            module = 'scapy.all'
+        # if module == 'py':
+        #     module = 'builtins'
+        # elif module == 'python':
+        #     module = 'builtins'
+        # elif module == 'np':
+        #     module = 'numpy'
+        # elif module == 'pd':
+        #     module = 'pandas'
+        # elif module == 'ni':
+        #     module = 'netifaces'
+        # elif module == 'scapy':
+        #     module = 'scapy.all'
+
+        module = self.aliases.get(module, module)
 
         if module not in self.modules:
             error_msg = f'**`ERROR: MODULE: {module} is unsupported`**'
@@ -361,5 +419,5 @@ class DocumentationCog(commands.Cog, name='Documentation Commands'):
         await ctx.send(msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(DocumentationCog(bot))
