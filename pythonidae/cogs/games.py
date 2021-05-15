@@ -9,19 +9,19 @@ from discord.ext import commands
 from utils import print_context
 
 
-class GamesCog(commands.Cog, name='Game Commands'):
+class GamesCog(commands.Cog, name='games'):
     def __init__(self, bot: commands.Bot) -> None:
         """initializer"""
 
         self.bot = bot
 
     @commands.command(
-        aliases=['dice', 'roll', 'roll_dice'],
+        aliases=['dice_roll', 'roll', 'roll_dice'],
         usage='!roll AMOUNT SIDES',
 
     )
     @print_context
-    async def dice_roll(
+    async def dice(
             self,
             ctx: commands.Context,
             amount: int = None,
@@ -32,20 +32,19 @@ class GamesCog(commands.Cog, name='Game Commands'):
         amount = amount if amount else 1
         sides = sides if sides else 6
         if (0 < amount <= 100) and (1 < sides <= 1000):
-            dice = [str(random.randint(1, sides)) for _ in range(amount)]
-            msg = '**`' + ', '.join(dice) + '`**'
+            msg = ', '.join(str(random.randint(1, sides)) for _ in range(amount))
+            await self.bot.send_info_msg(ctx, msg)
         else:
-            msg = '**`ERROR: ranges are: 0 < AMOUNT <= 100, 1 < SIDES <= 1000`**'
-        await ctx.send(msg)
+            msg = 'ranges are: 0 < AMOUNT <= 100, 1 < SIDES <= 1000'
+            await self.bot.send_error_msg(ctx, msg)
 
-    @commands.command(aliases=['coin', 'flip', 'flip_coin'])
+    @commands.command(aliases=['coin_flip', 'flip', 'flip_coin'])
     @print_context
-    async def coin_flip(self, ctx: commands.Context) -> None:
+    async def coin(self, ctx: commands.Context) -> None:
         """simulates flipping a coin"""
 
-        side = random.choice(['heads', 'tails'])
-        msg = f'**`{side}`**'
-        await ctx.send(msg)
+        msg = random.choice(['heads', 'tails'])
+        await self.bot.send_info_msg(ctx, msg)
 
 
 def setup(bot: commands.Bot) -> None:
