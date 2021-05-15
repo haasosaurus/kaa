@@ -16,6 +16,7 @@ class MemeGenerator:
         self.aliens_font = ImageFont.truetype('impact.ttf', 50)
         self.aliens_bg = Image.open('cogs/meme-templates/history-aliens.jpg')
         self.simply_font = ImageFont.truetype('impact.ttf', 42)
+        self.simply_font_small = ImageFont.truetype('impact.ttf', 28)
         self.simply_bg = Image.open('cogs/meme-templates/one-does-not-simply.jpg')
         self.toystory_font = ImageFont.truetype('impact.ttf', 45)
         self.toystory_bg = Image.open('cogs/meme-templates/woody-buzz.jpg')
@@ -64,16 +65,45 @@ class MemeGenerator:
         https://knowyourmeme.com/memes/one-does-not-simply-walk-into-mordor
         """
 
-        text = text[:100]
+        text = text.upper()
+        if len(text) > 15:
+            font = self.simply_font_small
+            wrap = True
+            small = True
+        else:
+            font = self.simply_font
+            wrap = False
+            small = False
+        if wrap:
+            sz = 30
+            text = text[:100]
+            l = [[]]
+            cnt = 0
+            for word in text.split():
+                if (new_cnt := cnt + len(word)) <= sz:
+                    l[-1].append(word)
+                    cnt = new_cnt
+                else:
+                    cnt = len(word)
+                    l.append([word])
+            text = '\n'.join(' '.join(x) for x in l)
+            lines = text.count('\n')
+        else:
+            lines = 1
         img = self.simply_bg.copy()
         draw = ImageDraw.Draw(img)
-        w, h = draw.textsize(text, self.simply_font)
+        w, h = draw.textsize(text, font)
+        if small:
+            bottom_text_y = 285
+            bottom_text_y -= 25 * lines
+        else:
+            bottom_text_y = 280
         self.draw_text_with_outline(
             draw,
             text,
             img.width / 2 - w / 2,
-            280,
-            self.simply_font
+            bottom_text_y,
+            font
         )
         buf = io.BytesIO()
         img.save(buf, format='png')
