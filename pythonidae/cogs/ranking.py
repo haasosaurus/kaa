@@ -21,18 +21,20 @@ import sqlite3
 import discord
 from discord.ext import commands
 
+from pythonbot import PythonBot
 from utils import print_context
 
 
-class RankingCog(commands.Cog, name='Ranking Commands'):
+class RankingCog(commands.Cog, name='Points'):
     """ranking cog"""
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
         self.blacklist = set()
         self.db_path = pathlib.Path('./points_db.sqlite3').resolve()
+
 
     @commands.command(hidden=True)
     @commands.guild_only()
@@ -135,7 +137,7 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
         if isinstance(error, commands.BadArgument):
             await ctx.send(f'**`{error}`**')
         elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send("**`you can't do that yet`**")
+            await ctx.send(f"**`you can't do that for {round(error.retry_after)} seconds`**")
 
     @commands.command(
         aliases=['show_points', 'show_point', 'point_show'],
@@ -190,5 +192,5 @@ class RankingCog(commands.Cog, name='Ranking Commands'):
             await ctx.send(f'**`{error}`**')
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(RankingCog(bot))
