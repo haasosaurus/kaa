@@ -3,18 +3,13 @@
 
 # import discord
 from discord.ext import commands
-from googleapiclient import discovery
 
 from utils import print_context
 
 
-class ResourceCog(commands.Cog, name='Resource Commands'):
+class ResourceCog(commands.Cog, name='resources'):
     """
-    original purpose:
-    someday it will take resources and their categories as input
-    give resources based on search categories
-
-    currently temporary hardcoded resource links due to people
+    resource commands
     """
 
     def __init__(self, bot: commands.Bot) -> None:
@@ -22,57 +17,18 @@ class ResourceCog(commands.Cog, name='Resource Commands'):
 
         self.bot = bot
 
-    @commands.command(help='!save_resource CATEGORY URL')
+    @commands.group(case_insensitive=True, aliases=['py'])
     @print_context
-    async def resource_save(
-            self,
-            ctx: commands.Context,
-            category: str = None,
-            link: str = None
-    ) -> None:
-        """save link to resources"""
+    async def python(self, ctx: commands.Context) -> None:
+        """python specific resource sub-commands"""
 
-        if not link:
-            error_msg = '**`Link and/or Category Missing - Link not saved`**'
-            usage = '**`Usage: !save_resource CATEGORY URL`**'
-            await ctx.send(error_msg)
-            await ctx.send(usage)
-            return
+        msg = 'for more information, use `!help python`\nfor sub-commands use `!python SUBCOMMAND`'
+        await self.bot.send_info_msg(ctx, msg)
 
-        # need to check that the resource isn't already there?
-        category = category.lower()
-        service = discovery.build(
-            'sheets',
-            'v4',
-            credentials=None
-        )
-        spreadsheet_id = self.bot.settings['google_sheets_id']
-        request = service.spreadsheets().values().get(
-            spreadsheetId=spreadsheet_id,
-            range='A2:C',
-            majorDimension='ROWS'
-        )
-        response = request.execute()
-
-        # get last row of google sheet to prevent overwriting
-        lastrow = len(response['values'])
-        new_values = [[link, category, str(ctx.author)]]
-        new_body = {'values' : new_values}
-        new_range = 'A' + str(lastrow + 2) + ':C'
-        update_request = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id,
-            range=new_range,
-            valueInputOption='RAW',
-            body=new_body
-        )
-        update_request.execute()
-
-        await ctx.send('Link successfully saved to ' + category + '!')
-
-    @commands.command()
+    @python.command(aliases=['ref', 'refs'])
     @print_context
     async def reference(self, ctx: commands.Context) -> None:
-        """display python reference links"""
+        """python reference material"""
 
         msg='''\
 __**Python Reference Materials**__
@@ -82,10 +38,10 @@ __**Python Reference Materials**__
 :link: Real Python <https://www.realpython.com/>'''
         await ctx.send(msg)
 
-    @commands.command()
+    @python.command(aliases=['path', 'studyorder'])
     @print_context
     async def curriculum(self, ctx: commands.Context) -> None:
-        """display python standard library curriculum"""
+        """python standard library curriculum"""
 
         msg = '''\
 __**Python Standard Library - Reading order - Beginner**__
@@ -111,32 +67,10 @@ __**Alternate download methods**__
 :link: Library Genesis <http://gen.lib.rus.ec/>'''
         await ctx.send(msg)
 
-    @commands.command()
-    @print_context
-    async def practice(self, ctx: commands.Context) -> None:
-        """display list of websites for practicing python"""
-
-        msg='''\
-__**Python Practice Websites**__
-:link: Project Euler <https://www.projecteuler.net/> (Math problems)
-:link: LeetCode <https://www.leetcode.com/> (Preparing for technical interviews)
-:link: Codewars <https://www.codewars.com/>
-:link: HackerRank <https://www.hackerrank.com/>
-:link: CodeChef <https://www.codechef.com/>
-:link: HackerEarth <https://www.hackerearth.com/>
-:link: CodingBat <https://www.codingbat.com/python>
-:link: CodeSignal <https://www.codesignal.com/>
-:link: Exercism <https://www.exercism.io/>
-:link: Topcoder <https://www.topcoder.com/>
-:link: Advent of Code <https://adventofcode.com/>
-:link: CSES Problem Set <https://cses.fi/problemset/list/>
-:link: CodinGame <https://www.codingame.com/home>'''
-        await ctx.send(msg)
-
-    @commands.command()
+    @python.command(aliases=['game_dev'])
     @print_context
     async def gamedev(self, ctx: commands.Context) -> None:
-        """display python game development resources"""
+        """python game development resources"""
 
         msg = '''\
 __**Pygame Resources**__
@@ -151,15 +85,17 @@ __**Terminal-based game resources**__
 :link: blessed <https://github.com/jquast/blessed> (python curses wrapper with enhancements)'''
         await ctx.send(msg)
 
-    @commands.command()
+    @python.command()
     @print_context
     async def vscode(self, ctx: commands.Context) -> None:
-        """display some useful vs code extensions"""
+        """useful python vs code extensions"""
 
         msg = '''\
 __**Helpful Visual Studio Code extensions**__
 **Python Specific - Assorted**
 Python - Microsoft (basically required for coding python in vs code)
+Visual Studio IntelliCode - Microsoft (alternative to jedi/pylint etc)
+Pylance - Microsoft (install alongside Intellicode
 python-snippets - cstrap
 **Python Specific - Qt**
 PYQT Integration - Feng Zhou
@@ -176,15 +112,13 @@ GitLens — Git supercharged - Eric Amodio (feature packed)
 .gitignore Generator - Piotr Palarz
 Git History - Don Jayamanne
 **Themes**
-Dracula Official - Dracula Theme
-**Advanced** (don't use unless you're good at troubleshooting)
-Visual Studio IntelliCode - Microsoft (alternative to jedi/pylint etc)'''
+Dracula Official - Dracula Theme'''
         await ctx.send(msg)
 
-    @commands.command()
+    @python.command()
     @print_context
     async def ides(self, ctx: commands.Context) -> None:
-        """display list of quality IDEs"""
+        """quality IDEs for python"""
 
         msg = '''\
 __**Well liked IDEs for coding in Python**__
@@ -195,22 +129,10 @@ __**Well liked IDEs for coding in Python**__
 :link: Sublime Text 3 <https://www.sublimetext.com/3> (unlimited free trial, crackable, fast, lightweight, and extensible)'''
         await ctx.send(msg)
 
-    @commands.command()
-    @print_context
-    async def projects(self, ctx: commands.Context) -> None:
-        """display project idea resources"""
-
-        msg = '''\
-__**project ideas**__
-:link: Mega Project List <https://github.com/karan/Projects> (very good)
-:link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
-:link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>'''
-        await ctx.send(msg)
-
-    @commands.command(aliases=['discord.py'])
+    @python.command(aliases=['discord.py'])
     @print_context
     async def discord(self, ctx: commands.Context) -> None:
-        """display discord.py learning resources"""
+        """discord.py learning resources"""
 
         msg = '''\
 __**discord.py resources**__
@@ -227,10 +149,134 @@ __**discord.py resources**__
 :link: realpython - Async IO in Python: A Complete Walkthrough <https://realpython.com/async-io-python/>'''
         await ctx.send(msg)
 
+    @python.command()
+    @print_context
+    async def snippets(self, ctx: commands.Context) -> None:
+        """vs code python snippets"""
+
+        text = '''\
+{
+    "shebang and coding": {
+        "prefix": "shebang",
+        "body": "#!/usr/bin/env python\\n# coding=utf-8\\n\\n\\n$0",
+        "description": "adds shebang and coding lines"
+    },
+    "list comprehension": {
+        "prefix": "lc",
+        "body": "[${1:value} for ${2:value} in ${3:iterable}]$0",
+        "description" : "List comprehension for creating a list based on existing lists."
+    },
+    "list comprehension if else": {
+        "prefix": "lc.if_else",
+        "body": "[${1:value} if ${2:condition} else ${3:condition} for ${4:value} in ${5:iterable}]$0",
+        "description" : "List comprehension for creating a list based on existing lists, with conditional if-else statement."
+    },
+    "list comprehension if": {
+        "prefix": "lc.if",
+        "body": "[${1:value} for ${2:value} in ${3:iterable} if ${4:condition}$0]",
+        "description" : "List comprehension for creating a list based on existing lists, with conditional if statement."
+    },
+    "list comprehension - nested": {
+        "prefix": "lc.nested",
+        "body": "[[${1:j} for ${2:j} in ${4:inner_iterable}] for ${5:i} in ${6:outer_iterable}]$0",
+        "description" : "list comprehension - make list of lists"
+    },
+    "list comprehension - flatten": {
+        "prefix": "lc.flatten",
+        "body": "[${1:val} for ${2:sublist} in ${3:matrix} for ${4:val} in ${5:sublist}]$0",
+        "description" : "list comprehension - flatten nested iterables"
+    },
+    "list comprehension - flatten - if": {
+        "prefix": "lc.flattenif",
+        "body": "[${1:val} for ${2:sublist} in ${3:matrix} for ${4:val} in ${5:sublist} if ${6:condition}]$0",
+        "description": "list comprehension - flatten nested iterables - if"
+    },
+    "list comprehension - multiline string to lists of words": {
+        "prefix": "lc.multiline_string_to_lists_of_words",
+        "body": "[[${1:word} for ${2:word} in ${3:line}.split()] for ${4:line} in ${5:multiline_string}.split('\\n')]$0",
+        "description": "list comprehension - multiline string to a list of lists of words"
+    },
+    "list comprehension - multiline file to lists of words": {
+        "prefix": "lc.multiline_file_to_lists_of_words",
+        "body": "[[${1:word} for ${2:word} in ${3:line}.split()] for ${4:line} in ${5:file_object}.readlines()]$0",
+        "description": "list comprehension - multiline file to a list of lists of words"
+    },
+    "list comprehension - flatten - partially 2d array": {
+        "prefix": "lc.flatten_partially_2d_array",
+        "body": "[${1:x} for ${2:element} in ${3:partially_2d_array} for ${4:x} in (${5:element} if isinstance(${6:element}, list) else [${7:element}])]$0",
+        "description": "list comprehension - flatten a partially 2d array"
+    }
+}'''
+        p = commands.Paginator(prefix='```json', suffix='```')
+        for line in text.split('\n'):
+            p.add_line(line)
+        for page in p.pages:
+            await ctx.send(page)
+
+    @commands.command()
+    @print_context
+    async def practice(self, ctx: commands.Context) -> None:
+        """sites for practicing programming"""
+
+        msg='''\
+__**Python Practice Websites**__
+:link: Project Euler <https://www.projecteuler.net/> (Math problems)
+:link: LeetCode <https://www.leetcode.com/> (Preparing for technical interviews)
+:link: binarysearch <https://binarysearch.com/>
+:link: Codewars <https://www.codewars.com/>
+:link: HackerRank <https://www.hackerrank.com/>
+:link: CodeChef <https://www.codechef.com/>
+:link: HackerEarth <https://www.hackerearth.com/>
+:link: CodingBat <https://www.codingbat.com/python>
+:link: CodeSignal <https://www.codesignal.com/>
+:link: Exercism <https://www.exercism.io/>
+:link: Topcoder <https://www.topcoder.com/>
+:link: Advent of Code <https://adventofcode.com/>
+:link: CSES Problem Set <https://cses.fi/problemset/list/>
+:link: CodinGame <https://www.codingame.com/home>'''
+        await ctx.send(msg)
+
+    @commands.command(aliases=['gameprojects'])
+    @print_context
+    async def game_projects(self, ctx: commands.Context) -> None:
+        """game project ideas"""
+
+        msg = '''\
+"Guess the number"
+Hangman
+Rock-Paper-Scissors (turn-based gameplay, opponent AI)
+Tic-Tac-Toe (turn-based gameplay, opponent AI)
+snake
+breakout (Arkanoid) / Pong (collisions, stable frame rate, score, levels)
+Tetris (data structures and how they relate to gaming)
+1942 / Shoot-em-up (enemies, bullets)
+simple platformer / pinball game if your engine does platformers (gravity-based collisions)
+Bomberman / Pacman (tile-based movement, complex enemy AI)
+Two-player game of any of the types above (two player inputs)
+Roguelike / Diablo (Inventory management, multiple enemy AIs, saving and loading complex game states)
+Faceball / Wolfenstein 3D (basic 3d movement and rendering)
+Network turn-based game (basic networking)
+Gimmicky 3D third-person platformer (physics, complex 3d movement)
+Network real-time game (Client-server synchronism, lag)
+MMORPG (Persistent world)'''
+        await ctx.send(msg)
+
+    @commands.command()
+    @print_context
+    async def projects(self, ctx: commands.Context) -> None:
+        """project idea resources"""
+
+        msg = '''\
+__**project ideas**__
+:link: Mega Project List <https://github.com/karan/Projects> (very good)
+:link: Python Project Ideas for 2020 <https://data-flair.training/blogs/python-project-ideas/>
+:link: Intermediate Python Workshop/Projects <https://wiki.openhatch.org/wiki/Intermediate_Python_Workshop/Projects>'''
+        await ctx.send(msg)
+
     @commands.command()
     @print_context
     async def downloading(self, ctx: commands.Context) -> None:
-        """display some helpful download site links"""
+        """helpful download sites"""
 
         msg = '''\
 __**download links**__
