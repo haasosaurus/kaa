@@ -2,73 +2,47 @@
 
 
 # standard library modules
-import argparse
-import asyncio
-import base64
-import bisect
-import builtins
-import codecs
-import collections
-import contextlib
-import copy
-import csv
-import datetime
-import decimal
+import argparse, asyncio
+import base64, bisect, builtins
+import codecs, collections, contextlib, copy, csv
+import datetime, decimal
 import enum
-import fileinput
-import fractions
-import functools
-import gc
-import getpass
-import inspect
-import itertools
+import fileinput, fractions, functools
+import gc, getpass
+import inspect, itertools
 import json
-import locale
-import logging
+import locale, logging
 import math
-import netifaces
 import numbers
-import operator
-import os
-import pathlib
-import pickle
-import PIL
-from PIL import ImageDraw
-import pprint
+import operator, os
+import pathlib, pickle, pprint
 import random
 import re
-import requests
-# import scapy.all
-import secrets
-import shlex
-import signal
-import sqlite3
-import statistics
-import string
-import this
-import time
-import timeit
-import traceback
-import typing
-import types
+import secrets, shlex, signal, sqlite3, statistics, string
+import this, time, timeit, traceback, typing, types
 import weakref
 
+# standard library modules - typing
+from typing import List, Type
+
 # third-party modules
-import more_itertools
-import numpy
-import pandas
-import pretty_help
-import pyautogui
-import pygame
-import sortedcontainers
-import sqlalchemy
+import matplotlib, matplotlib.pyplot, more_itertools
+import netifaces, numpy
+import pandas, PIL, PIL.ImageDraw, pretty_help, pyautogui
+import requests
+import sortedcontainers, sqlalchemy
 import tqdm
 
+# third-party modules - broken
+#import scapy.all
+
+# third-party modules - pygame
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame, pygame_sdl2
+
 # third-party modules - discord and related
-import discord
-import discord.ext
+import discord, discord_argparse
 from discord.ext import commands
-import discord_argparse
 
 # local modules
 from pythonbot import PythonBot
@@ -84,88 +58,60 @@ class DocumentationCog(commands.Cog, name='documentation'):
         self.bot = bot
         self.modules = {
             # standard library modules
-            'argparse': argparse,
-            'asyncio': asyncio,
-            'base64': base64,
-            'bisect': bisect,
-            'builtins': builtins,
-            'codecs': codecs,
-            'collections': collections,
-            'contextlib': contextlib,
-            'copy': copy,
-            'csv': csv,
-            'datetime': datetime,
-            'decimal': decimal,
+            'argparse': argparse, 'asyncio': asyncio,
+            'base64': base64, 'bisect': bisect, 'builtins': builtins,
+            'codecs': codecs, 'collections': collections,
+            'contextlib': contextlib, 'copy': copy, 'csv': csv,
+            'datetime': datetime, 'decimal': decimal,
             'enum': enum,
-            'fileinput': fileinput,
-            'fractions': fractions,
+            'fileinput': fileinput, 'fractions': fractions,
             'functools': functools,
-            'gc': gc,
-            'getpass': getpass,
-            'inspect': inspect,
-            'itertools': itertools,
+            'gc': gc, 'getpass': getpass,
+            'inspect': inspect, 'itertools': itertools,
             'json': json,
-            'locale': locale,
-            'logging': logging,
+            'locale': locale, 'logging': logging,
             'math': math,
-            'netifaces': netifaces,
             'numbers': numbers,
-            'operator': operator,
-            'os': os,
-            'pathlib': pathlib,
-            'pickle': pickle,
-
-            # PIL
-            'PIL': PIL,
-            'ImageDraw': ImageDraw,
-
-            'pprint': pprint,
-            'random': random,
-            're': re,
-            'requests': requests,
-            # 'scapy.all': scapy.all,
-            'secrets': secrets,
-            'shlex': shlex,
-            'signal': signal,
-            'sqlite': sqlite3,
-            'statistics': statistics,
-            'string': string,
-            'time': time,
-            'timeit': timeit,
-            'traceback': traceback,
-            'types': types,
-            'typing': typing,
+            'operator': operator, 'os': os,
+            'pathlib': pathlib, 'pickle': pickle, 'pprint': pprint,
+            'random': random, 're': re,
+            'secrets': secrets, 'shlex': shlex, 'signal': signal,
+            'sqlite': sqlite3, 'statistics': statistics, 'string': string,
+            'time': time, 'timeit': timeit, 'traceback': traceback,
+            'types': types, 'typing': typing,
             'weakref': weakref,
 
             # third-party modules
-            'more_itertools': more_itertools,
-            'numpy': numpy,
-            'pandas': pandas,
-            'pretty_help': pretty_help,
+            'matplotlib': matplotlib, 'more_itertools': more_itertools,
+            'netifaces': netifaces, 'numpy': numpy,
+            'pandas': pandas, 'PIL': PIL, 'pretty_help': pretty_help,
             'pyautogui': pyautogui,
-            'sortedcontainers': sortedcontainers,
-            'sqlalchemy': sqlalchemy,
+            'requests': requests,
+            'sortedcontainers': sortedcontainers, 'sqlalchemy': sqlalchemy,
             'tqdm': tqdm,
 
+            # third-party modules - broken
+            #'scapy.all': scapy.all,
+
+            # third-party modules - pygame
+            'pygame': pygame, 'pygame_sdl2': pygame_sdl2,
+
             # third-party modules - discord and related
-            'discord': discord,
-            'discord.ext.commands': discord.ext.commands,
+            'discord': discord, 'discord.ext.commands': commands,
             'discord_argparse': discord_argparse,
         }
-        self.aliases = {
-            'py': 'builtins',
-            'python': 'builtins',
+        self.module_aliases = {
+            'commands': 'discord.ext.commands',
+            'ni': 'netifaces',
             'np': 'numpy',
             'pd': 'pandas',
-            'ni': 'netifaces',
+            'py': 'builtins', 'python': 'builtins',
             'scapy': 'scapy.all',
         }
-        self.standard_module_names = list(self.modules.keys())
-        pg_name_checker = lambda x: any((x.startswith('__'), x.isupper(), x.startswith('K_')))
-        pg_module_names = [x for x in vars(pygame) if not pg_name_checker(x)]
-        pg_modules = {'pygame.' + mdl: getattr(pygame, mdl) for mdl in pg_module_names}
-        self.pygame_module_names = ['pygame.' + mdl for mdl in pg_module_names]
-        self.modules.update(pg_modules)
+        self.hidden_modules = {
+            'pygame_sdl2'
+        }
+        self.module_names = sorted(x for x in self.modules if x not in self.hidden_modules)
 
     @commands.command(
         aliases=['documentation', 'doc', 'pydoc', 'pydocs']
@@ -174,123 +120,79 @@ class DocumentationCog(commands.Cog, name='documentation'):
     async def docs(
             self,
             ctx: commands.Context,
-            module: str = None,
-            obj: str = None,
-            method: str = None,
+            *members: str,
     ) -> None:
         """python documentation"""
 
-        if not module:
-            await self.send_members(
-                ctx,
-                self.standard_module_names,
-                title='Currently available modules:'
-            )
-            await self.send_members(
-                ctx,
-                self.pygame_module_names,
-                title='Pygame modules:'
-            )
-            await self.send_usage(ctx)
-            return
-
-        # if module == 'py':
-        #     module = 'builtins'
-        # elif module == 'python':
-        #     module = 'builtins'
-        # elif module == 'np':
-        #     module = 'numpy'
-        # elif module == 'pd':
-        #     module = 'pandas'
-        # elif module == 'ni':
-        #     module = 'netifaces'
-        # elif module == 'scapy':
-        #     module = 'scapy.all'
-
-        module = self.aliases.get(module, module)
-
-        if module not in self.modules:
-            error_msg = f'**`ERROR: MODULE: {module} is unsupported`**'
-            await ctx.send(error_msg)
-            await self.send_members(
-                ctx,
-                self.standard_module_names,
-                title='Currently available modules:'
-            )
-            await self.send_members(
-                ctx,
-                self.pygame_module_names,
-                title='Pygame modules:'
-            )
-            await self.send_usage(ctx)
-            return
-
-        target_module = self.modules[module]
-        if inspect.isroutine(target_module):
-            await self.send_docs_and_methods(ctx, target_module, module)
-            return
-
-        if not obj:
-            # error_msg = f'**`ERROR: No member specified for {module}`**'
-            obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
-            obj_list = await self.make_members_list(target_module, module)
-            # await ctx.send(error_msg)
-            await ctx.send(obj_list_header)
-            if module == 'scapy.all':
-                await ctx.send('**`scapy stuff too long to list`**')
-            else:
-                await self.send_members(ctx, obj_list)
-            await self.send_usage(ctx)
-            return
-
-        if obj not in dir(target_module):
-            error_msg = f'**`ERROR: {obj} not found in {module}`**'
-            obj_list_header = f"**`{module}'s TYPEs|FUNCTIONs:`**"
-            obj_list = await self.make_members_list(target_module, module)
-            await ctx.send(error_msg)
-            await ctx.send(obj_list_header)
-            if module == 'scapy.all':
-                await ctx.send('**`scapy stuff too long to list`**')
-            else:
-                await self.send_members(ctx, obj_list)
-            await self.send_usage(ctx)
-            return
-
-        target_obj = getattr(target_module, obj)
-        target = None
-        target_name = ''
-
-        if method and method not in dir(target_obj):
-            error_msg = f'**`ERROR: {method} not found in {obj}`**'
-            obj_list_header = f"**`{obj}'s METHODs:`**"
-            obj_list = await self.make_members_list(target_obj, obj)
-            await ctx.send(error_msg)
-            await ctx.send(obj_list_header)
-            await self.send_members(ctx, obj_list, title='Methods:')
-            await self.send_usage(ctx)
-            return
-
-        if method:
-            target = getattr(target_obj, method)
-            target_name = method
+        errored = False
+        module = None
+        members = collections.deque(x for y in members for x in y.split('.'))
+        if members:
+            module = members.popleft()
         else:
-            target = target_obj
-            target_name = obj
+            error_msg = 'missing module argument'
+            errored = True
+        module = self.module_aliases.get(module, module)
+        if not errored and module not in self.modules:
+            error_msg = f"module '{module}' is unsupported"
+            errored = True
+        if errored:
+            await self.bot.send_error_msg(ctx, error_msg)
+            await self.send_supported_modules(ctx)
+            await self.send_usage(ctx)
+            return
+
+        target_name = module
+        target = self.modules[target_name]
+
+        while members:
+            member_name = members.popleft()
+            if member_name not in dir(target):
+                error_msg = f"'{target_name}' has no member '{member_name}'"
+                self.bot.send_error_msg(ctx, error_msg)
+                member_list_header = f"**`{target_name}'s members:`**"
+                member_list = await self.make_members_list(target, target_name)
+                await ctx.send(member_list_header)
+                await self.send_members(ctx, member_list)
+                await self.send_usage(ctx)
+                return
+            member = getattr(target, member_name)
+            target_name = member_name
+            target = member
 
         if not target:
-            error_msg = '**`ERROR: failed to acquire target, sorry about that`**'
-            await ctx.send(error_msg)
+            error_msg = f"failed to get docs for '{target_name}', sorry about that..."
+            await self.bot.send_error_msg(error_msg)
             return
 
-        await self.send_docs_and_methods(ctx, target, target_name, obj, method)
+        await self.send_docs_and_methods(ctx, target, target_name, '', '')
+
+    async def send_supported_modules(self, ctx: commands.Context) -> None:
+        """sends supported modules list to ctx"""
+
+        await self.send_members(
+            ctx,
+            self.module_names,
+            title='Currently available modules:'
+        )
+
+    async def send_usage(self, ctx: commands.Context) -> None:
+        """send usage information"""
+
+        usage = '**`Usage: !docs module[.| ]members...`**'
+        await self.bot.send_info_msg(ctx, usage)
+
+
+
+
 
     async def send_docs_and_methods(
             self,
             ctx: commands.Context,
             target,
             target_name: str,
-            obj=None,
-            method=None
+            obj=None,  # str
+            method=None  # str
     ) -> None:
         """final method to send everything"""
 
@@ -403,12 +305,6 @@ class DocumentationCog(commands.Cog, name='documentation'):
             for msg in msg_slices:
                 msg = '```\n' + msg + '```'
                 await ctx.send(msg)
-
-    async def send_usage(self, ctx: commands.Context) -> None:
-        """send usage information"""
-
-        usage = '**`Usage: !docs MODULE TYPE|FUNCTION [METHOD]`**'
-        await ctx.send(usage)
 
     @commands.command(hidden=True)
     @print_context
