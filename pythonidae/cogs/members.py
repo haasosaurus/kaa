@@ -15,6 +15,8 @@ from utils import print_context
 
 
 class MembersCog(commands.Cog, name='members'):
+    """assorted commands for guild members"""
+
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
@@ -55,6 +57,7 @@ class MembersCog(commands.Cog, name='members'):
             await self.bot.send_error_msg(ctx, msg)
 
     @commands.command(hidden=True)
+    @commands.guild_only()
     @print_context
     async def hello(self, ctx: commands.Context) -> None:
         """A simple command which only responds to the owner of the bot."""
@@ -64,6 +67,25 @@ class MembersCog(commands.Cog, name='members'):
         else:
             msg = f'Hello {ctx.author.display_name}'
         await ctx.send(msg)
+
+    @commands.command(
+        help='shame tony for his laziness',
+        aliases=['search', 'lmgtfy', 'lmgt',],
+    )
+    @commands.guild_only()
+    @print_context
+    async def google(self, ctx: commands.Context, *obvious_keywords: str) -> None:
+        """
+        generate letmegooglethat links for help vampires
+        """
+
+        if not obvious_keywords:
+            msg = '!google OBVIOUS SEARCH KEYWORDS'
+            await self.bot.send_usage_msg(ctx, msg)
+        else:
+            keywords = '+'.join(obvious_keywords)
+            msg = ':link: http://letmegooglethat.com/?q=' + keywords
+            await self.bot.send_info_msg(ctx, msg)
 
 
 def setup(bot: PythonBot) -> None:
