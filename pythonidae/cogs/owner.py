@@ -1,27 +1,24 @@
 # coding=utf-8
 
 
-import sys
-
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 
+from pythonbot import PythonBot
 from utils import print_context
 
 
 class OwnerCog(commands.Cog, name='owner'):
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
-        self.servers = None
 
     @commands.command(name='load', hidden=True)
     @commands.is_owner()
     @print_context
-    async def load_cog(self, ctx: commands.Context, *, cog: str) -> None:
+    async def load_cog(self, ctx: commands.Context, cog: str) -> None:
         """
         Command which Loads a Module.
         Remember to use dot path. e.g: cogs.owner
@@ -29,15 +26,20 @@ class OwnerCog(commands.Cog, name='owner'):
 
         try:
             self.bot.load_extension(cog)
+        except commands.ExtensionAlreadyLoaded as e:
+            msg = f'{cog} already loaded, attempting to reload...'
+            await self.bot.send_info_msg(ctx, msg)
+            await self.reload_cog(ctx, cog)
         except (
                 commands.ExtensionNotFound,
-                commands.ExtensionAlreadyLoaded,
                 commands.NoEntryPointError,
                 commands.ExtensionFailed,
         ) as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            msg = f'{type(e).__name__} - {e}'
+            await self.bot.send_error_msg(ctx, msg)
         else:
-            await ctx.send('**`SUCCESS - loaded cog`**')
+            msg = f'Loaded: {cog}'
+            await self.bot.send_success_msg(ctx, msg)
 
     @commands.command(name='unload', hidden=True)
     @commands.is_owner()
@@ -51,14 +53,16 @@ class OwnerCog(commands.Cog, name='owner'):
         try:
             self.bot.unload_extension(cog)
         except commands.ExtensionNotLoaded as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            msg = f'{type(e).__name__} - {e}'
+            await self.bot.send_error_msg(ctx, msg)
         else:
-            await ctx.send('**`SUCCESS - unloaded cog`**')
+            msg = f'Unloaded: {cog}'
+            await self.bot.send_success_msg(ctx, msg)
 
     @commands.command(name='reload', hidden=True)
     @commands.is_owner()
     @print_context
-    async def reload_cog(self, ctx: commands.Context, *, cog: str) -> None:
+    async def reload_cog(self, ctx: commands.Context, cog: str) -> None:
         """
         Command which Reloads a Module.
         Remember to use dot path. e.g: cogs.owner
@@ -67,71 +71,22 @@ class OwnerCog(commands.Cog, name='owner'):
         try:
             self.bot.unload_extension(cog)
             self.bot.load_extension(cog)
+        except commands.ExtensionNotLoaded as e:
+            msg = f'{cog} not loaded, attempting to load...'
+            await self.bot.send_info_msg(ctx, msg)
+            await self.load_cog(ctx, cog)
         except (
-                commands.ExtensionNotLoaded,
                 commands.ExtensionNotFound,
                 commands.ExtensionAlreadyLoaded,
                 commands.NoEntryPointError,
                 commands.ExtensionFailed,
         ) as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            msg = f'{type(e).__name__} - {e}'
+            await self.bot.send_error_msg(ctx, msg)
         else:
-            await ctx.send('**`SUCCESS - reloaded cog`**')
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
-    async def shutdown(self, ctx: commands.Context) -> None:
-        """Shuts down the bot and hopefully exits entirely"""
-
-        await ctx.send('**`Shutting down...`**')
-        print('Shutting down...')
-        await ctx.bot.logout()
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
-    async def flush(self, ctx: commands.Context) -> None:
-        """flushes the buffers"""
-
-        sys.stdout.flush()
-        sys.stderr.flush()
-        await ctx.send('**`SUCCESS - flushed stdout and stderr`**')
-
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
-    async def say(
-            self,
-            ctx: commands.Context,
-            target: str = None,
-            channel: str = None,
-            *words: str
-    ) -> None:
-        """makes pythonbot speak on target server"""
-
-        if not words:
-            await ctx.send('**`Usage: !say SERVER CHANNEL *WORDS`**')
-            return
-
-        guild_settings = await self.bot.get_guild_settings(target)
-        if not guild_settings:
-            await ctx.send('**`ERROR: target settings not found`**')
-            return
-
-        guild = discord.utils.get(self.bot.guilds, id=guild_settings['id'])
-        if not guild:
-            await ctx.send('**`ERROR: target not found`**')
-            return
-
-        channel = discord.utils.get(guild.text_channels, name=channel.lower())
-        if not channel:
-            await ctx.send('**`ERROR: channel not found`**')
-            return
-
-        msg = ' '.join('I' if word == 'i' else word for word in words)
-        await channel.send(msg)
+            msg = f'Reloaded: {cog}'
+            await self.bot.send_success_msg(ctx, msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(OwnerCog(bot))
