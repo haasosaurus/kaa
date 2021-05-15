@@ -8,7 +8,7 @@ from memegenerator import MemeGenerator
 from utils import print_context
 
 
-class GamesCog(commands.Cog, name='Memes'):
+class GamesCog(commands.Cog, name='memes'):
 	def __init__(self, bot: commands.Bot) -> None:
 		"""initializer"""
 
