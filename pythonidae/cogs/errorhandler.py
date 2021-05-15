@@ -48,13 +48,23 @@ class CommandErrorHandler(commands.Cog):
             return
 
         elif isinstance(error, commands.DisabledCommand):
-            return await ctx.send(f'**`{ctx.command} has been disabled.`**')
+            msg = f"'{ctx.command}' has been disabled."
+            return await self.bot.send_error_msg(ctx, msg)
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                return await ctx.author.send(f'**`{ctx.command} can not be used in Private Messages.`**')
+                msg = f"'{ctx.command}' can not be used in Private Messages."
+                return await self.bot.send_error_msg(ctx, msg)
             except:
                 pass
+
+        elif isinstance(error, commands.NotOwner):
+            msg = f"'{ctx.command}' can only be used by the bot's owner."
+            return await self.bot.send_error_msg(ctx, msg)
+
+        elif isinstance(error, commands.MissingRole):
+            msg = f"You're missing a role required to run '{ctx.command}'."
+            return await self.bot.send_error_msg(ctx, msg)
 
         # For this error example we check to see where it came from...
         elif isinstance(error, commands.BadArgument):
@@ -66,7 +76,8 @@ class CommandErrorHandler(commands.Cog):
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     """Below is an example of a Local Error Handler for our command do_repeat"""
-    @commands.command(name='repeat', aliases=['mimic', 'copy'])
+    @commands.command(name='repeat', aliases=['mimic', 'copy'], hidden=True)
+    @commands.is_owner()
     async def do_repeat(self, ctx, *, inp: str):
         """A simple command which repeats your input!
         inp  : The input to be repeated"""
