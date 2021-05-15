@@ -2,7 +2,7 @@
 
 
 #---------------------------- ideas ----------------------------#
-#
+# print/send to owner text of direct messages received
 #---------------------------------------------------------------#
 
 
@@ -11,11 +11,13 @@ from typing import Union
 import discord
 from discord.ext import commands
 
+from pythonbot import PythonBot
+
 
 class ListenerCog(commands.Cog, name='Listener'):
     """this cog listens for events"""
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """ListenerCog initializer"""
 
         self.bot = bot
@@ -36,6 +38,11 @@ class ListenerCog(commands.Cog, name='Listener'):
 
         if welcome:
             await member.guild.system_channel.send(f'welcome **{member.name}**')
+            # rule_1 = 'No unsanctioned rap battles'
+            # rule_2 = 'No krunker'
+            # await member.guild.system_channel.send(f'Server rules:')
+            # await member.guild.system_channel.send(rule_1)
+            # await member.guild.system_channel.send(rule_2)
 
         if default_role:
             role = discord.utils.get(member.guild.roles, name=default_role)
@@ -53,6 +60,15 @@ class ListenerCog(commands.Cog, name='Listener'):
         says goodbye to members after they've left, pointlessly
         """
 
+        # return if goodbye is not enabled for member's guild
+        goodbye = self.bot.settings['send_goodbye_default']
+        guild_settings = await self.bot.get_guild_settings(member)
+        if guild_settings:
+            goodbye = guild_settings.get('send_goodbye', goodbye)
+
+        if not goodbye:
+            return
+
         # send kick info if bot has correct permissions
         try:
             async for entry in member.guild.audit_logs(action=discord.AuditLogAction.kick, limit=3):
@@ -66,14 +82,7 @@ class ListenerCog(commands.Cog, name='Listener'):
         except discord.Forbidden:
             pass
 
-        # send goodbye if enabled for member's guild
-        goodbye = self.bot.settings['send_goodbye_default']
-        guild_settings = await self.bot.get_guild_settings(member)
-        if guild_settings:
-            goodbye = guild_settings.get('send_goodbye', goodbye)
-
-        if goodbye:
-            await member.guild.system_channel.send(f'goodbye forever **{member}**')
+        await member.guild.system_channel.send(f'goodbye forever **{member}**')
 
     @commands.Cog.listener()
     @commands.has_permissions(view_audit_log=True)
@@ -85,6 +94,15 @@ class ListenerCog(commands.Cog, name='Listener'):
         """
         Called when user gets banned from a Guild.
         """
+
+        # return if goodbye is not enabled for member's guild
+        goodbye = self.bot.settings['send_goodbye_default']
+        guild_settings = await self.bot.get_guild_settings(member)
+        if guild_settings:
+            goodbye = guild_settings.get('send_goodbye', goodbye)
+
+        if not goodbye:
+            return
 
         async for entry in guild.audit_logs(action=discord.AuditLogAction.ban, limit=3):
             if entry.target == user:
@@ -126,6 +144,7 @@ class ListenerCog(commands.Cog, name='Listener'):
         # await owner.send(msg)
 
     @commands.Cog.listener()
+    @commands.cooldown(1, 60 * 20, commands.BucketType.guild)
     async def on_guild_unavailable(self, guild: discord.Guild) -> None:
         """Called when a guild becomes unavailable."""
 
@@ -135,5 +154,5 @@ class ListenerCog(commands.Cog, name='Listener'):
         await owner.send(msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(ListenerCog(bot))
