@@ -1,9 +1,11 @@
 # coding=utf-8
 
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 from utils import print_context
 

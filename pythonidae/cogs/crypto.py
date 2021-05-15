@@ -1,21 +1,28 @@
 # coding=utf-8
 
 
+# third-party modules
 import aiohttp
 
-import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
+
+# local modules
+from pythonbot import PythonBot
+from utils import print_context
 
 
 class CryptoCog(commands.Cog, name='crypto'):
     """crypto currency cog"""
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         self.bot = bot
 
     @commands.command(aliases=['crypto_price', 'price'])
     @commands.is_owner()
     @commands.guild_only()
+    @print_context
     async def crypto(self, ctx: commands.Context, *coins: str) -> None:
         """displays the prices of all or a specific crypto currency"""
 
@@ -100,5 +107,5 @@ class CryptoCog(commands.Cog, name='crypto'):
                 return resp_dict
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(CryptoCog(bot))

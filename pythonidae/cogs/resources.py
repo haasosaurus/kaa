@@ -1,9 +1,12 @@
 # coding=utf-8
 
 
-# import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
+# local modules
+from pythonbot import PythonBot
 from utils import print_context
 
 
@@ -12,7 +15,7 @@ class ResourceCog(commands.Cog, name='resources'):
     resource commands
     """
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
@@ -295,5 +298,5 @@ __**download links**__
         await ctx.send(msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(ResourceCog(bot))

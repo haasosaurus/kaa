@@ -2,13 +2,16 @@
 # coding=utf-8
 
 
+# standard library modules
 import asyncio
 from asyncio.events import AbstractEventLoop
 import os
 import signal
 
+# third party modules
 from dotenv import load_dotenv
 
+# local modules
 from pythonbot import PythonBot
 
 

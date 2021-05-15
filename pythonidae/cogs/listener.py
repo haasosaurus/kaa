@@ -1,16 +1,14 @@
 # coding=utf-8
 
 
-#---------------------------- ideas ----------------------------#
-# print/send to owner text of direct messages received
-#---------------------------------------------------------------#
-
-
+# standard library modules
 from typing import Union
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 
 

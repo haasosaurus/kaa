@@ -1,7 +1,16 @@
-import traceback
+# coding=utf-8
+
+
+# standard library modules
 import sys
+import traceback
+
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
-import discord
+
+# local modules
+from pythonbot import PythonBot
 
 
 """
@@ -24,7 +33,7 @@ http://discordpy.readthedocs.io/en/rewrite/ext/commands/api.html#errors
 
 
 class CommandErrorHandler(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: PythonBot):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -97,5 +106,5 @@ class CommandErrorHandler(commands.Cog):
                 await ctx.send("You forgot to give me input to repeat!")
 
 
-def setup(bot):
+def setup(bot: PythonBot) -> None:
     bot.add_cog(CommandErrorHandler(bot))

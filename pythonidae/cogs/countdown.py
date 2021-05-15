@@ -1,18 +1,22 @@
 # coding=utf-8
 
 
+# standard library modules
 import asyncio
 
-# import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
+# local modules
+from pythonbot import PythonBot
 from utils import print_context
 
 
 class CountdownCog(commands.Cog, name='Countdown Commands'):
     """pointless cog, move this to members"""
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
@@ -75,5 +79,5 @@ class CountdownCog(commands.Cog, name='Countdown Commands'):
         await ctx.send(f'countdown over, time for {title}')
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(CountdownCog(bot))

@@ -1,14 +1,17 @@
 # coding=utf-8
 
 
+# standard library modules
 import datetime
-import itertools
-import json
-import traceback
+#import itertools
+#import json
+#import traceback
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 from utils import print_context
 

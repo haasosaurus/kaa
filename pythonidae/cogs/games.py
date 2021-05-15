@@ -1,16 +1,20 @@
 # coding=utf-8
 
 
+# standard library modules
 import random
 
-# import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
+# local modules
+from pythonbot import PythonBot
 from utils import print_context
 
 
 class GamesCog(commands.Cog, name='games'):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
@@ -47,5 +51,5 @@ class GamesCog(commands.Cog, name='games'):
         await self.bot.send_info_msg(ctx, msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(GamesCog(bot))

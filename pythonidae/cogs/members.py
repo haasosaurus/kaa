@@ -1,12 +1,15 @@
 # coding=utf-8
 
 
-import itertools
-import traceback
+# standard library modules
+#import itertools
+#import traceback
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 from utils import print_context
 

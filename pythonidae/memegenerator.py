@@ -1,9 +1,11 @@
 # coding=utf-8
 
 
+# standard library modules
 import io
-import pathlib
+#import pathlib
 
+# third party modules
 from PIL import Image, ImageDraw, ImageFont
 
 

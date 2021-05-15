@@ -1,26 +1,15 @@
 # coding=utf-8
 
 
-#---------------------------- ideas ----------------------------#
-# limit giving points to once a minute
-# put a time when last points given as a column
-# implement ban and unban methods
-# implement leaderboard method, call it points_top
-# implement set_points method
-# make this into a command group, like:
-#     !points give Tony -1 good reason
-#     !points show Tony
-# clean up sql implementation
-# fix blacklist command
-#---------------------------------------------------------------#
-
-
+# standard library modules
 import pathlib
 import sqlite3
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 from utils import print_context
 

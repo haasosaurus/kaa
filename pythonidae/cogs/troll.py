@@ -1,7 +1,8 @@
 # coding=utf-8
 
 
-# import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
 # local modules

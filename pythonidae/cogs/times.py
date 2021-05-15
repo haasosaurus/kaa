@@ -1,12 +1,15 @@
 # coding=utf-8
 
 
+# standard library modules
 from datetime import datetime
 import pytz
 
-import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
+# local modules
 from pythonbot import PythonBot
 from utils import print_context
 

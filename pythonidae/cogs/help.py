@@ -8,14 +8,16 @@
 # Written by Jared Newsom (AKA Jared M.F
 
 
-import discord
+# third-party modules - discord and related
+#import discord
 from discord.ext import commands
 
-from utils import print_context
+# local modules
+from pythonbot import PythonBot
 
 
 class HelpCog(commands.Cog, name='help_cog'):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
@@ -125,5 +127,5 @@ class HelpCog(commands.Cog, name='help_cog'):
 #     bot.add_command(help)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(HelpCog(bot))

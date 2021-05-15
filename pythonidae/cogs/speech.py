@@ -1,17 +1,26 @@
-import discord
+# coding=utf-8
+
+
+# standard library modules
 import os
 import threading
 
+# third party modules
 import aiml
-
-from discord.ext import commands
 from dotenv import load_dotenv
+
+# third-party modules - discord and related
+import discord
+from discord.ext import commands
+
+# local modules
+from pythonbot import PythonBot
 
 
 class SpeechCog(commands.Cog, name='AIML'):
 	"""this cog listens for events"""
 
-	def __init__(self, bot: commands.Bot) -> None:
+	def __init__(self, bot: PythonBot) -> None:
 		"""initializer"""
 
 		self.bot = bot
@@ -38,7 +47,7 @@ class SpeechCog(commands.Cog, name='AIML'):
 				await message.channel.send(reply)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
 	bot.add_cog(SpeechCog(bot))
 
 

@@ -1,15 +1,18 @@
 # coding=utf-8
 
 
+# third-party modules - discord and related
 import discord
 from discord.ext import commands
 
+# local modules
+from pythonbot import PythonBot
 from memegenerator import MemeGenerator
 from utils import print_context
 
 
 class GamesCog(commands.Cog, name='memes'):
-	def __init__(self, bot: commands.Bot) -> None:
+	def __init__(self, bot: PythonBot) -> None:
 		"""initializer"""
 
 		self.bot = bot
@@ -57,5 +60,5 @@ class GamesCog(commands.Cog, name='memes'):
 		await ctx.send(file=discord.File(fp=img_buf, filename='image.png'))
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
 	bot.add_cog(GamesCog(bot))
