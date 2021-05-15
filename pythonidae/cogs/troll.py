@@ -4,31 +4,35 @@
 # import discord
 from discord.ext import commands
 
+# local modules
+from pythonbot import PythonBot
 from utils import print_context
 
 
-class TrollCog(commands.Cog, name='Troll Commands'):
-    def __init__(self, bot: commands.Bot) -> None:
+class TrollCog(commands.Cog, name='troll'):
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
 
     @commands.command(
-        help='shame people for their laziness',
-        aliases=['lmgtfy'],
+        help='shame tony for his laziness',
+        aliases=['search', 'lmgtfy', 'lmgt',],
     )
     @print_context
-    async def google(self, ctx: commands.Context, *keywords: str) -> None:
+    async def google(self, ctx: commands.Context, *obvious_keywords: str) -> None:
         """
-        generate LMGTFY links when people try to make you their google bot
+        generate letmegooglethat links for help vampires
         """
 
-        if not keywords:
-            msg = '**`USAGE: !google OBVIOUS SEARCH KEYWORDS`**'
+        if not obvious_keywords:
+            msg = '!google OBVIOUS SEARCH KEYWORDS'
+            await self.bot.send_usage_msg(ctx, msg)
         else:
-            msg = ':link: <https://lmgtfy.com/?q=' + '+'.join(keywords) + '>'
-        await ctx.send(msg)
+            keywords = '+'.join(obvious_keywords)
+            msg = ':link: http://letmegooglethat.com/?q=' + keywords
+            await self.bot.send_info_msg(ctx, msg)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(TrollCog(bot))
