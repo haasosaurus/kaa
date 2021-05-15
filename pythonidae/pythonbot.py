@@ -8,23 +8,34 @@ import json
 import pathlib
 import sys
 import traceback
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import discord
 from discord.ext import commands
+
+from pretty_help import PrettyHelp
 
 
 class PythonBot(commands.Bot):
     """commands.Bot sublass, trying to clean things up around here"""
 
-    def __init__(self):
-        commands.Bot.__init__(self, command_prefix=PythonBot.prefixes_for, case_insensitive=True)
+    def __init__(self) -> None:
+        intents = discord.Intents.all()
+        commands.Bot.__init__(
+            self,
+            command_prefix=PythonBot.prefixes_for,
+            case_insensitive=True,
+            help_command=PrettyHelp(),
+            intents=intents,
+        )
         self.settings = self.load_settings()
         self.load_extensions()
         self._owner = None
+        self.message_counts = {}
 
     # test this to make sure it's using the cache
     @staticmethod
-    async def prefixes_for(bot, message: discord.Message, guild_prefixes={}) -> str:
+    async def prefixes_for(bot, message: discord.Message, guild_prefixes={}) -> Union[str, list]:
         """A callable Prefix for our bot. This could be edited to allow per server prefixes."""
 
         # Only allow ! to be used in DMs, fix this up later
@@ -93,13 +104,17 @@ class PythonBot(commands.Bot):
                 print(f'Failed to load extension {extension}.', file=sys.stderr)
                 traceback.print_exc()
 
-    async def get_owner(self):
+    async def get_owner(self) -> discord.User:
+        """returns owner discord.User object, caches it for reuse"""
+
         if not self._owner:
             app_info = await self.application_info()
             self._owner = app_info.owner
         return self._owner
 
-    async def get_guild_settings(self, obj):
+    async def get_guild_settings(self, obj: Union[str, discord.Member]) -> Optional[dict]:
+        """returns dict of guild specific settings"""
+
         guild_id = None
         if isinstance(obj, str):
             for guild_settings in self.settings['guilds'].values():
@@ -115,11 +130,45 @@ class PythonBot(commands.Bot):
                 return copy.deepcopy(guild_settings)
         return None
 
+    async def send_titled_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, color: int) -> None:
+        embed = discord.Embed(
+            color=color,
+        )
+        embed.add_field(
+            name=title,
+            value=msg,
+            inline=False
+        )
+        return await ctx.send(embed=embed)
+
+    async def send_untitled_msg(self, ctx: Union[commands.Context, discord.User], msg: str, color: int, thumbnail: str = None) -> None:
+        embed = discord.Embed(
+            color=color,
+            description=msg
+        )
+        if thumbnail is not None:
+            embed.set_thumbnail(url=thumbnail)
+        return await ctx.send(embed=embed)
+
+    async def send_error_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
+        return await self.send_titled_msg(ctx, 'Error', msg, 0xaa0000)
+
+    async def send_success_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
+        return await self.send_titled_msg(ctx, 'Success', msg, 0x00aa00)
+
+    async def send_usage_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
+        return await self.send_titled_msg(ctx, 'Usage', msg, 0x0000aa)
+
+    async def send_info_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, thumbnail: str = None) -> None:
+        return await self.send_untitled_msg(ctx, msg, 0x0000aa, thumbnail)
+
+    async def send_titled_info_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str) -> None:
+        return await self.send_titled_msg(ctx, title, msg, 0x0000aa)
+
     async def on_ready(self) -> None:
         """
         Called when the client is done preparing the data received from Discord.
-        Usually after login is successful and the Client.guilds and co. are
-        filled up.
+        Usually after login is successful.
         """
 
         print('\n------ startup complete ------')
