@@ -1,14 +1,18 @@
 # coding=utf-8
 
 
+import itertools
+import traceback
+
 import discord
 from discord.ext import commands
 
+from pythonbot import PythonBot
 from utils import print_context
 
 
-class MembersCog(commands.Cog, name='Member Commands'):
-    def __init__(self, bot: commands.Bot) -> None:
+class MembersCog(commands.Cog, name='members'):
+    def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
@@ -19,12 +23,21 @@ class MembersCog(commands.Cog, name='Member Commands'):
     async def joined(
             self,
             ctx: commands.Context,
-            *,
-            member: discord.Member
+            member: discord.Member = None,
+            # *,
     ) -> None:
         """Says when a member joined."""
 
-        await ctx.send(f'**`{member.display_name} joined at {member.joined_at}`**')
+        if member is None:
+            member = ctx.message.author
+
+        if member == ctx.message.author:
+            header = 'You joined:'
+        else:
+            header = f"{member.display_name} joined:"
+
+        formatted_datetime = member.joined_at.strftime('%B %d %Y at %I:%M:%S %p')
+        await self.bot.send_titled_info_msg(ctx, header, formatted_datetime)
 
     @joined.error
     async def joined_handler(
@@ -35,24 +48,8 @@ class MembersCog(commands.Cog, name='Member Commands'):
         """error handling for joined command"""
 
         if isinstance(error, commands.BadArgument):
-            arg = ctx.message.clean_content.split()[-1]
-            matches = [x for x in ctx.guild.members if x.display_name.lower() == arg.lower()]
-            if not matches:
-                msg = f'**`{error}`**'
-            elif len(matches) == 1:
-                member = matches[0]
-                msg = f'**`{member.display_name} joined at {member.joined_at}`**'
-            else:
-                msg = '**`multiple matches found, but your case is wrong for all of them`**'
-            await ctx.send(msg)
-
-    @commands.command(hidden=True)
-    @print_context
-    async def discobot(self, ctx: commands.Context, *args: str) -> None:
-        """insult discobot"""
-
-        if not args:
-            await ctx.send('I am smarter than DiscoBot')
+            msg = 'Member not found'
+            await self.bot.send_error_msg(ctx, msg)
 
     @commands.command(hidden=True)
     @print_context
@@ -65,16 +62,6 @@ class MembersCog(commands.Cog, name='Member Commands'):
             msg = f'Hello {ctx.author.display_name}'
         await ctx.send(msg)
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @print_context
-    async def test(self, ctx: commands.Context) -> None:
-        """just a test command"""
 
-        # for member in ctx.guild.members:
-        #     print(f'{member.name}: {member.id}')
-        await ctx.send('**`testing...`**')
-
-
-def setup(bot: commands.Bot) -> None:
+def setup(bot: PythonBot) -> None:
     bot.add_cog(MembersCog(bot))
