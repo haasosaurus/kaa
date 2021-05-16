@@ -14,6 +14,8 @@ from utils import print_context
 
 
 class GamesCog(commands.Cog, name='games'):
+    """game commands"""
+
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
