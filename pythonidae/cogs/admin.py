@@ -25,7 +25,7 @@ class AdminCog(commands.Cog, name='admin'):
     )
     @commands.guild_only()
     @commands.has_guild_permissions(administrator=True)
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 60, commands.BucketType.user)
     @print_context
     async def rm(
             self,
