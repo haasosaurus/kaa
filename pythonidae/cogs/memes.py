@@ -11,7 +11,9 @@ from memegenerator import MemeGenerator
 from utils import print_context
 
 
-class GamesCog(commands.Cog, name='memes'):
+class MemesCog(commands.Cog, name='memes'):
+	"""commands for sending memes"""
+
 	def __init__(self, bot: PythonBot) -> None:
 		"""initializer"""
 
@@ -61,4 +63,4 @@ class GamesCog(commands.Cog, name='memes'):
 
 
 def setup(bot: PythonBot) -> None:
-	bot.add_cog(GamesCog(bot))
+	bot.add_cog(MemesCog(bot))
