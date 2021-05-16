@@ -1,12 +1,6 @@
 # coding=utf-8
 
 
-# standard library modules
-import datetime
-#import itertools
-#import json
-#import traceback
-
 # third-party modules - discord and related
 import discord
 from discord.ext import commands
@@ -23,7 +17,6 @@ class AdminCog(commands.Cog, name='admin'):
         """initializer"""
 
         self.bot = bot
-        #self.message_counts = {}
 
     @commands.command(
         aliases=['delete'],
@@ -90,28 +83,43 @@ class AdminCog(commands.Cog, name='admin'):
     async def _rm(
             self,
             ctx: commands.Context,
-            member:discord.Member,
+            member: discord.Member,
             count: int,
     ) -> None:
         """backend private method for handling rm command"""
 
-        i = 0
-        async for msg in ctx.channel.history(limit=100):
-            if msg.author == member:
+        message_blacklist = set()
 
-                # don't delete the message that called the command
-                # if caller is deleting their own messages
-                if ctx.author.id == member.id and i == 0:
-                    i += 1
-                    count += 1
+        # don't delete the message that called the command
+        if ctx.message:
+            message_blacklist.add(ctx.message)
+
+        # limit the maximum messages able to be deleted
+        message_limit = 50
+        if count > message_limit:
+            msg = f'max messages that can be deleted per usage is {message_limit}, limiting count...'
+            sent_msg = await self.bot.send_info_msg(ctx, msg)
+            if sent_msg:
+                message_blacklist.add(sent_msg)
+            count = message_limit
+
+        # deleted messages until i reaches count
+        i = 0
+        async for message in ctx.channel.history(limit=1_000):
+            if message.author == member:
+
+                # skip messages in the blacklist
+                if message in message_blacklist:
                     continue
 
-                # delete all others in this potentially new range
-                print(f"deleting: '{msg.clean_content}'")
-                await msg.delete()
+                await message.delete()
                 i += 1
                 if i >= count:
                     break
+
+        # send amount of messages actually deleted
+        msg = f'deleted {i} messages'
+        await self.bot.send_info_msg(ctx, msg)
 
 
 def setup(bot: PythonBot) -> None:
