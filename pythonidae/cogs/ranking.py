@@ -47,7 +47,6 @@ class RankingCog(commands.Cog, name='Points'):
         aliases=['give_points', 'point_give', 'give_point'],
         cooldown_after_parsing=True)
     @commands.guild_only()
-    # @commands.is_owner()
     @commands.cooldown(1, 90, commands.BucketType.user)
     @print_context
     async def points_give(
