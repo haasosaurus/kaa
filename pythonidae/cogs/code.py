@@ -11,6 +11,8 @@ from utils import print_context
 
 
 class CodeCog(commands.Cog, name='code'):
+    """helper commands for sending code"""
+
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 

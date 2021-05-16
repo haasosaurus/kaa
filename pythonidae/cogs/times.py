@@ -15,6 +15,8 @@ from utils import print_context
 
 
 class TimesCog(commands.Cog, name='times'):
+    """commands for setting and checking guild member's local time"""
+
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
