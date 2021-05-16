@@ -79,6 +79,9 @@ class DocumentationCog(commands.Cog, name='documentation'):
         'data_private': ('Data (private)', 16),
         'dunders': ('Dunders', 18),
     }
+    docs_blacklist_text = [
+        'The MIT License (MIT)',
+    ]
 
     @classmethod
     async def member_kind_title(cls, kind: str) -> str:
@@ -257,11 +260,19 @@ class DocumentationCog(commands.Cog, name='documentation'):
                 docs = docs_body
             else:
                 docs = ''
+
+        # convert docs from string to list of lines (strings)
         docs = docs.strip()
+        lines = []
         if docs:
-            lines = docs.split('\n')
-        else:
-            lines = []
+
+            # check that docs not in list of known incorrects
+            for text in DocumentationCog.docs_blacklist_text:
+                if docs.startswith(text):
+                    break
+            else:
+                lines = docs.split('\n')
+
         return lines
 
     async def send_docs_and_members(
@@ -277,8 +288,8 @@ class DocumentationCog(commands.Cog, name='documentation'):
         # docs
         lines = await self.make_docs(target, target_name, obj, method)
         if not lines:
-            error_msg = f'**`ERROR: docs for {target_name} not found, sorry`**'
-            await ctx.send(error_msg)
+            error_msg = f"Docs for '{target_name}' not found, attempting to get members..."
+            await self.bot.send_error_msg(ctx, error_msg)
         await self.send_docs(ctx, lines)
 
         # members
