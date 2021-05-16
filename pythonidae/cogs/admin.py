@@ -43,7 +43,7 @@ class AdminCog(commands.Cog, name='admin'):
             ctx: commands.Context,
             error: commands.CommandError,
     ) -> None:
-        """error handler for points_give"""
+        """error handler for rm"""
 
         # if member or count conversion failed
         if isinstance(error, commands.BadArgument):
