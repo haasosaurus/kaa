@@ -113,19 +113,6 @@ class AdminCog(commands.Cog, name='admin'):
                 if i >= count:
                     break
 
-    @commands.command(
-        aliases=[],
-        hidden=True,
-    )
-    @commands.is_owner()
-    @commands.guild_only()
-    @print_context
-    async def test(self, ctx: commands.Context) -> None:
-        """just a test command"""
-
-        msg = 'testing...'
-        await self.bot.send_info_msg(ctx, msg)
-
 
 def setup(bot: PythonBot) -> None:
     bot.add_cog(AdminCog(bot))

@@ -112,6 +112,19 @@ class OwnerUtilsCog(commands.Cog, name='ownerutils'):
         msg = f'Playing {status}'
         await self.bot.send_titled_msg(ctx, 'Set status to:', msg, 0x00aa00)
 
+    @commands.command(
+        aliases=[],
+        hidden=True,
+    )
+    @commands.is_owner()
+    # @commands.guild_only()
+    @print_context
+    async def test(self, ctx: commands.Context) -> None:
+        """just a test command"""
+
+        msg = 'testing...'
+        await self.bot.send_info_msg(ctx, msg)
+
 
 def setup(bot: PythonBot) -> None:
     bot.add_cog(OwnerUtilsCog(bot))
