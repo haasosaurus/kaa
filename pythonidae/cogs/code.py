@@ -18,7 +18,7 @@ class CodeCog(commands.Cog, name='code'):
 
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=['codeblock', 'code_block', 'code',])
     @commands.guild_only()
     @commands.has_guild_permissions(administrator=True)
     @print_context
