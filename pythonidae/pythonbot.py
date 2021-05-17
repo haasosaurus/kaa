@@ -2,7 +2,6 @@
 
 
 # standard library modules
-#import asyncio
 import copy
 import json
 import pathlib
@@ -10,12 +9,10 @@ import sys
 import traceback
 from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
-# third-party modules
-from pretty_help import PrettyHelp
-
 # third-party modules - discord and related
 import discord
 from discord.ext import commands
+from pretty_help import PrettyHelp
 
 
 class PythonBot(commands.Bot):
