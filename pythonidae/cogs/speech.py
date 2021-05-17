@@ -3,11 +3,11 @@
 
 # standard library modules
 import os
+import pathlib
 import threading
 
 # third party modules
 import aiml
-from dotenv import load_dotenv
 
 # third-party modules - discord and related
 import discord
@@ -17,7 +17,7 @@ from discord.ext import commands
 from pythonbot import PythonBot
 
 
-class SpeechCog(commands.Cog, name='AIML'):
+class SpeechCog(commands.Cog, name='speech'):
 	"""this cog listens for events"""
 
 	def __init__(self, bot: PythonBot) -> None:
@@ -25,26 +25,30 @@ class SpeechCog(commands.Cog, name='AIML'):
 
 		self.bot = bot
 		self.servers = None
-		self.nlp = Parser(os.path.join('cogs', 'datasets'))
+		datasets_path = pathlib.Path('resources/data/aiml/datasets')
+		self.nlp = Parser(datasets_path)
 
 
 	@commands.Cog.listener()
-	async def on_message(self, message):
+	async def on_message(self, message: discord.Message):
 		"""message listener"""
-
-		# await self.bot.process_commands(message)
 
 		if message.author == self.bot.user:
 			return
 
 		server = message.guild
-
-		#------ temporarily disabled speech in direct messages ------#
+		command_message = None
 		if server:
-			if discord.utils.get(message.guild.members, id=680692520141062154) in message.mentions:
-				processed_message = ' '.join(message.content.split()[1:])
-				reply = self.nlp.RespondTo(processed_message).replace('[newline]', '\n')
-				await message.channel.send(reply)
+			if discord.utils.get(message.guild.members, id=self.bot.user.id) in message.mentions:
+				command_message = message
+		else:
+			if not message.content.startswith('!'):
+				command_message = message
+
+		if command_message:
+			processed_message = ' '.join(x for x in command_message.content.split() if str(self.bot.user.id) not in x)
+			reply = self.nlp.RespondTo(processed_message).replace('[newline]', '\n')
+			await command_message.channel.send(reply)
 
 
 def setup(bot: PythonBot) -> None:

@@ -3,7 +3,7 @@
 
 # standard library modules
 import io
-#import pathlib
+import pathlib
 
 # third party modules
 from PIL import Image, ImageDraw, ImageFont
@@ -13,15 +13,33 @@ class MemeGenerator:
     def __init__(self) -> None:
         """initializer"""
 
-        self.skyrim_font = ImageFont.truetype('impact.ttf', 60)
-        self.skyrim_bg = Image.open('cogs/meme-templates/skyrimStatusMemeBackground.png', 'r')
-        self.aliens_font = ImageFont.truetype('impact.ttf', 50)
-        self.aliens_bg = Image.open('cogs/meme-templates/history-aliens.jpg')
-        self.simply_font = ImageFont.truetype('impact.ttf', 42)
-        self.simply_font_small = ImageFont.truetype('impact.ttf', 28)
-        self.simply_bg = Image.open('cogs/meme-templates/one-does-not-simply.jpg')
-        self.toystory_font = ImageFont.truetype('impact.ttf', 45)
-        self.toystory_bg = Image.open('cogs/meme-templates/woody-buzz.jpg')
+        # fonts
+        font_directory = 'resources/fonts'
+        font_name = 'impact.ttf'
+        font_path = str(pathlib.Path(font_directory, font_name))
+        self.skyrim_font = ImageFont.truetype(font_path, 60)
+        self.aliens_font = ImageFont.truetype(font_path, 50)
+        self.simply_font = ImageFont.truetype(font_path, 42)
+        self.simply_font_small = ImageFont.truetype(font_path, 28)
+        self.toystory_font = ImageFont.truetype(font_path, 45)
+
+        template_directory = 'resources/images/meme-templates'
+
+        skyrim_template_name = 'skyrimStatusMemeBackground.png'
+        skyrim_template_path = str(pathlib.Path(template_directory, skyrim_template_name))
+        self.skyrim_bg = Image.open(skyrim_template_path, 'r')
+
+        aliens_template_name = 'history-aliens.jpg'
+        aliens_template_path = str(pathlib.Path(template_directory, aliens_template_name))
+        self.aliens_bg = Image.open(aliens_template_path, 'r')
+
+        simply_template_name = 'one-does-not-simply.jpg'
+        simply_template_path = str(pathlib.Path(template_directory, simply_template_name))
+        self.simply_bg = Image.open(simply_template_path, 'r')
+
+        toystory_template_name = 'woody-buzz.jpg'
+        toystory_template_path = str(pathlib.Path(template_directory, toystory_template_name))
+        self.toystory_bg = Image.open(toystory_template_path, 'r')
 
     def skyrim(self, skill: str, level: str) -> io.BytesIO:
         """skyrim skill level meme"""
