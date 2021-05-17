@@ -2,7 +2,6 @@
 
 
 # standard library modules
-import os
 import pathlib
 import threading
 
@@ -57,19 +56,16 @@ def setup(bot: PythonBot) -> None:
 
 class Parser:
 	kernel = None
-	datasetdir = ""
 
-	def __init__(self, datasetdir = "datasets"):
+	def __init__(self, datasets_path: pathlib.Path):
 		self.kernel = aiml.Kernel()
-		self.datasetdir = datasetdir
+		self.datasets_path = datasets_path
 		self.LoadDataSets()
 
 	def LoadDataSets(self):
-		files = os.listdir(self.datasetdir)
-		aimlfiles = []
-		for x in files:
-			if x[-3:] == 'xml':
-				self.kernel.learn(os.path.join(self.datasetdir, x))
+		for p in self.datasets_path.iterdir():
+			if p.is_file() and p.suffix == '.xml':
+				self.kernel.learn(str(p))
 
 	def RespondTo(self, message):
 		response = self.kernel.respond(message)
