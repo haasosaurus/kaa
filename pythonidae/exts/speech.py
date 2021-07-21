@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
@@ -27,9 +27,8 @@ class SpeechCog(commands.Cog, name='speech'):
 		datasets_path = pathlib.Path('resources/data/aiml/datasets')
 		self.nlp = Parser(datasets_path)
 
-
 	@commands.Cog.listener()
-	async def on_message(self, message: discord.Message):
+	async def on_message(self, message: discord.Message) -> None:
 		"""message listener"""
 
 		if message.author == self.bot.user:
@@ -55,19 +54,17 @@ def setup(bot: PythonBot) -> None:
 
 
 class Parser:
-	kernel = None
-
-	def __init__(self, datasets_path: pathlib.Path):
+	def __init__(self, datasets_path: pathlib.Path) -> None:
 		self.kernel = aiml.Kernel()
 		self.datasets_path = datasets_path
 		self.LoadDataSets()
 
-	def LoadDataSets(self):
+	def LoadDataSets(self) -> None:
 		for p in self.datasets_path.iterdir():
 			if p.is_file() and p.suffix == '.xml':
 				self.kernel.learn(str(p))
 
-	def RespondTo(self, message):
+	def RespondTo(self, message: str) -> str:
 		response = self.kernel.respond(message)
 		if "{SELF_NAME}" in response: response = response.replace("{SELF_NAME}", "PythonBot")
 		if '||' in response:
@@ -80,6 +77,6 @@ class Parser:
 		else:
 			return response
 
-	def HandleCommand(self, command):
+	def HandleCommand(self, command) -> None:
 		# Handle the command here
 		print("Command : " + command)

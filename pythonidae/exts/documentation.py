@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
@@ -9,7 +9,7 @@ import datetime, decimal
 import enum
 import fileinput, fractions, functools
 import gc, getpass
-import inspect, itertools
+import inspect, io, itertools
 import json
 import locale, logging
 import math
@@ -18,8 +18,10 @@ import operator, os
 import pathlib, pickle, pprint
 import random
 import re
-import secrets, shlex, signal, sqlite3, statistics, string
-import this, time, timeit, traceback, typing, types
+import secrets, shlex, signal, sqlite3, statistics, string, sys
+with contextlib.redirect_stdout(None):
+    import this
+import tkinter, time, timeit, traceback, typing, types
 import weakref
 
 # standard library modules - typing
@@ -27,12 +29,14 @@ from typing import List, Type
 
 # third-party modules
 import aioitertools, asyncstdlib
+import dateparser
 import matplotlib, matplotlib.pyplot, more_itertools
 import netifaces, numpy
-import pandas, PIL, PIL.ImageDraw, pretty_help, pyautogui
+import pandas, PIL, PIL.ImageDraw, pretty_help, pytz
+#import pyautogui
 import requests
 import sortedcontainers, sqlalchemy
-import tqdm
+import tqdm, tweepy
 
 # third-party modules - broken
 #import scapy.all
@@ -44,6 +48,7 @@ import pygame, pygame_sdl2
 # third-party modules - discord and related
 import discord, discord_argparse
 from discord.ext import commands
+import dislash
 
 # local modules
 from pythonbot import PythonBot
@@ -123,7 +128,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
             'fileinput': fileinput, 'fractions': fractions,
             'functools': functools,
             'gc': gc, 'getpass': getpass,
-            'inspect': inspect, 'itertools': itertools,
+            'inspect': inspect, 'io': io, 'itertools': itertools,
             'json': json,
             'locale': locale, 'logging': logging,
             'math': math,
@@ -133,19 +138,22 @@ class DocumentationCog(commands.Cog, name='documentation'):
             'random': random, 're': re,
             'secrets': secrets, 'shlex': shlex, 'signal': signal,
             'sqlite': sqlite3, 'statistics': statistics, 'string': string,
-            'time': time, 'timeit': timeit, 'traceback': traceback,
-            'types': types, 'typing': typing,
+            'sys': sys,
+            'tkinter': tkinter, 'time': time, 'timeit': timeit,
+            'traceback': traceback, 'types': types, 'typing': typing,
             'weakref': weakref,
 
             # third-party modules
             'aioitertools': aioitertools, 'asyncstdlib': asyncstdlib,
+            'dateparser': dateparser,
             'matplotlib': matplotlib, 'more_itertools': more_itertools,
             'netifaces': netifaces, 'numpy': numpy,
             'pandas': pandas, 'PIL': PIL, 'pretty_help': pretty_help,
-            'pyautogui': pyautogui,
+            #'pyautogui': pyautogui,
+            'pytz': pytz,
             'requests': requests,
             'sortedcontainers': sortedcontainers, 'sqlalchemy': sqlalchemy,
-            'tqdm': tqdm,
+            'tqdm': tqdm, 'tweepy': tweepy,
 
             # third-party modules - broken
             #'scapy.all': scapy.all,
@@ -156,6 +164,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
             # third-party modules - discord and related
             'discord': discord, 'discord.ext.commands': commands,
             'discord_argparse': discord_argparse,
+            'dislash': dislash,
         }
         self.module_aliases = {
             'commands': 'discord.ext.commands',
