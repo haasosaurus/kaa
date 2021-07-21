@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # third-party modules - discord and related
@@ -25,8 +25,12 @@ class ResourceCog(commands.Cog, name='resources'):
     async def python(self, ctx: commands.Context) -> None:
         """python specific resource sub-commands"""
 
-        msg = 'for more information, use `!help python`\nfor sub-commands use `!python SUBCOMMAND`'
-        await self.bot.send_info_msg(ctx, msg)
+        if ctx.invoked_subcommand is None:
+            msg = (
+                'for more information, use `!help python`\n'
+                'for sub-commands use `!python SUBCOMMAND`'
+            )
+            await self.bot.send_info_msg(ctx, msg)
 
     @python.command(aliases=['ref', 'refs'])
     @print_context
