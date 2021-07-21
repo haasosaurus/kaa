@@ -28,17 +28,17 @@
     "send_goodbye_default": true,
     "prefix_default": ["!"],
     "default_extensions": [
-        "cogs.countdown",
-        "cogs.documentation",
-        "cogs.errorhandler",
-        "cogs.games",
-        "cogs.listener",
-        "cogs.members",
-        "cogs.memes",
-        "cogs.owner",
-        "cogs.ranking",
-        "cogs.resources",
-        "cogs.speech",
-        "cogs.troll"
+        "exts.admin",
+        "exts.code",
+        "exts.documentation",
+        "exts.errorhandler",
+        "exts.extensions",
+        "exts.games",
+        "exts.listener",
+        "exts.members",
+        "exts.memes",
+        "exts.owner",
+        "exts.resources",
+        "exts.times"
     ]
 }
