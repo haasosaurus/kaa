@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
@@ -27,9 +27,18 @@ class PythonBot(commands.Bot):
             help_command=PrettyHelp(),
             intents=intents,
         )
+
+        # formatting variables, should store these elsewhere
+        self.indent = 4
+        self.underline = True
+
         self.settings = self.load_settings()
+        self.user_timezones = None
         self.load_extensions()
         self._owner = None
+
+        # assorted
+        self.blackjack_players = {}
         self.message_counts = {}
 
     # test this to make sure it's using the cache
@@ -89,18 +98,25 @@ class PythonBot(commands.Bot):
         return settings
 
     def load_extensions(self) -> None:
-        """load ethe extensions specified by the settings file"""
+        """load the default extensions specified by the settings file"""
+
+        print()
+        title = 'loading extensions'
+        print(title)
+        if self.underline:
+            print(f"{'-' * len(title)}")
 
         for extension in self.settings['default_extensions']:
             try:
                 self.load_extension(extension)
+                print(f"{' ' * self.indent}{extension}")
             except (
                     commands.ExtensionNotFound,
                     commands.ExtensionAlreadyLoaded,
                     commands.NoEntryPointError,
                     commands.ExtensionFailed
             ):
-                print(f'Failed to load extension {extension}.', file=sys.stderr)
+                print(f"Failed to load extension '{extension}'", file=sys.stderr)
                 traceback.print_exc()
 
     async def get_owner(self) -> discord.User:
@@ -111,7 +127,10 @@ class PythonBot(commands.Bot):
             self._owner = app_info.owner
         return self._owner
 
-    async def get_guild_settings(self, obj: Union[str, discord.Member]) -> Optional[dict]:
+    async def get_guild_settings(
+            self,
+            obj: Union[str, discord.Member, discord.Guild]
+    ) -> Optional[dict]:
         """returns dict of guild specific settings"""
 
         guild_id = None
@@ -122,6 +141,10 @@ class PythonBot(commands.Bot):
             return None
         elif isinstance(obj, discord.Member):
             guild_id = obj.guild.id
+        elif isinstance(obj, discord.Guild):
+            guild_id = obj.id
+        else:
+            raise TypeError('obj must be a guild nickname str, a discord.Member instance, or a discord.Guild instance')
         if not guild_id:
             return None
         for guild_settings in self.settings['guilds'].values():
@@ -149,20 +172,20 @@ class PythonBot(commands.Bot):
             embed.set_thumbnail(url=thumbnail)
         return await ctx.send(embed=embed)
 
-    async def send_error_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
-        return await self.send_titled_msg(ctx, 'Error', msg, 0xaa0000)
+    async def send_error_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0xaa0000) -> None:
+        return await self.send_titled_msg(ctx, 'Error', msg, color)
 
-    async def send_success_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
-        return await self.send_titled_msg(ctx, 'Success', msg, 0x00aa00)
+    async def send_success_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x00aa00) -> None:
+        return await self.send_titled_msg(ctx, 'Success', msg, color)
 
-    async def send_usage_msg(self, ctx: Union[commands.Context, discord.User], msg: str) -> None:
-        return await self.send_titled_msg(ctx, 'Usage', msg, 0x0000aa)
+    async def send_usage_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x0000aa) -> None:
+        return await self.send_titled_msg(ctx, 'Usage', msg, color)
 
-    async def send_info_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, thumbnail: str = None) -> None:
-        return await self.send_untitled_msg(ctx, msg, 0x0000aa, thumbnail)
+    async def send_info_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, thumbnail: str = None, color=0x0000aa) -> None:
+        return await self.send_untitled_msg(ctx, msg, color, thumbnail)
 
-    async def send_titled_info_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str) -> None:
-        return await self.send_titled_msg(ctx, title, msg, 0x0000aa)
+    async def send_titled_info_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, *, color=0x0000aa) -> None:
+        return await self.send_titled_msg(ctx, title, msg, color)
 
     async def on_ready(self) -> None:
         """
@@ -170,10 +193,40 @@ class PythonBot(commands.Bot):
         Usually after login is successful.
         """
 
-        print('\n------ startup complete ------')
-        print(f'discord.py version: {discord.__version__}')
-        print(f"logged in as: '{self.user.name}', id: {self.user.id}")
-        print('member of these servers:')
+        print('\n--- startup complete ---\n')
+
+        # print information about the bot
+        bot_info = [
+            ['bot username', f"'{self.user.name}#{self.user.discriminator}'"],
+            ['bot id', self.user.id],
+            ['server count', len(self.guilds)],
+            ['discord.py version', discord.__version__],
+        ]
+        title = 'bot information'
+        print(title)
+        if self.underline:
+            print(f"{'-' * len(title)}")
+
+        # find the length of the longest title in bot_info for padding purposes (+1 for colon)
+        sz = max((len(name) for name, _ in bot_info), default=0) + 1
+
+        # iterate through info and print the titles and values
+        for name, value in bot_info:
+            print(f"{' ' * self.indent}{name + ':':<{sz}} {value}")
+        print()
+
+        # print information about the servers the bot is a member of
+        title = 'current server names and ids'
+        print(title)
+        if self.underline:
+            print(f"{'-' * len(title)}")
+
+        # find the length of the longest Guild.name in self.guilds for padding purposes (+3 for colon and quotes)
+        sz = max((len(guild.name) for guild in self.guilds), default=0) + 3
+
+        # iterate through info and print the titles and values
         for guild in self.guilds:
-            print(f"    name: '{guild.name}', id: {guild.id}")
+            print(f"{' ' * self.indent}{guild.name.__repr__() + ':':<{sz}} {guild.id}")
+
+        # print newline and flush the buffer to make sure everything is printed in a timely fashion
         print(flush=True)
