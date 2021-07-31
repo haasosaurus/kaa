@@ -162,7 +162,7 @@ class BlackjackPlayer(BlackjackState):
         player: dict = self.game.players[self.game.player_current]
         hand: BlackjackHand = player['hand']
 
-        if player['status'] = 'Busted':
+        if player['status'] == 'Busted':
             title_status = ' Busted'
         else:
             title_status = "'s Turn"
