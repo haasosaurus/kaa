@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
@@ -95,7 +95,7 @@ class ListenerCog(commands.Cog, name='Listener'):
 
         # return if goodbye is not enabled for member's guild
         goodbye = self.bot.settings['send_goodbye_default']
-        guild_settings = await self.bot.get_guild_settings(member)
+        guild_settings = await self.bot.get_guild_settings(guild)
         if guild_settings:
             goodbye = guild_settings.get('send_goodbye', goodbye)
 
@@ -132,24 +132,24 @@ class ListenerCog(commands.Cog, name='Listener'):
         owner = await self.bot.get_owner()
         await owner.send(msg)
 
-    @commands.Cog.listener()
-    async def on_guild_available(self, guild: discord.Guild) -> None:
-        """Called when a guild becomes available."""
+    # @commands.Cog.listener()
+    # async def on_guild_available(self, guild: discord.Guild) -> None:
+    #     """Called when a guild becomes available."""
 
-        msg = f"server status is now AVAILABLE: '{guild.name}', id: {guild.id}"
-        print(msg)
-        # owner = await self.bot.get_owner()
-        # await owner.send(msg)
+    #     msg = f"server status is now AVAILABLE: '{guild.name}', id: {guild.id}"
+    #     print(msg)
+    #     # owner = await self.bot.get_owner()
+    #     # await owner.send(msg)
 
-    @commands.Cog.listener()
-    @commands.cooldown(1, 60 * 20, commands.BucketType.guild)
-    async def on_guild_unavailable(self, guild: discord.Guild) -> None:
-        """Called when a guild becomes unavailable."""
+    # @commands.Cog.listener()
+    # @commands.cooldown(1, 60 * 20, commands.BucketType.guild)
+    # async def on_guild_unavailable(self, guild: discord.Guild) -> None:
+    #     """Called when a guild becomes unavailable."""
 
-        msg = f"server status is now UNAVAILABLE: '{guild.name}', id: {guild.id}"
-        print(msg)
-        owner = await self.bot.get_owner()
-        await owner.send(msg)
+    #     msg = f"server status is now UNAVAILABLE: '{guild.name}', id: {guild.id}"
+    #     print(msg)
+    #     owner = await self.bot.get_owner()
+    #     await owner.send(msg)
 
 
 def setup(bot: PythonBot) -> None:

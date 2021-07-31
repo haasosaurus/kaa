@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
@@ -14,7 +14,8 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class OwnerUtilsCog(commands.Cog, name='ownerutils'):
+class Owner(commands.Cog, name='owner'):
+    """cog with commands for the bot's owner"""
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -112,19 +113,24 @@ class OwnerUtilsCog(commands.Cog, name='ownerutils'):
         msg = f'Playing {status}'
         await self.bot.send_titled_msg(ctx, 'Set status to:', msg, 0x00aa00)
 
-    @commands.command(
-        aliases=[],
-        hidden=True,
-    )
+    @commands.command(aliases=['rt'])
     @commands.is_owner()
-    # @commands.guild_only()
     @print_context
-    async def test(self, ctx: commands.Context) -> None:
-        """just a test command"""
+    async def reload_test_ext(self, ctx: commands.Context):
+        await ctx.invoke(self.bot.get_command('reload'), 'test')
 
-        msg = 'testing...'
-        await self.bot.send_info_msg(ctx, msg)
+    @commands.command(aliases=['rg'])
+    @commands.is_owner()
+    @print_context
+    async def reload_games_ext(self, ctx: commands.Context):
+        await ctx.invoke(self.bot.get_command('reload'), 'games')
+
+    @commands.command(aliases=['re'])
+    @commands.is_owner()
+    @print_context
+    async def reload_games_utils_embeds(self, ctx: commands.Context):
+        await ctx.invoke(self.bot.get_command('reload'), 'games.utils.embeds')
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(OwnerUtilsCog(bot))
+    bot.add_cog(Owner(bot))
