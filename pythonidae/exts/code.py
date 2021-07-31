@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # third-party modules - discord and related
@@ -46,6 +46,29 @@ class CodeCog(commands.Cog, name='code'):
             await self.bot.send_error_msg(ctx, error_msg)
         else:
             raise error
+
+    @commands.command(aliases=['md'])
+    async def markdown(self, ctx: commands.Context):
+        msg = '''\
+**__CODEBLOCK SYNTAX HIGHLIGHTING__**
+\`\`\`py
+def func(n):
+    for i in range(n):
+        print(i)
+\`\`\`
+```py
+def func(n):
+    for i in range(n):
+        print(i)
+```
+**__SPOILERS__**
+\|\|spoiler\|\|
+||spoiler||
+
+**__MORE INFO__**
+:link: Discord Markdown Text 101 <https://support.discord.com/hc/en-us/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline->'''
+
+        await ctx.send(msg)
 
 
 def setup(bot: PythonBot) -> None:
