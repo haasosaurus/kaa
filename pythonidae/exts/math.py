@@ -19,13 +19,15 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class Math(commands.Cog, name='test'):
+class Math(commands.Cog, name='math'):
     def __init__(self, bot: PythonBot) -> None:
         self.bot = bot
 
+        # embed styling/formatting
         self.embed_color = 0xfed142
 
     @commands.command()
+    @commands.guild_only()
     @print_context
     async def tex(self, ctx: commands.Context, *, expression: str) -> None:
         """
@@ -54,12 +56,12 @@ class Math(commands.Cog, name='test'):
             outputbuffer=buffer,
             euler=False,
             dvioptions=[
-                "-T", "tight",
-                "-z", "0",
-                "--truecolor",
-                "-D 400",
-                "-bg", "Transparent",
-                "-fg", "White",
+                '-T', 'tight',
+                '-z', '0',
+                '--truecolor',
+                '-D 400',
+                '-bg', 'Transparent',
+                '-fg', 'White',
             ],
         )
 
@@ -96,7 +98,7 @@ class Math(commands.Cog, name='test'):
 
         # create embed for the latex image to be sent in
         embed = discord.Embed(
-            title='Python Math Expression to Latex',
+            title='Your expression as LaTeX',
             color=self.embed_color,
         )
         embed.set_image(url="attachment://tex.png")
@@ -104,7 +106,8 @@ class Math(commands.Cog, name='test'):
         # send the embed and the image as an attachment
         await ctx.send(file=file, embed=embed)
 
-    @commands.command()
+    @commands.command(hidden=True)
+    @commands.is_owner()
     @print_context
     async def tex_test(self, ctx: commands.Context) -> None:
         """test for the tex command"""
