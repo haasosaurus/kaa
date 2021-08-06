@@ -30,7 +30,7 @@ class Math(commands.Cog, name='test'):
     async def tex(self, ctx: commands.Context, *, expression: str) -> None:
         """
         turn python math expression into latex image in an embed
-        example: !tex x = 2*sqrt(2*pi*k*T_e/m_e)*(DeltaE/(k*T_e))**2*a_0**2
+        ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
         """
 
         # strip any whitespace and backticks
@@ -43,7 +43,7 @@ class Math(commands.Cog, name='test'):
                 print_latex=False,
                 print_formula=False,
             )
-        except SyntaxError:
+        except (TypeError, SyntaxError):
             return await self.bot.send_error_msg(ctx, 'Error processing expression')
 
         # convert latex to png and save to buffer
@@ -109,7 +109,7 @@ class Math(commands.Cog, name='test'):
     async def tex_test(self, ctx: commands.Context) -> None:
         """test for the tex command"""
 
-        expression = '2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2'
+        expression = 'x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2'
         await ctx.invoke(self.bot.get_command('tex'), expression=expression)
 
 
