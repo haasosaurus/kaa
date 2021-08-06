@@ -44,7 +44,7 @@ class Math(commands.Cog, name='test'):
                 print_formula=False,
             )
         except (TypeError, SyntaxError):
-            return await self.bot.send_error_msg(ctx, 'Error processing expression')
+            return await self.bot.send_error_msg(ctx, 'Expression could not be processed')
 
         # convert latex to png and save to buffer
         buffer = io.BytesIO()
