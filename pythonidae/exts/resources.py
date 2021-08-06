@@ -10,7 +10,7 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class ResourceCog(commands.Cog, name='resources'):
+class Resources(commands.Cog, name='resources'):
     """
     resource commands
     """
@@ -303,4 +303,4 @@ __**download links**__
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(ResourceCog(bot))
+    bot.add_cog(Resources(bot))
