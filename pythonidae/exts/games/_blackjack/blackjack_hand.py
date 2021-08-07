@@ -9,6 +9,7 @@ from exts.games._cards import Card
 class BlackjackHand:
 
     card_values = {
+        Card.Rank.ACE: 1,
         Card.Rank.TWO: 2,
         Card.Rank.THREE: 3,
         Card.Rank.FOUR: 4,
@@ -63,22 +64,19 @@ class BlackjackHand:
     @property
     def value_hard(self):
         val = 0
-        for card in self:
-            if card.rank == Card.Rank.ACE:
-                val += 1
-            else:
-                val += self.card_values[card.rank]
+        for card in self.cards:
+            val += self.card_values[card.rank]
         return val
 
-    @property
-    def value_soft(self):
-        val = 0
-        for card in self:
-            if card.rank == Card.Rank.ACE:
-                val += 11
-            else:
-                val += self.card_values[card.rank]
-        return val
+    # @property
+    # def value_soft(self):
+    #     val = 0
+    #     for card in self:
+    #         if card.rank == Card.Rank.ACE:
+    #             val += 11
+    #         else:
+    #             val += self.card_values[card.rank]
+    #     return val
 
     @property
     def blackjack(self):
@@ -90,10 +88,8 @@ class BlackjackHand:
         val = 0
         for card in self.cards:
             if card.rank == Card.Rank.ACE:
-                val += 1
                 ace = True
-            else:
-                val += self.card_values[card.rank]
+            val += self.card_values[card.rank]
         if ace and val < 12:
             val += 10
 
@@ -109,6 +105,9 @@ class BlackjackDealerHand(BlackjackHand):
     def __iter__(self):
         return islice(self.cards, 1, len(self.cards))
 
+    def iter_all(self):
+        return iter(self.cards)
+
     @property
     def hidden(self):
         if self.cards:
@@ -117,15 +116,20 @@ class BlackjackDealerHand(BlackjackHand):
             return None
 
     @property
+    def value_hidden_hard(self):
+        val = 0
+        for card in self:
+            val += self.card_values[card.rank]
+        return val
+
+    @property
     def value_hidden(self):
         ace = False
         val = 0
         for card in self:
             if card.rank == Card.Rank.ACE:
-                val += 1
                 ace = True
-            else:
-                val += self.card_values[card.rank]
+            val += self.card_values[card.rank]
         if ace and val < 12:
             val += 10
 
