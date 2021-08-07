@@ -196,33 +196,40 @@ class Blackjack:
             # otherwise
             else:
                 # go to dealer phase
-                # self.phase = Blackjack.Phase.DEALER
+                self.phase = Blackjack.Phase.DEALER
 
                 # debugging Phase.PLAYER
-                self.phase = Blackjack.Phase.EXIT
+                #self.phase = Blackjack.Phase.EXIT
 
 
         # last completed phase == Phase.DEALER
         elif self.phase == Blackjack.Phase.DEALER:
-            self.phase = Blackjack.Phase.PAYOUT
 
+            # go to payout phase
+            #self.phase = Blackjack.Phase.PAYOUT
+
+            # debugging Phase.DEALER
+            self.phase = Blackjack.Phase.EXIT
 
         # last completed phase == Phase.PAYOUT
         elif self.phase == Blackjack.Phase.PAYOUT:
 
+            # debugging payout phase
+            self.phase = Blackjack.Phase.EXIT
 
-            # start a new round if there are still players
-            if self.players:
 
-                # cleanup players and game state
-                self.cleanup()
+            # # start a new round if there are still players
+            # if self.players:
 
-                # restart round loop
-                self.phase = Blackjack.Phase.WAGER
+            #     # cleanup players and game state
+            #     self.cleanup()
 
-            # otherwise exit the game
-            else:
-                self.phase = Blackjack.Phase.EXIT
+            #     # restart round loop
+            #     self.phase = Blackjack.Phase.WAGER
+
+            # # otherwise exit the game
+            # else:
+            #     self.phase = Blackjack.Phase.EXIT
 
 
         # set the next state
@@ -344,15 +351,27 @@ class Blackjack:
         self.players.pop(user_id, None)
 
 
-    def player_bet(self, user_id, wager):
+    def player_wager(self, user_id, wager):
         """set a players curent wager and its status"""
 
-        if user_id not in self.players:
+        player: dict = self.players.get(user_id)
+
+        # return if they're not a player in this game
+        if player is None:
             return
 
-        if wager == self.players[user_id]['wager']:
+        # return if it's the same wager they already have
+        if wager == player['wager']:
             return
 
-        if self.wager_min <= wager <= self.wager_max:
-            self.players[user_id]['wager'] = wager
-            self.players[user_id]['wager_updated'] = True
+        # return if they don't have enough credits
+        if wager > player['credits']:
+            return
+
+        # return if the wager isn't in the range wager_min, wager_max inclusive
+        if wager < self.wager_min or wager > self.wager_max:
+            return
+
+        # set their new wager
+        player['wager'] = wager
+        player['wager_updated'] = True
