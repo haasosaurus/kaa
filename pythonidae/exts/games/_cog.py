@@ -59,14 +59,14 @@ class Games(commands.Cog, name='games'):
 
             # wager
             ('bj_wager_embed', 'resources/data/game_embeds/bj_wager_embed.json'),
-            ('bj_wager_row1', 'resources/data/game_embeds/bj_wager_row1.json'),
+            ('bj_wager_row', 'resources/data/game_embeds/bj_wager_row.json'),
 
             # deal
             ('bj_deal_embed', 'resources/data/game_embeds/bj_deal_embed.json'),
 
             # player
             ('bj_player_embed', 'resources/data/game_embeds/bj_player_embed.json'),
-            ('bj_player_row1', 'resources/data/game_embeds/bj_player_row1.json'),
+            ('bj_player_row', 'resources/data/game_embeds/bj_player_row.json'),
 
             # dealer
             ('bj_dealer_embed', 'resources/data/game_embeds/bj_dealer_embed.json'),
@@ -80,9 +80,9 @@ class Games(commands.Cog, name='games'):
         self.bot.blackjack_players = {}
 
 
-    @commands.command(aliases=['bj_bet', 'bet'])
+    @commands.command(aliases=['bj_wager', 'blackjack_bet', 'bj_bet', 'bet'])
     @print_context
-    async def blackjack_bet(self, ctx: commands.Context, wager: int) -> None:
+    async def blackjack_wager(self, ctx: commands.Context, wager: int) -> None:
         """make wager in blackjack"""
 
         # delete message to reduce spam
@@ -98,7 +98,7 @@ class Games(commands.Cog, name='games'):
         if game.wager_changes_allowed:
 
             # set player wager
-            game.player_bet(ctx.author.id, wager)
+            game.player_wager(ctx.author.id, wager)
 
 
     @commands.command(aliases=['bj'])
