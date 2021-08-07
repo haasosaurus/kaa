@@ -37,6 +37,7 @@ class BlackjackWager(BlackjackState):
         """initializer"""
 
         super().__init__(*args, **kwargs)
+        self.bj_wager_row = None
         self.interface_init()
         self.gameplay_init()
         self.game.bot.loop.create_task(
@@ -47,7 +48,7 @@ class BlackjackWager(BlackjackState):
     def interface_init(self):
         """interface related initializations"""
 
-        self.row1 = ActionRow.from_dict(self.game.embed_data['bj_wager_row1'])
+        self.bj_wager_row = ActionRow.from_dict(self.game.embed_data['bj_wager_row'])
         self.setup_callbacks()
 
 
@@ -74,7 +75,7 @@ class BlackjackWager(BlackjackState):
         """async initializations and actions"""
 
         # edit the message initially
-        await self.game.message.edit(content=None, embed=self.embed, components=[self.row1, self.menu_row])
+        await self.game.message.edit(content=None, embed=self.embed, components=[self.bj_wager_row, self.menu_row])
         await self.wager_loop()
 
 
@@ -94,13 +95,21 @@ class BlackjackWager(BlackjackState):
             if not self.waiting_on:
                 break
 
-            # otherwise continue to update wagers
+            # otherwise wait half a second
             await asyncio.sleep(0.5)
-            for player in self.game.players.values():
+
+            # check if any player has updated their wager
+            players = iter(self.game.players.values())
+            for player in players:
                 if player['wager_updated']:
                     player['wager_updated'] = False
+
+                    # set wager_updated to false for remaining players and expend iterator
+                    for player in players:
+                        player['wager_updated'] = False
+
+                    # edit the embed to show the updated wagers
                     await self.game.message.edit(embed=self.embed)
-                    break
 
         # set game to disallow wager changes
         self.game.wager_changes_allowed = False
