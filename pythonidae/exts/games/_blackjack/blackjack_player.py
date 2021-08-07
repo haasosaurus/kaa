@@ -42,7 +42,7 @@ class BlackjackPlayer(BlackjackState):
         self.other_players_values = ''
         self.player_position = 1
         self.action_taken = False
-        self.row1 = None
+        self.bj_player_row = None
 
         self.interface_init()
         self.game.bot.loop.create_task(
@@ -51,7 +51,7 @@ class BlackjackPlayer(BlackjackState):
 
 
     def interface_init(self):
-        self.row1 = ActionRow.from_dict(self.game.embed_data['bj_player_row1'])
+        self.bj_player_row = ActionRow.from_dict(self.game.embed_data['bj_player_row'])
         self.create_other_players_fields()
         self.setup_callbacks()
 
@@ -136,7 +136,7 @@ class BlackjackPlayer(BlackjackState):
         """initializer for async stuff"""
 
         # edit the message initially
-        await self.game.message.edit(embed=self.embed, components=[self.row1, self.menu_row])
+        await self.game.message.edit(embed=self.embed, components=[self.bj_player_row, self.menu_row])
 
 
     @property
@@ -227,7 +227,7 @@ class BlackjackPlayer(BlackjackState):
             inline=True,
         )
 
-        name = 'Hard/Best'
+        name = 'Hard[/Best]'
         # value = f'{pad_left(1)}{hand.value_hard}'
         value = f'{hand.value_hard}'
         if hand.value_hard != hand.value:
@@ -252,13 +252,6 @@ class BlackjackPlayer(BlackjackState):
         for card in self.game.dealer_hand:
             dealer_cards += CARDS[card.format_short()]
 
-        # dealer - value - hard
-        dealer_value_hard = self.game.dealer_hand.value_hard
-
-        # dealer - value - soft
-        dealer_value_best = self.game.dealer_hand.value_hidden
-
-
         # player cards field
         name = dealer_name
         # value = ''
@@ -273,7 +266,12 @@ class BlackjackPlayer(BlackjackState):
             inline=True,
         )
 
-        # name = '(Shown)'
+        # dealer - value - hidden - hard
+        dealer_value_hard = self.game.dealer_hand.value_hidden_hard
+
+        # dealer - value - hidden - best
+        dealer_value_best = self.game.dealer_hand.value_hidden
+
         name = U200B
         value = f'{dealer_value_hard}'
         if dealer_value_hard != dealer_value_best:
@@ -355,7 +353,7 @@ class BlackjackPlayer(BlackjackState):
             return await inter.reply(content=msg, ephemeral=True)
 
         # correct player clicks, gracefully end player turn
-        self.row1.disable_buttons()
+        self.bj_player_row.disable_buttons()
         self.listener.kill()
         await asyncio.sleep(self.timeout_manual)
         await self.game.timeout_handler()
@@ -370,23 +368,34 @@ class BlackjackPlayer(BlackjackState):
             return await inter.reply(content=msg, ephemeral=True)
 
         # correct player clicks
-        self.row1.disable_buttons(2, 3)
+        self.bj_player_row.disable_buttons(2, 3)
+
+        # handle interaction
+        await inter.reply(type=dislash.ResponseType.DeferredUpdateMessage)
+
+        # deal card to player
         player = self.game.players[self.game.player_current]
         hand: BlackjackHand = player['hand']
         deck = self.game.deck
         hand.append(deck.deal())
+
+        # check if player busted
         if hand.value > 21:
             player['status'] = 'Busted'
-            self.row1.disable_buttons(0, 1)
+            self.bj_player_row.disable_buttons(0, 1)
 
-        # handle interaction and update the embed to show player busted
-        await inter.reply(type=dislash.ResponseType.DeferredUpdateMessage)
-        await inter.message.edit(embed=self.embed, components=[self.row1, self.menu_row])
+        # upddate the embed
+        await inter.message.edit(embed=self.embed, components=[self.bj_player_row, self.menu_row])
 
-        # gracefully end player turn
-        self.listener.kill()
-        await asyncio.sleep(self.timeout_manual)
-        await self.game.timeout_handler()
+        # gracefully end player turn if player busted
+        if player['status'] == 'Busted':
+            self.listener.kill()
+            await asyncio.sleep(self.timeout_manual)
+            await self.game.timeout_handler()
+
+        # update the embed to show player busted
+        # await inter.message.edit(embed=self.embed, components=[self.player_row, self.menu_row])
+
 
 
     async def button_double_down_handler(self, inter: dislash.MessageInteraction):
