@@ -321,10 +321,7 @@ class TimesCog(commands.Cog, name='times'):
         user_name = None
         utc_offset = dt_now.strftime('%z')
         if not isinstance(user_or_timezone, str):
-            if user_or_timezone.nick:
-                user_name = user_or_timezone.nick
-            else:
-                user_name = user_or_timezone.name
+            user_name = user_or_timezone.display_name
 
         # create embed
         embed = discord.Embed(
