@@ -7,7 +7,7 @@ import pytz
 
 # third-party modules - discord and related
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 # local modules
 from pythonbot import PythonBot
@@ -17,6 +17,25 @@ from utils import print_context
 class EventsCog(commands.Cog, name='test'):
     def __init__(self, bot: PythonBot) -> None:
         self.bot = bot
+
+    @commands.command()
+    @commands.is_owner()
+    @print_context
+    async def taskgen(self, ctx: commands.Context, seconds: int) -> None:
+
+        @tasks.loop(seconds=seconds, count=1)
+        async def inner_task() -> None:
+            pass
+
+        @inner_task.before_loop
+        async def before_inner_task() -> None:
+            pass
+
+        @inner_task.after_loop
+        async def after_inner_task() -> None:
+            await ctx.send('timer complete')
+
+        inner_task.start()
 
     @commands.command()
     @commands.is_owner()
