@@ -1,16 +1,6 @@
 {
-	"asshat": "gentleman",
-	"asshole": "gentleman",
-	"assholes": "gentlemen",
 	"bastard": "gentleman",
 	"bastards": "gentlemen",
-	"nigga": "gentleman",
-	"niggas": "gentlemen",
-	"niga": "gentleman",
-	"nigas": "gentlemen",
-	"nigger": "gentleman",
-	"niggers": "gentlemen",
-	"nigers": "gentlemen",
 	"tosser": "gentleman",
 	"tossers": "gentlemen",
 	"fudgepacker": "gentleman",
@@ -31,6 +21,17 @@
 
 
 
+	"asshole": "friend",
+	"assholes": "friends",
+	"asshat": "friend",
+	"asshats": "friends",
+	"nigga": "friend",
+	"niggas": "friends",
+	"niga": "friend",
+	"nigas": "friends",
+	"nigger": "friend",
+	"niggers": "friends",
+	"nigers": "friends",
 	"fag": "friend",
 	"fags": "friends",
 	"faggot": "friend",
@@ -98,12 +99,12 @@
 
 
 
-	"boob": "udder",
-	"boobs": "udders",
-	"tit": "udder",
-	"tits": "udders",
-	"titty": "udder",
-	"titties": "udders",
+	"boob": "balloon",
+	"boobs": "balloons",
+	"tit": "balloon",
+	"tits": "balloons",
+	"titty": "balloon",
+	"titties": "balloons",
 
 
 
