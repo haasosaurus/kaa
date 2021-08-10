@@ -1,99 +1,206 @@
 {
-	"anal": "back",
-	"anus": "uranus",
-	"arse": "donkey",
-	"ass": "donkey",
 	"asshat": "gentleman",
 	"asshole": "gentleman",
 	"assholes": "gentlemen",
-	"ballsack": "bag",
 	"bastard": "gentleman",
 	"bastards": "gentlemen",
+	"nigga": "gentleman",
+	"niggas": "gentlemen",
+	"niga": "gentleman",
+	"nigas": "gentlemen",
+	"nigger": "gentleman",
+	"niggers": "gentlemen",
+	"nigers": "gentlemen",
+	"tosser": "gentleman",
+	"tossers": "gentlemen",
+	"fudgepacker": "gentleman",
+	"fudgepackers": "gentlemen",
+
+
+
+
 	"biatch": "lady",
 	"bitch": "lady",
 	"biatches": "ladies",
 	"bitches": "ladies",
 	"biatchs": "ladies",
 	"bitchs": "ladies",
-	"blowjob": "vacuum",
-	"bollock": "uk insult",
-	"bollok": "misspelled uk insult",
-	"boner": "happy rooster",
-	"boob": "beanbag",
-	"boobs": "beanbags",
-	"buttplug": "cork",
-	"clitoris": "bean",
+	"dyke": "lady",
+	"dykes": "ladies",
+
+
+
+
+	"fag": "friend",
+	"fags": "friends",
+	"faggot": "friend",
+	"faggots": "friends",
+	"fagot": "friend",
+	"fagots": "friends",
+	"homo": "friend",
+	"homos": "friends",
+	"tranny": "friend",
+	"trannies": "friends",
+	"trannys": "friends",
+	"dickbag": "friend",
+	"dickbags": "friends",
+	"jerk": "friend",
+	"jerks": "friends",
+
+
+
+
+	"arse": "donkey",
+	"arses": "donkeys",
+	"ass": "donkey",
+	"asses": "donkeys",
+	"anal": "donkey riding",
+
+	"anus": "uranus",
+	"anuses": "multiple uranus",
+
+
+
+
 	"cock": "rooster",
-	"cum": "swimmers",
-	"cunt": "kitty",
+	"cocks": "roosters",
 	"dick": "rooster",
+	"dicks": "roosters",
+	"penis": "rooster",
+	"penises": "roosters",
 	"dildo": "silicone rooster",
-	"dyke": "dam",
+	"dildos": "silicone roosters",
+	"boner": "happy rooster",
+	"boners": "happy roosters",
 	"erection": "happy rooster",
-	"fag": "stick",
-	"faggot": "stick",
-	"faggots": "sticks",
-	"fagot": "stick",
-	"fagots": "sticks",
-	"fags": "sticks",
-	"feck": "fudge",
-	"felching": "unknown",
-	"fellate": "clean",
-	"fellatio": "cleaning",
-	"fuck": "hug",
-	"fucks": "hugs",
-	"fudgepacker": "confectionary packager",
-	"genitals": "generals",
-	"hell": "heck",
-	"homo": "gentleman",
-	"homos": "gentlemen",
-	"jerk": "friendo",
-	"jizz": "hail",
-	"knobend": "unknown",
-	"labia": "curtains",
-	"masturbate": "play solo",
-	"motherfuckin": "mom-adoring",
-	"motherfucking": "mom-adoring",
-	"muff": "boomer term",
-	"nigga": "gentleman",
-	"nigger": "gentleman",
-	"niggas": "gentlemen",
-	"niggers": "gentlemen",
-	"penis": "male connector",
-	"piss": "fluid leak",
-	"poop": "mud",
-	"pube": "bristle",
+	"erections": "happy roosters",
+
+	"ballsack": "walnuts",
+	"scrotum": "walnuts",
+	"bollock": "uk walnuts",
+	"bollok": "uk walnuts",
+
+
+
+
+	"cunt": "cat",
+	"cunts": "cats",
 	"pussy": "cat",
-	"scrotum": "container",
-	"sex": "snuggle",
-	"shit": "evacuation",
-	"shits": "evacuations",
-	"slut": "fun person",
-	"smegma": "unwashed",
-	"spunk": "something",
-	"tit": "tat",
+	"pussies": "cats",
+	"pussys": "cats",
+	"muff": "boomer's cat",
+	"muffs": "boomer's cats",
+	"vagina": "cat",
+	"vaginas": "cats",
+	"clitoris": "button",
+	"labia": "curtains",
+
+
+
+
+	"boob": "udder",
+	"boobs": "udders",
+	"tit": "udder",
 	"tits": "udders",
 	"titty": "udder",
-	"tosser": "unknown",
-	"trannies": "friends",
-	"tranny": "friend",
-	"turd": "dirt",
-	"twat": "tweet",
-	"vagina": "female connector",
-	"wank": "speed run",
-	"whore": "everyone's friend",
-    "bullshit": "something i disagree with",
-    "damn": "darn",
-    "dickbag": "male connector container",
-    "fick": "misspelling",
-    "fucking": "hugging so passionately",
-    "handjob": "handshake",
-    "horny": "lonely",
+	"titties": "udders",
+
+
+
+
+	"fuck": "hug",
+	"fucks": "hugs",
+    "fucking": "hugging",
+	"fuckin": "huggin",
+	"fucker": "hugger",
+	"fuckers": "huggers",
+	"fick": "german hug",
+	"sex": "a hug",
+	"motherfuck": "motherhug",
+	"motherfucks": "motherhugs",
+    "motherfucker": "motherhugger",
+	"motherfuckin": "motherhugging",
+	"motherfucking": "motherhugging",
+    "motherfuker": "motherhugger",
+	"motherfukin": "motherhugging",
+	"motherfuking": "motherhugging",
+	"skank": "professional hugger",
+	"skanks": "professional huggers",
+	"slut": "professional hugger",
+	"sluts": "professional huggers",
+	"whore": "professional hugger",
+	"whores": "professional huggers",
+
+
+
+
+    "bullshit": "manure",
+	"shit": "number two",
+	"shits": "number twos",
+	"turd": "number two",
+	"turds": "number twos",
+	"poop": "number two",
+
+	"piss": "number one",
+
+
+
+
+    "stupid": "genius",
     "idiot": "genius",
-    "lmao": "laughing so hard",
-    "lmfao": "laughing so hard i can't even",
-    "motherfucker": "mom-adorer",
-    "stfu": "hold comments please sir",
-    "stupid": "brilliant",
-    "wtf": "shocking"
+	"idiots": "geniuses",
+	"retard": "genius",
+	"retards": "geniuses",
+	"twat": "genius",
+	"twats": "geniuses",
+	"knobend": "genius",
+	"knobends": "geniuses",
+
+
+
+
+	"cum": "swimmers",
+	"cumming": "swimming",
+	"cuming": "swimming",
+	"jizz": "swimmers",
+	"jiz": "swimmers",
+	"jizzing": "swimming",
+	"jizing": "swimming",
+	"spunk": "swimmers",
+
+	"blowjob": "vacuum",
+	"blowjobs": "vacuums",
+	"fellate": "vacuum",
+	"fellatio": "vacuuming",
+    "handjob": "massage",
+	"handjobs": "massages",
+	"felching": "extreme deviancy",
+
+	"genital": "unspecified animal",
+	"genitals": "unspecified animal",
+
+	"masturbate": "play solo",
+	"masturbating": "playing solo",
+	"wank": "play solo",
+	"wanking": "playing solo",
+
+	"pube": "netherhair",
+	"smegma": "lube",
+    "horny": "thirsty",
+
+	"buttplug": "cork",
+	"buttplugs": "corks",
+
+
+
+
+    "damn": "darn",
+	"damnit": "darn it",
+	"dammit": "darn it",
+	"hell": "heck",
+	"hells": "hecks",
+    "lmao": "mildly amusing",
+    "lmfao": "moderately amusing",
+    "wtf": "absolutely shocking",
+    "stfu": "hold comments please sir"
 }
