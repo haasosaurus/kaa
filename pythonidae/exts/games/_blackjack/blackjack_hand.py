@@ -7,6 +7,7 @@ from exts.games._cards import Card
 
 
 class BlackjackHand:
+    """class for storing cards and calculating the the hands values"""
 
     card_values = {
         Card.Rank.ACE: 1,
@@ -66,17 +67,8 @@ class BlackjackHand:
         val = 0
         for card in self.cards:
             val += self.card_values[card.rank]
-        return val
 
-    # @property
-    # def value_soft(self):
-    #     val = 0
-    #     for card in self:
-    #         if card.rank == Card.Rank.ACE:
-    #             val += 11
-    #         else:
-    #             val += self.card_values[card.rank]
-    #     return val
+        return val
 
     @property
     def blackjack(self):
@@ -96,8 +88,8 @@ class BlackjackHand:
         return val
 
 
-
 class BlackjackDealerHand(BlackjackHand):
+    """dealer specific BlackjackHand subclass"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -120,6 +112,7 @@ class BlackjackDealerHand(BlackjackHand):
         val = 0
         for card in self:
             val += self.card_values[card.rank]
+
         return val
 
     @property
@@ -149,13 +142,16 @@ def main():
 
     print()
 
+
     cards = [Card(Card.Rank.KING, Card.Suit.SPADES), Card(Card.Rank.TEN, Card.Suit.SPADES), Card(Card.Rank.ACE, Card.Suit.SPADES)]
     hand = BlackjackDealerHand(cards)
+
     print(hand)
     print(f'{hand.blackjack=}')
     print(f'{hand.value=}')
     print(f'{hand.value_hard=}')
     print(f'{hand.value_soft=}')
+
     for card in hand:
         print(f'    {card.format_short()}')
 
