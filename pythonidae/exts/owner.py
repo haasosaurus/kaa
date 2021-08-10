@@ -131,6 +131,12 @@ class Owner(commands.Cog, name='owner'):
     async def reload_games_utils_embeds(self, ctx: commands.Context):
         await ctx.invoke(self.bot.get_command('reload'), 'games.utils.embeds')
 
+    @commands.command(aliases=['rp'])
+    @commands.is_owner()
+    @print_context
+    async def reload_profanity(self, ctx: commands.Context):
+        await ctx.invoke(self.bot.get_command('reload'), 'profanity')
+
 
 def setup(bot: PythonBot) -> None:
     bot.add_cog(Owner(bot))
