@@ -19,6 +19,8 @@ from utils import print_context
 
 class Profanity(commands.Cog, name='profanity'):
     def __init__(self, bot: PythonBot) -> None:
+        """initializer"""
+
         self.bot = bot
 
         # extention specific stuff
@@ -28,14 +30,15 @@ class Profanity(commands.Cog, name='profanity'):
         self.build_subs_and_regexes()
 
     def build_subs_and_regexes(self):
+        """builds word substitution dict and regexes to use with it"""
 
         # keys as lists for multi-character alts in the future
-        alts = {}
+        alt_chars = {}
 
         # load alts dict from json
         conversion_json_path = 'resources/data/alt_chars.json'
         with pathlib.Path(conversion_json_path).open() as f:
-            alts = json.load(f)
+            alt_chars = json.load(f)
 
         # load soft translation dict from json
         conversion_json_path = 'resources/data/profanity_subs_soft.json'
@@ -43,12 +46,7 @@ class Profanity(commands.Cog, name='profanity'):
             subs_soft = json.load(f)
 
         # generate alternate spellings
-        for word in list(subs_soft):
-            sub = subs_soft[word]
-            expanded = [alts[letter] for letter in word]
-            for variant in itertools.product(*expanded):
-                variant = ''.join(variant)
-                subs_soft[variant] = sub
+        self.create_variants(subs_soft, alt_chars)
 
         # create pattern
         start = r'''(^|\W)('''
@@ -74,12 +72,7 @@ class Profanity(commands.Cog, name='profanity'):
             subs_hard = hard_rounds[round]
 
             # generate alternate spellings
-            for word in list(subs_hard):
-                sub = subs_hard[word]
-                expanded = [alts[letter] for letter in word]
-                for variant in itertools.product(*expanded):
-                    variant = ''.join(variant)
-                    subs_hard[variant] = sub
+            self.create_variants(subs_hard, alt_chars)
 
             # compile pattern
             pattern = f"({'|'.join(subs_hard)})"
@@ -91,6 +84,18 @@ class Profanity(commands.Cog, name='profanity'):
 
             # update main subs dict
             self.subs.update(subs_hard)
+
+    def create_variants(self, subs: dict, alt_chars: dict) -> None:
+        """
+        creates word variants for a given substitution dict using alt chars dict
+        """
+
+        for word in list(subs):
+            sub = subs[word]
+            expanded = [alt_chars[letter] for letter in word]
+            for variant in itertools.product(*expanded):
+                variant = ''.join(variant)
+                subs[variant] = sub
 
     def translate_soft(self, m: re.Match):
         return m.group(1) + self.subs[m.group(2)]
