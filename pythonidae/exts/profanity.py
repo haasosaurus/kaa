@@ -8,7 +8,7 @@ import pathlib
 import re
 from typing import List, Union
 
-# third-party modules - discord and related
+# third-party packages - discord and related
 import discord
 from discord.ext import commands
 
@@ -21,25 +21,13 @@ class Profanity(commands.Cog, name='profanity'):
     def __init__(self, bot: PythonBot) -> None:
         self.bot = bot
 
+        # extention specific stuff
         self.subs = {}
-        self.build_subs()
+        self.regex_soft = None
+        self.regexes_hard = []
+        self.build_subs_and_regexes()
 
-        # create pattern
-        start = r"(^|\s)"
-        end = r"(?=$|\s)"
-        punct = (
-            r"([\)\$\+\=\:\|\]\\\-\*\!\(\^\[\}\{\<\>\?\.%,`@#/~&_;'"
-            r'\"]*?)'
-        )
-        pattern = f"{start}{punct}({'|'.join(self.subs)}){punct}{end}"
-
-        # compile pattern
-        self.sub_regex = re.compile(
-            pattern=pattern,
-            flags=re.MULTILINE | re.IGNORECASE,
-        )
-
-    def build_subs(self):
+    def build_subs_and_regexes(self):
 
         # keys as lists for multi-character alts in the future
         alts = {}
@@ -49,27 +37,72 @@ class Profanity(commands.Cog, name='profanity'):
         with pathlib.Path(conversion_json_path).open() as f:
             alts = json.load(f)
 
-        # load translation dict from json
-        conversion_json_path = 'resources/data/profanity_substitutions.json'
+        # load soft translation dict from json
+        conversion_json_path = 'resources/data/profanity_subs_soft.json'
         with pathlib.Path(conversion_json_path).open() as f:
-            self.subs = json.load(f)
+            subs_soft = json.load(f)
 
         # generate alternate spellings
-        for word in list(self.subs):
-            sub = self.subs[word]
+        for word in list(subs_soft):
+            sub = subs_soft[word]
             expanded = [alts[letter] for letter in word]
             for variant in itertools.product(*expanded):
                 variant = ''.join(variant)
-                self.subs[variant] = sub
+                subs_soft[variant] = sub
 
-    def translate(self, m: re.Match):
-        return '{0}{1}{3}{2}'.format(*m.group(1, 2, 4), self.subs[m.group(3)])
+        # create pattern
+        start = r'''(^|\W)('''
+        end = r''')(?=$|\W)'''
+        pattern = f"{start}{'|'.join(subs_soft)}{end}"
 
+        # compile pattern
+        self.regex_soft = re.compile(
+            pattern=pattern,
+            flags=re.MULTILINE | re.IGNORECASE,
+        )
+
+        # update main subs dict
+        self.subs.update(subs_soft)
+
+        # now do the hard subs
+        conversion_json_path = 'resources/data/profanity_subs_hard.json'
+        with pathlib.Path(conversion_json_path).open() as f:
+            hard_rounds = json.load(f)
+
+        # do all three rounds
+        for round in ('round1', 'round2', 'round3'):
+            subs_hard = hard_rounds[round]
+
+            # generate alternate spellings
+            for word in list(subs_hard):
+                sub = subs_hard[word]
+                expanded = [alts[letter] for letter in word]
+                for variant in itertools.product(*expanded):
+                    variant = ''.join(variant)
+                    subs_hard[variant] = sub
+
+            # compile pattern
+            pattern = f"({'|'.join(subs_hard)})"
+            regex = re.compile(
+                pattern=pattern,
+                flags=re.MULTILINE | re.IGNORECASE,
+            )
+            self.regexes_hard.append(regex)
+
+            # update main subs dict
+            self.subs.update(subs_hard)
+
+    def translate_soft(self, m: re.Match):
+        return m.group(1) + self.subs[m.group(2)]
+
+    def translate_hard(self, m: re.Match) -> str:
+        return self.subs[m.group(1)]
 
     @commands.Cog.listener(name='on_message')
     async def profanity_translator(self, message: discord.Message) -> None:
         """
-        deletes messages with profanity, replaces with edited message as webhook
+        listens for messages with profanity if one is detected it deletes it and
+        replaces with edited message as webhook masquerading as the user
         """
 
         # return if it's a dm
@@ -84,11 +117,21 @@ class Profanity(commands.Cog, name='profanity'):
         if message.webhook_id or message.author.bot:
             return
 
-        # create translated str
+        # do hard sub translations
+        translated = message.content
+        for regex in self.regexes_hard:
+            translated = re.sub(
+                pattern=regex,
+                repl=self.translate_hard,
+                string=translated,
+                count=0,
+            )
+
+        # do soft sub translation
         translated = re.sub(
-            pattern=self.sub_regex,
-            repl=self.translate,
-            string=message.content,
+            pattern=self.regex_soft,
+            repl=self.translate_soft,
+            string=translated,
             count=0,
         )
 
