@@ -8,7 +8,7 @@ import pathlib
 import re
 from typing import List, Union
 
-# third-party packages - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -22,6 +22,9 @@ class Profanity(commands.Cog, name='profanity'):
         """initializer"""
 
         self.bot = bot
+
+        # style and formatting
+        self.embed_color = 0xfed142
 
         # extention specific stuff
         self.subs = {}
@@ -98,10 +101,18 @@ class Profanity(commands.Cog, name='profanity'):
                 subs[variant] = sub
 
     def translate_soft(self, m: re.Match):
-        return m.group(1) + self.subs[m.group(2)]
+        return m.group(1) + self.subs[m.group(2).lower()]
 
     def translate_hard(self, m: re.Match) -> str:
-        return self.subs[m.group(1)]
+        return self.subs[m.group(1).lower()]
+
+    async def run_regex(self, regex: re.Pattern, translator, text: str) -> str:
+        return re.sub(
+            pattern=regex,
+            repl=translator,
+            string=text,
+            count=0,
+        )
 
     @commands.Cog.listener(name='on_message')
     async def profanity_translator(self, message: discord.Message) -> None:
@@ -114,8 +125,14 @@ class Profanity(commands.Cog, name='profanity'):
         if not message.guild:
             return
 
-        # DEBUG: return if not on the test server
-        if message.guild.id != 864816273618763797:
+        # return if it's not in one of the test channels
+        test_channels = {
+            875283005130801172,  # sfw-zone
+            864922816344358982,  # spam
+            881689845985054741,  # bots-1
+            881689937265700875,  # bots-2
+        }
+        if message.channel.id not in test_channels:
             return
 
         # return if it's a webhook/bot
@@ -125,20 +142,11 @@ class Profanity(commands.Cog, name='profanity'):
         # do hard sub translations
         translated = message.content
         for regex in self.regexes_hard:
-            translated = re.sub(
-                pattern=regex,
-                repl=self.translate_hard,
-                string=translated,
-                count=0,
-            )
+            translated = await self.run_regex(regex, self.translate_hard, translated)
+
 
         # do soft sub translation
-        translated = re.sub(
-            pattern=self.regex_soft,
-            repl=self.translate_soft,
-            string=translated,
-            count=0,
-        )
+        translated = await self.run_regex(self.regex_soft, self.translate_soft, translated)
 
         # if it's not the same as the original message
         if translated != message.content:
@@ -146,20 +154,35 @@ class Profanity(commands.Cog, name='profanity'):
             # delete the original message
             await message.delete()
 
-            # make the webhook creation and deletion into a context manager maybe
-            webhook: discord.Webhook = await message.channel.create_webhook(
-                name=message.author.display_name
+            embed = discord.Embed(
+                description=translated,
+                color=self.embed_color,
             )
-
-            # send the webhook
-            await webhook.send(
-                translated,
-                avatar_url=message.author.avatar_url
+            embed.set_author(
+                name=message.author.display_name,
+                icon_url=message.author.avatar_url
             )
+            await message.channel.send(embed=embed)
 
-            # delete the webhook
-            await webhook.delete()
+            # # make the webhook creation and deletion into a context manager maybe
+            # webhook: discord.Webhook = await message.channel.create_webhook(
+            #     name=message.author.display_name
+            # )
+
+            # # send the webhook
+            # await webhook.send(
+            #     translated,
+            #     avatar_url=message.author.avatar_url,
+            #     wait=True,
+            # )
+
+            # # delete the webhook
+            # await webhook.delete()
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(Profanity(bot))
