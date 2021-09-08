@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -10,7 +10,7 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class AdminCog(commands.Cog, name='admin'):
+class Admin(commands.Cog, name='admin'):
     """commands for server admins"""
 
     def __init__(self, bot: PythonBot) -> None:
@@ -45,13 +45,8 @@ class AdminCog(commands.Cog, name='admin'):
     ) -> None:
         """error handler for rm"""
 
-        # if member or count conversion failed
-        if isinstance(error, commands.BadArgument):
-            msg = f'{error}'
-            await self.bot.send_error_msg(ctx, msg)
-
         # if command is on cooldown for the user that called it
-        elif isinstance(error, commands.CommandOnCooldown):
+        if isinstance(error, commands.CommandOnCooldown):
             _, original_ctx, member, count = ctx.args
 
             # if the owner is on cooldown, allow the command anyways
@@ -62,6 +57,11 @@ class AdminCog(commands.Cog, name='admin'):
             else:
                 msg = f"you can't do that for {round(error.retry_after)} seconds"
                 await self.bot.send_error_msg(ctx, msg)
+
+        # if member or count conversion failed
+        elif isinstance(error, commands.BadArgument):
+            msg = f'{error}'
+            await self.bot.send_error_msg(ctx, msg)
 
         # member doesn't have permission
         elif isinstance(error, commands.MissingPermissions):
@@ -121,6 +121,38 @@ class AdminCog(commands.Cog, name='admin'):
         msg = f'deleted {i} messages'
         await self.bot.send_info_msg(ctx, msg)
 
+    @commands.command(aliases=['wipe_channel'], hidden=True)
+    @commands.has_permissions(administrator=True)
+    @commands.bot_has_permissions(manage_channels=True)
+    @commands.cooldown(1, 60, commands.BucketType.user)
+    @print_context
+    async def reset_channel(
+            self,
+            ctx: commands.Context,
+            channel: discord.TextChannel,
+    ) -> None:
+        """
+        deletes and then creates a matching channel to remove all messages easily
+        """
+
+        # save old position
+        position = channel.position
+
+        # replace channel with clone
+        clone = await channel.clone()
+        await channel.delete()
+
+        # move clone to old position
+        await clone.edit(position=position)
+
+        # send success message
+        msg = f'Wiped channel {clone.mention}'
+        await self.bot.send_success_msg(ctx, msg)
+
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(AdminCog(bot))
+    """
+    function the bot uses to load this extension
+    """
+
+    bot.add_cog(Admin(bot))
