@@ -8,10 +8,10 @@ import json
 import pathlib
 from typing import Union
 
-# third-party modules
+# third-party packages
 import pytz
 
-# third-party modules - discord related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 from reactionmenu import ButtonsMenu, ComponentsButton
@@ -22,7 +22,7 @@ from utils import print_context
 from better_menu import BetterMenu
 
 
-class TimesCog(commands.Cog, name='times'):
+class Times(commands.Cog, name='times'):
     """commands for setting and checking guild member's local time"""
 
     def __init__(self, bot: PythonBot) -> None:
@@ -131,7 +131,7 @@ class TimesCog(commands.Cog, name='times'):
                 msg = f"'{timezone}' is not a valid timezone"
                 return self.bot.send_error_msg(ctx, msg)
             else:
-                return self.set_user_timezone(ctx, timezone)
+                return await self.set_user_timezone(ctx, timezone)
 
         # create menu and buttons
         menu = BetterMenu(
@@ -234,7 +234,7 @@ class TimesCog(commands.Cog, name='times'):
         """
 
         with self.user_timezones_path.open('r') as f:
-            self.bot.user_timezones = json.load(f, object_pairs_hook=TimesCog.keys_to_int)
+            self.bot.user_timezones = json.load(f, object_pairs_hook=Times.keys_to_int)
 
     async def timezone_embeds(self, offset: str):
         """
@@ -338,4 +338,4 @@ class TimesCog(commands.Cog, name='times'):
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(TimesCog(bot))
+    bot.add_cog(Times(bot))
