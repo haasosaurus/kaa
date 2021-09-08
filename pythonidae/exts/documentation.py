@@ -27,7 +27,7 @@ import weakref
 # standard library modules - typing
 from typing import List, Type
 
-# third-party modules
+# third-party packages
 import aioitertools, asyncstdlib
 import dateparser
 import matplotlib, matplotlib.pyplot, more_itertools
@@ -38,14 +38,14 @@ import requests
 import sortedcontainers, sqlalchemy
 import tqdm, tweepy
 
-# third-party modules - broken
+# third-party packages - broken
 #import scapy.all
 
-# third-party modules - pygame
+# third-party packages - pygame
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame, pygame_sdl2
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord, discord_argparse
 from discord.ext import commands
 import dislash
@@ -55,7 +55,7 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class DocumentationCog(commands.Cog, name='documentation'):
+class Documentation(commands.Cog, name='documentation'):
     """python documentation commands"""
 
     member_kind_titles_sort_order = {
@@ -276,7 +276,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
         if docs:
 
             # check that docs not in list of known incorrects
-            for text in DocumentationCog.docs_blacklist_text:
+            for text in Documentation.docs_blacklist_text:
                 if docs.startswith(text):
                     break
             else:
@@ -355,7 +355,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
                 kinds[kind]['members'].update({attr.name: attr.object})
             else:
                 kinds.update({kind: {
-                    'title': await DocumentationCog.member_kind_title(kind),
+                    'title': await Documentation.member_kind_title(kind),
                     'members': {attr.name: attr.object}
                 }})
 
@@ -371,7 +371,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
         if obj in [pygame, pygame_sdl2]:
             kind = 'constants'
             kinds.update({kind: {
-                'title': await DocumentationCog.member_kind_title(kind),
+                'title': await Documentation.member_kind_title(kind),
                 'members': {},
             }})
             for k, v in inspect.getmembers(pygame.constants):
@@ -411,7 +411,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
                 kinds[kind]['members'].update({k: v})
             else:
                 kinds.update({kind: {
-                    'title': await DocumentationCog.member_kind_title(kind),
+                    'title': await Documentation.member_kind_title(kind),
                     'members': {k: v},
                 }})
 
@@ -443,7 +443,7 @@ class DocumentationCog(commands.Cog, name='documentation'):
 
         lines = []
 
-        for kind in await asyncstdlib.sorted(members, key=DocumentationCog.member_kind_sort_order):
+        for kind in await asyncstdlib.sorted(members, key=Documentation.member_kind_sort_order):
             if kind.endswith('_private') and not private:
                 continue
             if kind == 'dunders' and not dunders:
@@ -527,4 +527,8 @@ class DocumentationCog(commands.Cog, name='documentation'):
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(DocumentationCog(bot))
+    """
+    function the bot uses to load this extension
+    """
+
+    bot.add_cog(Documentation(bot))

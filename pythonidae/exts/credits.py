@@ -5,7 +5,7 @@
 import pathlib
 import sqlite3
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -32,16 +32,6 @@ class Credits(commands.Cog, name='credits'):
         pass
 
 
-
-
-
-
-
-
-
-
-
-
     @commands.command(hidden=True)
     @commands.guild_only()
     @commands.is_owner()
@@ -59,6 +49,7 @@ class Credits(commands.Cog, name='credits'):
     async def db_connect(self):
         con = sqlite3.connect(self.db_path)
         return con
+
 
     @commands.command(
         aliases=['give_points', 'point_give', 'give_point'],
@@ -131,6 +122,7 @@ class Credits(commands.Cog, name='credits'):
                 f'They now have {total_points} points!`**'
             )
 
+
     @points_give.error
     async def points_give_handler(
             self,
@@ -143,6 +135,7 @@ class Credits(commands.Cog, name='credits'):
             await ctx.send(f'**`{error}`**')
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"**`you can't do that for {round(error.retry_after)} seconds`**")
+
 
     @commands.command(
         aliases=['show_points', 'show_point', 'point_show'],
@@ -185,6 +178,7 @@ class Credits(commands.Cog, name='credits'):
             # send result message
             await ctx.send(f'**`{member.display_name} has {total_points} points`**')
 
+
     @points_show.error
     async def points_show_handler(
             self,
@@ -198,4 +192,8 @@ class Credits(commands.Cog, name='credits'):
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(Credits(bot))

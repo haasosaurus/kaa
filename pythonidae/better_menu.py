@@ -1,15 +1,18 @@
-from reactionmenu import ButtonsMenu
-from reactionmenu.abc import _PageController
+# -*- coding: utf-8 -*-
 
+
+# standard library modules
 import asyncio
 import collections
 import inspect
 
-from reactionmenu.errors import *
-from reactionmenu.decorators import ensure_not_primed
-
+# third-party packages - discord related
 import discord
 from dislash import ActionRow
+from reactionmenu import ButtonsMenu
+from reactionmenu.abc import _PageController
+from reactionmenu.errors import *
+from reactionmenu.decorators import ensure_not_primed
 
 
 class BetterMenu(ButtonsMenu):

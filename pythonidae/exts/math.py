@@ -10,7 +10,7 @@ from PIL import Image
 from pytexit import py2tex
 import sympy
 
-# third-party packages - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -117,4 +117,8 @@ class Math(commands.Cog, name='math'):
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(Math(bot))

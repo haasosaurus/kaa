@@ -8,10 +8,10 @@ from asyncio.events import AbstractEventLoop
 import os
 import signal
 
-# third-party modules
+# third-party packages
 from dotenv import load_dotenv
 
-# third-party modules - discord related
+# third-party packages - discord related
 from dislash import SlashClient
 
 # local modules

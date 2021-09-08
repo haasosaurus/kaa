@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -10,7 +10,7 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class MembersCog(commands.Cog, name='members'):
+class Members(commands.Cog, name='members'):
     """assorted commands for guild members"""
 
     def __init__(self, bot: PythonBot) -> None:
@@ -63,7 +63,7 @@ class MembersCog(commands.Cog, name='members'):
             *obvious_keywords: str
     ) -> None:
         """
-        generate letmegooglethat links for help vampires
+        generate letmegooglethat links for help vampires/askholes
         """
 
         if not obvious_keywords:
@@ -88,4 +88,8 @@ class MembersCog(commands.Cog, name='members'):
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(MembersCog(bot))
+    """
+    function the bot uses to load this extension
+    """
+
+    bot.add_cog(Members(bot))

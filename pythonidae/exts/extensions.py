@@ -5,7 +5,7 @@
 import sys
 import traceback
 
-# third-party modules - discord and related
+# third-party packages - discord related
 from discord.ext import commands
 
 # local modules
@@ -105,4 +105,8 @@ class Extensions(commands.Cog, name='extensions'):
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(Extensions(bot))

@@ -5,7 +5,7 @@
 import sys
 #from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -139,4 +139,8 @@ class Owner(commands.Cog, name='owner'):
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(Owner(bot))

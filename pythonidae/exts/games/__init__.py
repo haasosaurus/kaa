@@ -5,7 +5,9 @@ from pythonbot import PythonBot
 
 
 def setup(bot: PythonBot) -> None:
-    """load the Games extension"""
+    """
+    function the bot uses to load this extension
+    """
 
     from ._cog import Games
     bot.add_cog(Games(bot))

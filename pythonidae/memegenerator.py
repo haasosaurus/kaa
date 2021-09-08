@@ -1,11 +1,11 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
 import io
 import pathlib
 
-# third party modules
+# third-party packages
 from PIL import Image, ImageDraw, ImageFont
 
 

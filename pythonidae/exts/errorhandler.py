@@ -5,7 +5,7 @@
 import sys
 import traceback
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -13,7 +13,7 @@ from discord.ext import commands
 from pythonbot import PythonBot
 
 
-class CommandErrorHandler(commands.Cog):
+class CommandErrorHandler(commands.Cog, name='command_error_handler'):
     """cog for handling errors that aren't caught by command specific error handlers"""
 
     def __init__(self, bot: PythonBot):
@@ -72,4 +72,8 @@ class CommandErrorHandler(commands.Cog):
 
 
 def setup(bot: PythonBot) -> None:
+    """
+    function the bot uses to load this extension
+    """
+
     bot.add_cog(CommandErrorHandler(bot))

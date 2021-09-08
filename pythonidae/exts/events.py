@@ -5,7 +5,7 @@
 import dateparser
 import pytz
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands, tasks
 
@@ -14,7 +14,7 @@ from pythonbot import PythonBot
 from utils import print_context
 
 
-class EventsCog(commands.Cog, name='test'):
+class Events(commands.Cog, name='events'):
     def __init__(self, bot: PythonBot) -> None:
         self.bot = bot
 
@@ -98,4 +98,8 @@ class EventsCog(commands.Cog, name='test'):
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(EventsCog(bot))
+    """
+    function the bot uses to load this extension
+    """
+
+    bot.add_cog(Events(bot))

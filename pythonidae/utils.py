@@ -1,11 +1,12 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 
 # standard library modules
 import functools
 from typing import Callable
 
-# third-party modules - discord and related
+# third-party packages - discord related
+import discord
 from discord.ext import commands
 
 

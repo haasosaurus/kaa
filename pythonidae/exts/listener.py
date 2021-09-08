@@ -4,7 +4,7 @@
 # standard library modules
 from typing import Union
 
-# third-party modules - discord and related
+# third-party packages - discord related
 import discord
 from discord.ext import commands
 
@@ -12,7 +12,7 @@ from discord.ext import commands
 from pythonbot import PythonBot
 
 
-class ListenerCog(commands.Cog, name='Listener'):
+class Listener(commands.Cog, name='listener'):
     """this cog listens for events"""
 
     def __init__(self, bot: PythonBot) -> None:
@@ -153,4 +153,8 @@ class ListenerCog(commands.Cog, name='Listener'):
 
 
 def setup(bot: PythonBot) -> None:
-    bot.add_cog(ListenerCog(bot))
+    """
+    function the bot uses to load this extension
+    """
+
+    bot.add_cog(Listener(bot))
