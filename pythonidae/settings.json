@@ -30,8 +30,8 @@
     "default_extensions": [
         "exts.admin",
         "exts.code",
+        "exts.command_error_handler",
         "exts.documentation",
-        "exts.errorhandler",
         "exts.extensions",
         "exts.games",
         "exts.listener",
