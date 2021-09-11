@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
+# standard library modules
+from typing import Union
+
 # third-party packages - discord related
 import discord
 from discord.ext import commands
+import dislash
+from dislash import slash_commands
 
 # local modules
 from pythonbot import PythonBot
@@ -48,8 +53,38 @@ class Members(commands.Cog, name='members'):
         """error handling for joined command"""
 
         if isinstance(error, commands.BadArgument):
-            msg = 'Member not found'
+            msg = str(error)
             await self.bot.send_error_msg(ctx, msg)
+
+    @commands.command(name='avatar')
+    @print_context
+    async def avatar_command(self, ctx: commands.Context, user: Union[discord.Member, discord.User] = None) -> None:
+        if user is None:
+            user = ctx.author
+        url = user.avatar_url
+        await ctx.send(url)
+
+    @slash_commands.slash_command(
+        name='avatar',
+        description="sends a user's avatar",
+        guild_ids=[
+            791589784626921473,  # ck
+            864816273618763797,  # kaa
+        ],
+        options=[
+            dislash.Option(
+                name='user',
+                description='another user, or omitted for yourself',
+                type=dislash.OptionType.USER,
+                required=False,
+            ),
+        ]
+    )
+    async def avatar_slash(self, inter: dislash.MessageInteraction, user: Union[discord.Member, discord.User] = None) -> None:
+        if user is None:
+            user = inter.author
+        url = user.avatar_url
+        await inter.reply(url)
 
     @commands.command(
         help='shame tony for his laziness',
