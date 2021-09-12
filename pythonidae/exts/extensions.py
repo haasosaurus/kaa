@@ -21,12 +21,22 @@ class Extensions(commands.Cog, name='extensions'):
 
         self.bot = bot
 
-    @commands.command(name='load', hidden=True)
+    @commands.command(
+        name='load',
+        aliases=[],
+        description='load extensions',
+        help='load extensions',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def load_extensions(self, ctx: commands.Context, *extensions: str) -> None:
+    async def load_extensions(
+            self,
+            ctx: commands.Context,
+            *extensions: str,
+    ) -> None:
         """
-        command to load an extension
+        load extensions
         """
 
         for extension in extensions:
@@ -42,19 +52,34 @@ class Extensions(commands.Cog, name='extensions'):
                     commands.NoEntryPointError,
                     commands.ExtensionFailed,
             ) as e:
-                traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
+                traceback.print_exception(
+                    type(e),
+                    e,
+                    e.__traceback__,
+                    file=sys.stderr,
+                )
                 msg = f'{type(e).__name__} - {e}'
                 await self.bot.send_error_msg(ctx, msg)
             else:
                 msg = f'Loaded: {extension}'
                 await self.bot.send_success_msg(ctx, msg)
 
-    @commands.command(name='unload', hidden=True)
+    @commands.command(
+        name='unload',
+        aliases=[],
+        description='unload extensions',
+        help='unload extensions',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def unload_extensions(self, ctx: commands.Context, *extensions: str) -> None:
+    async def unload_extensions(
+            self,
+            ctx: commands.Context,
+            *extensions: str,
+    ) -> None:
         """
-        command to unload an extension
+        unload extensions
         """
 
         for extension in extensions:
@@ -64,18 +89,34 @@ class Extensions(commands.Cog, name='extensions'):
             try:
                 self.bot.unload_extension(extension)
             except commands.ExtensionNotLoaded as e:
+                traceback.print_exception(
+                    type(e),
+                    e,
+                    e.__traceback__,
+                    file=sys.stderr,
+                )
                 msg = f'{type(e).__name__} - {e}'
                 await self.bot.send_error_msg(ctx, msg)
             else:
                 msg = f'Unloaded: {extension}'
                 await self.bot.send_success_msg(ctx, msg)
 
-    @commands.command(name='reload', hidden=True)
+    @commands.command(
+        name='reload',
+        aliases=[],
+        description='reload extensions',
+        help='reload extensions',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def reload_extensions(self, ctx: commands.Context, *extensions: str) -> None:
+    async def reload_extensions(
+            self,
+            ctx: commands.Context,
+            *extensions: str,
+    ) -> None:
         """
-        command to reload an extension
+        reload extensions
         """
 
         for extension in extensions:
@@ -93,6 +134,12 @@ class Extensions(commands.Cog, name='extensions'):
                     commands.NoEntryPointError,
                     commands.ExtensionFailed,
             ) as e:
+                traceback.print_exception(
+                    type(e),
+                    e,
+                    e.__traceback__,
+                    file=sys.stderr,
+                )
                 msg = f'{type(e).__name__} - {e}'
                 await self.bot.send_error_msg(ctx, msg)
             else:
@@ -101,8 +148,6 @@ class Extensions(commands.Cog, name='extensions'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Extensions(bot))
