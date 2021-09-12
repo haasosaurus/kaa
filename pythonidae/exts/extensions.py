@@ -36,8 +36,6 @@ class Extensions(commands.Cog, name='extensions'):
             try:
                 self.bot.load_extension(extension)
             except commands.ExtensionAlreadyLoaded as e:
-                msg = f'{extension} already loaded, attempting to reload...'
-                await self.bot.send_info_msg(ctx, msg)
                 await self.reload_extensions(ctx, extension)
             except (
                     commands.ExtensionNotFound,
@@ -88,8 +86,6 @@ class Extensions(commands.Cog, name='extensions'):
                 self.bot.unload_extension(extension)
                 self.bot.load_extension(extension)
             except commands.ExtensionNotLoaded as e:
-                msg = f'{extension} not loaded, attempting to load...'
-                await self.bot.send_info_msg(ctx, msg)
                 await self.load_extensions(ctx, extension)
             except (
                     commands.ExtensionNotFound,
