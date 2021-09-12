@@ -17,11 +17,17 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
     """cog for handling errors that aren't caught by command specific error handlers"""
 
     def __init__(self, bot: PythonBot):
+        """initializer"""
+
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: BaseException):
         """triggered when an error is raised while invoking a command"""
+
+        # All other Errors not returned come here... And we can just print the default TraceBack.
+        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
         # This prevents any commands with local handlers being handled here in on_command_error.
         if hasattr(ctx.command, 'on_error'):
@@ -66,14 +72,8 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
             msg = f"You don't have permission to run '{ctx.command}'."
             return await self.bot.send_error_msg(ctx, msg)
 
-        # All other Errors not returned come here... And we can just print the default TraceBack.
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(CommandErrorHandler(bot))
