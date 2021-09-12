@@ -13,10 +13,10 @@ from pythonbot import PythonBot
 
 
 class Listener(commands.Cog, name='listener'):
-    """this cog listens for events"""
+    """general event listener"""
 
     def __init__(self, bot: PythonBot) -> None:
-        """ListenerCog initializer"""
+        """initializer"""
 
         self.bot = bot
 
@@ -35,12 +35,7 @@ class Listener(commands.Cog, name='listener'):
             default_role = guild_settings.get('default_role', default_role)
 
         if welcome:
-            await member.guild.system_channel.send(f'welcome **{member.name}**')
-            # rule_1 = 'No unsanctioned rap battles'
-            # rule_2 = 'No krunker'
-            # await member.guild.system_channel.send(f'Server rules:')
-            # await member.guild.system_channel.send(rule_1)
-            # await member.guild.system_channel.send(rule_2)
+            await member.guild.system_channel.send(f'welcome **{member.display_name}**')
 
         if default_role:
             role = discord.utils.get(member.guild.roles, name=default_role)
@@ -132,29 +127,8 @@ class Listener(commands.Cog, name='listener'):
         owner = await self.bot.get_owner()
         await owner.send(msg)
 
-    # @commands.Cog.listener()
-    # async def on_guild_available(self, guild: discord.Guild) -> None:
-    #     """Called when a guild becomes available."""
-
-    #     msg = f"server status is now AVAILABLE: '{guild.name}', id: {guild.id}"
-    #     print(msg)
-    #     # owner = await self.bot.get_owner()
-    #     # await owner.send(msg)
-
-    # @commands.Cog.listener()
-    # @commands.cooldown(1, 60 * 20, commands.BucketType.guild)
-    # async def on_guild_unavailable(self, guild: discord.Guild) -> None:
-    #     """Called when a guild becomes unavailable."""
-
-    #     msg = f"server status is now UNAVAILABLE: '{guild.name}', id: {guild.id}"
-    #     print(msg)
-    #     owner = await self.bot.get_owner()
-    #     await owner.send(msg)
-
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Listener(bot))
