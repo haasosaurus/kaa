@@ -152,7 +152,7 @@ class MemeGenerator:
         buf.seek(0)
         return buf
 
-    def toyStoryMeme(self, text: str) -> io.BytesIO:
+    def toy_story_meme(self, text: str, jpg=False) -> io.BytesIO:
         """toystory meme"""
 
         text = text[:100]
@@ -175,7 +175,17 @@ class MemeGenerator:
             self.toystory_font
         )
         buf = io.BytesIO()
-        img.save(buf, format='png')
+        save_kwargs = {
+            'format': 'png',
+        }
+        if jpg:
+            save_kwargs.update({
+                'format': 'jpeg',
+                'quality': 80,
+                'optimize': True,
+                'progressive': True,
+            })
+        img.save(buf, **save_kwargs)
         buf.seek(0)
         return buf
 
