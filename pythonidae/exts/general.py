@@ -18,15 +18,24 @@ class General(commands.Cog, name='general'):
 
         self.bot = bot
 
-    @commands.command(aliases=['h'])
+    @commands.command(
+        name='help_',
+        aliases=[],
+        description='old new help command test',
+        help='old new help command test',
+        hidden=True,
+    )
+    @commands.is_owner()
     @print_context
-    async def help_(self, ctx: commands.Context):
+    async def help_command(self, ctx: commands.Context):
+        """
+        old new help command test
+        """
+
         await ctx.send_help()
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(General(bot))

@@ -17,19 +17,35 @@ from discord.ext import commands
 # local modules
 from pythonbot import PythonBot
 from utils import print_context
+from constants import Colors
 
 
 class Math(commands.Cog, name='math'):
+    """math related commands"""
+
     def __init__(self, bot: PythonBot) -> None:
+        """initializer"""
+
         self.bot = bot
 
-        # embed styling/formatting
-        self.embed_color = 0xfed142
+    @commands.command(
+        name='tex',
+        aliases=[],
+        description='python math expression to latex',
+        help='''\
+turn python math expression into latex image in an embed
+ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
 
-    @commands.command()
+**note:** you must use '==' if you want an equals sign''',
+    )
     @commands.guild_only()
     @print_context
-    async def tex(self, ctx: commands.Context, *, expression: str) -> None:
+    async def tex_command(
+            self,
+            ctx: commands.Context,
+            *,
+            expression: str
+    ) -> None:
         """
         turn python math expression into latex image in an embed
         ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
@@ -99,26 +115,32 @@ class Math(commands.Cog, name='math'):
         # create embed for the latex image to be sent in
         embed = discord.Embed(
             title='Your expression as LaTeX',
-            color=self.embed_color,
+            color=Colors.kaa,
         )
         embed.set_image(url="attachment://tex.png")
 
         # send the embed and the image as an attachment
         await ctx.send(file=file, embed=embed)
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='tex_test',
+        aliases=[],
+        description='tex command test',
+        help='tex command test',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def tex_test(self, ctx: commands.Context) -> None:
-        """test for the tex command"""
+    async def tex_test_command(self, ctx: commands.Context) -> None:
+        """
+        test for the tex command
+        """
 
         expression = 'x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2'
         await ctx.invoke(self.bot.get_command('tex'), expression=expression)
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Math(bot))

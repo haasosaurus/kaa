@@ -16,12 +16,23 @@ from utils import print_context
 
 class Events(commands.Cog, name='events'):
     def __init__(self, bot: PythonBot) -> None:
+        """initializer"""
+
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        name='taskgen',
+        aliases=[],
+        description='testing creating a Task factory',
+        help='testing creating a Task factory',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def taskgen(self, ctx: commands.Context, seconds: int) -> None:
+    async def taskgen_command(self, ctx: commands.Context, seconds: int) -> None:
+        """
+        testing creating a Task factory
+        """
 
         @tasks.loop(seconds=seconds, count=1)
         async def inner_task() -> None:
@@ -37,12 +48,18 @@ class Events(commands.Cog, name='events'):
 
         inner_task.start()
 
-    @commands.command()
+    @commands.command(
+        name='local_time',
+        aliases=[],
+        description='dateparser test',
+        help='dateparser test',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def local_time_test(self, ctx: commands.Context, *, future_datetime: str):
+    async def local_time_command(self, ctx: commands.Context, *, future_datetime: str):
         """
-        dateparse test
+        dateparser test
         """
 
         # stop if unable to load caller's timezone
@@ -98,8 +115,6 @@ class Events(commands.Cog, name='events'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Events(bot))

@@ -17,7 +17,9 @@ from pythonbot import PythonBot
 
 
 class Speech(commands.Cog, name='speech'):
-    """this cog listens for events"""
+    """
+    chatbot cog
+    """
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -27,9 +29,11 @@ class Speech(commands.Cog, name='speech'):
         datasets_path = pathlib.Path('resources/data/aiml/datasets')
         self.nlp = Parser(datasets_path)
 
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message) -> None:
-        """message listener"""
+    @commands.Cog.listener(name='on_message')
+    async def chatbot_listener(self, message: discord.Message) -> None:
+        """
+        chat listener
+        """
 
         if message.author == self.bot.user:
             return
@@ -50,9 +54,7 @@ class Speech(commands.Cog, name='speech'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Speech(bot))
 

@@ -182,9 +182,14 @@ class Documentation(commands.Cog, name='documentation'):
             'members': sorted(x for x in self.modules if x not in self.hidden_modules),
         }
 
-    @commands.command(aliases=['documentation', 'doc', 'pydoc', 'docs'])
+    @commands.command(
+        name='pydocs',
+        aliases=['docs'],
+        description='python documentation',
+        help='python documentation',
+    )
     @print_context
-    async def pydocs(
+    async def pydocs_command(
             self,
             ctx: commands.Context,
             *members: str,
@@ -517,9 +522,15 @@ class Documentation(commands.Cog, name='documentation'):
         for page in pages:
             await ctx.send(page)
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='this',
+        aliases=[],
+        description='send this',
+        help='send this',
+        hidden=True,
+    )
     @print_context
-    async def this(self, ctx: commands.Context) -> None:
+    async def this_command(self, ctx: commands.Context) -> None:
         """send this"""
 
         msg = '```\n' + codecs.decode(this.s, 'rot13') + '```'
@@ -527,8 +538,6 @@ class Documentation(commands.Cog, name='documentation'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Documentation(bot))

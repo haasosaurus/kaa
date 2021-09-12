@@ -23,7 +23,9 @@ from better_menu import BetterMenu
 
 
 class Times(commands.Cog, name='times'):
-    """commands for setting and checking guild member's local time"""
+    """
+    commands for setting and checking guild member's local time
+    """
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -113,10 +115,15 @@ class Times(commands.Cog, name='times'):
                 self.timezones_by_offset.update({utc_offset: [cur_tz_str]})
         self.offsets = sorted(self.timezones_by_offset, key=int)
 
-    @commands.command(aliases=['tz', 'set_timezone', 'set_tz'])
+    @commands.command(
+        name='timezone',
+        aliases=['tz'],
+        description='set your timezone',
+        help='set your timezone',
+    )
     @commands.max_concurrency(1, per=commands.BucketType.user, wait=False)  # commands.BucketType.default is global
     @print_context
-    async def timezone(
+    async def timezone_command(
             self,
             ctx: commands.Context,
             timezone: str = None,
@@ -195,8 +202,8 @@ class Times(commands.Cog, name='times'):
 
         await menu.start(utc_page)
 
-    @timezone.error
-    async def timezone_handler(
+    @timezone_command.error
+    async def timezone_command_handler(
             self,
             ctx: commands.Context,
             error: commands.CommandError,
@@ -279,7 +286,12 @@ class Times(commands.Cog, name='times'):
 
         return embed
 
-    @commands.command()
+    @commands.command(
+        name='time',
+        aliases=[],
+        description='show time for timezone or user',
+        help='show time for timezone or user',
+    )
     # @commands.guild_only()
     @print_context
     async def time(
@@ -288,7 +300,7 @@ class Times(commands.Cog, name='times'):
             user_or_timezone: Union[discord.Member, discord.User, str],
     ) -> None:
         """
-        show time for a time zone or person
+        show time for timezone or user
         """
 
         # attempt to get valid timezone
@@ -338,4 +350,6 @@ class Times(commands.Cog, name='times'):
 
 
 def setup(bot: PythonBot) -> None:
+    """function the bot uses to load this extension"""
+
     bot.add_cog(Times(bot))

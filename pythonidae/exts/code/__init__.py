@@ -5,7 +5,7 @@ from pythonbot import PythonBot
 
 
 def setup(bot: PythonBot) -> None:
-    """Load the CodeCog cog."""
+    """function the bot uses to load this extension"""
 
     from ._cog import Code
     bot.add_cog(Code(bot))

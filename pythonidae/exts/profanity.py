@@ -18,6 +18,10 @@ from utils import print_context
 
 
 class Profanity(commands.Cog, name='profanity'):
+    """
+    translates profanity to less offensive things
+    """
+
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
@@ -33,7 +37,9 @@ class Profanity(commands.Cog, name='profanity'):
         self.build_subs_and_regexes()
 
     def build_subs_and_regexes(self):
-        """builds word substitution dict and regexes to use with it"""
+        """
+        builds word substitution dict and regexes to use with it
+        """
 
         # keys as lists for multi-character alts in the future
         alt_chars = {}
@@ -129,8 +135,6 @@ class Profanity(commands.Cog, name='profanity'):
         test_channels = {
             875283005130801172,  # sfw-zone
             864922816344358982,  # spam
-            881689845985054741,  # bots-1
-            881689937265700875,  # bots-2
         }
         if message.channel.id not in test_channels:
             return
@@ -181,8 +185,6 @@ class Profanity(commands.Cog, name='profanity'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Profanity(bot))

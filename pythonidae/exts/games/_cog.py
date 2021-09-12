@@ -23,7 +23,9 @@ from ._blackjack import Blackjack
 
 
 class Games(commands.Cog, name='games'):
-    """game commands extension"""
+    """
+    game commands
+    """
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -80,10 +82,17 @@ class Games(commands.Cog, name='games'):
         self.bot.blackjack_players = {}
 
 
-    @commands.command(aliases=['bj_wager', 'blackjack_bet', 'bj_bet', 'bet'])
+    @commands.command(
+        name='blackjack_wager',
+        aliases=['bj_wager', 'blackjack_bet', 'bj_bet', 'bet'],
+        description='make wager in blackjack',
+        help='make wager in blackjack',
+    )
     @print_context
-    async def blackjack_wager(self, ctx: commands.Context, wager: int) -> None:
-        """make wager in blackjack"""
+    async def blackjack_wager_command(self, ctx: commands.Context, wager: int) -> None:
+        """
+        make wager in blackjack
+        """
 
         # delete message to reduce spam
         message: discord.Message = ctx.message
@@ -101,17 +110,21 @@ class Games(commands.Cog, name='games'):
             game.player_wager(ctx.author.id, wager)
 
 
-    @commands.command(aliases=['bj'])
+    @commands.command(
+        name='blackjack',
+        aliases=['bj'],
+        description='start a blackjack game',
+        help='start a multiplayer blackjack game',
+    )
     @commands.is_owner()
     @print_context
-    async def blackjack(self, ctx: commands.Context):
+    async def blackjack_command(self, ctx: commands.Context):
         """
-        blackjack game
+        start a multiplayer blackjack game
         """
 
         # must add player id to set on cog level and force them to play only one game at once
         # need to implement that thing where it can make sure their id is removed when the command exits
-
 
         msg = await ctx.send('blackjack')
         game = Blackjack(
@@ -122,10 +135,6 @@ class Games(commands.Cog, name='games'):
         )
         game.player_add(ctx.author)
         await game.run()
-
-
-
-
 
 
     def load_embed_json_data(self):
@@ -155,25 +164,22 @@ class Games(commands.Cog, name='games'):
             self.card_emojis = d
 
 
-
-
-
-
-
-
     @commands.command(
-        aliases=['dice_roll', 'roll', 'roll_dice'],
-        usage='!dice AMOUNT SIDES',
-
+        name='dice',
+        aliases=['roll'],
+        description='roll the dice',
+        help='roll between 1 and 100 dice with between 2 and 1000 sides',
     )
     @print_context
-    async def dice(
+    async def dice_command(
             self,
             ctx: commands.Context,
             amount: int = None,
             sides: int = None,
     ) -> None:
-        """simulates rolling AMOUNT dice with SIDES sides"""
+        """
+        roll between 1 and 100 dice with between 2 and 1000 sides
+        """
 
         amount = amount if amount else 1
         sides = sides if sides else 6
@@ -184,10 +190,18 @@ class Games(commands.Cog, name='games'):
             msg = 'ranges are: 0 < AMOUNT <= 100, 1 < SIDES <= 1000'
             await self.bot.send_error_msg(ctx, msg)
 
-    @commands.command(aliases=['coin_flip', 'flip', 'flip_coin'])
+
+    @commands.command(
+        name='coin',
+        aliases=['flip'],
+        description='flip a coin',
+        help='flip a coin',
+    )
     @print_context
-    async def coin(self, ctx: commands.Context) -> None:
-        """simulates flipping a coin"""
+    async def coin_command(self, ctx: commands.Context) -> None:
+        """
+        flip a coin
+        """
 
         msg = random.choice(['heads', 'tails'])
         await self.bot.send_info_msg(ctx, msg)

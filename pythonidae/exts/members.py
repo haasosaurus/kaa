@@ -16,22 +16,29 @@ from utils import print_context
 
 
 class Members(commands.Cog, name='members'):
-    """assorted commands for guild members"""
+    """general commands for server members"""
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
 
-    @commands.command()
+    @commands.command(
+        name='joined',
+        aliases=[],
+        description='shows member joined date and time',
+        help='shows member joined date and time',
+    )
     @commands.guild_only()
     @print_context
-    async def joined(
+    async def joined_command(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
     ) -> None:
-        """Says when a member joined."""
+        """
+        sends member joined date and time
+        """
 
         if member is None:
             member = ctx.message.author
@@ -44,8 +51,8 @@ class Members(commands.Cog, name='members'):
         formatted_datetime = member.joined_at.strftime('%B %d %Y at %I:%M:%S %p')
         await self.bot.send_titled_info_msg(ctx, title, formatted_datetime)
 
-    @joined.error
-    async def joined_handler(
+    @joined_command.error
+    async def joined_command_handler(
             self,
             ctx: commands.Context,
             error: commands.CommandError,
@@ -56,9 +63,18 @@ class Members(commands.Cog, name='members'):
             msg = str(error)
             await self.bot.send_error_msg(ctx, msg)
 
-    @commands.command(name='avatar')
+    @commands.command(
+        name='avatar',
+        aliases=[],
+        description='sends user avatar url',
+        help='sends user avatar url',
+    )
     @print_context
     async def avatar_command(self, ctx: commands.Context, user: Union[discord.Member, discord.User] = None) -> None:
+        """
+        sends user avatar url
+        """
+
         if user is None:
             user = ctx.author
         url = user.avatar_url
@@ -76,29 +92,32 @@ class Members(commands.Cog, name='members'):
                 name='user',
                 description='another user, or omitted for yourself',
                 type=dislash.OptionType.USER,
-                required=False,
+                required=False,  # False is default
             ),
         ]
     )
-    async def avatar_slash(self, inter: dislash.MessageInteraction, user: Union[discord.Member, discord.User] = None) -> None:
+    @slash_commands.guild_only()
+    async def avatar_slash(self, inter: dislash.SlashInteraction, user: Union[discord.Member, discord.User] = None) -> None:
         if user is None:
             user = inter.author
         url = user.avatar_url
         await inter.reply(url)
 
     @commands.command(
-        help='shame tony for his laziness',
-        aliases=['search', 'lmgtfy', 'lmgt',],
+        name='google',
+        aliases=['search', 'lmgt', 'lmgtfy'],
+        description='generate letmegooglethat links',
+        help='generate letmegooglethat links for help vampires/askholes, shame tony for his laziness',
     )
     @commands.guild_only()
     @print_context
-    async def google(
+    async def google_command(
             self,
             ctx: commands.Context,
-            *obvious_keywords: str
+            *obvious_keywords: str,
     ) -> None:
         """
-        generate letmegooglethat links for help vampires/askholes
+        generate letmegooglethat links for help vampires/askholes, shame tony for his laziness
         """
 
         if not obvious_keywords:
@@ -109,10 +128,16 @@ class Members(commands.Cog, name='members'):
             msg = ':link: http://letmegooglethat.com/?q=' + keywords
             await self.bot.send_info_msg(ctx, msg)
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='hello',
+        aliases=[],
+        description='says hello',
+        help='says hello',
+        hidden=True,
+    )
     @commands.guild_only()
     @print_context
-    async def hello(self, ctx: commands.Context) -> None:
+    async def hello_command(self, ctx: commands.Context) -> None:
         """A simple command which only responds to the owner of the bot."""
 
         if ctx.author.id == self.bot.owner_id:
@@ -123,8 +148,6 @@ class Members(commands.Cog, name='members'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Members(bot))

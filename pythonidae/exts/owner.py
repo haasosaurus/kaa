@@ -15,47 +15,68 @@ from utils import print_context
 
 
 class Owner(commands.Cog, name='owner'):
-    """cog with commands for the bot's owner"""
+    """general commands for the bot owner"""
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
 
         self.bot = bot
-        self.servers = None
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='shutdown',
+        aliases=['poweroff'],
+        description='shuts down the bot',
+        help='shuts down the bot and hopefully exits gracefully and entirely',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def shutdown(self, ctx: commands.Context) -> None:
-        """Shuts down the bot and hopefully exits entirely"""
+    async def shutdown_command(self, ctx: commands.Context) -> None:
+        """
+        shuts down the bot and hopefully exits gracefully and entirely
+        """
 
         msg = 'Shutting down, goodbye...'
         print(msg)
         await self.bot.send_info_msg(ctx, msg)
         await ctx.bot.close()
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='flush',
+        aliases=[],
+        description='flushes stdout and stderr',
+        help='flushes stdout and stderr buffers',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def flush(self, ctx: commands.Context) -> None:
-        """flushes the buffers"""
+    async def flush_command(self, ctx: commands.Context) -> None:
+        """
+        flushes stdout and stderr buffers
+        """
 
         sys.stdout.flush()
         sys.stderr.flush()
         msg = 'Flushed stdout and stderr'
         await self.bot.send_success_msg(ctx, msg)
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='say',
+        aliases=[],
+        description='speak through kaa',
+        help='make kaa say whatever you want',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def say(
+    async def say_command(
             self,
             ctx: commands.Context,
             target: str,
             channel_name: str,
-            *words: str
+            *words: str,
     ) -> None:
-        """makes pythonbot speak on target server"""
+        """make kaa say whatever you want"""
 
         if not words:
             msg = '!say SERVER CHANNEL *WORDS'
@@ -83,64 +104,130 @@ class Owner(commands.Cog, name='owner'):
         msg = ' '.join('I' if word == 'i' else word for word in words)
         await channel.send(msg)
 
-    @commands.group(case_insensitive=True, hidden=True)
+    @commands.group(
+        name='status',
+        description='set listening/playing status',
+        help='set listening/playing status',
+        hidden=True,
+        case_insensitive=True,
+    )
     @commands.is_owner()
     @print_context
-    async def status(self, ctx: commands.Context) -> None:
-        """group for status setting commands"""
+    async def status_command_group(self, ctx: commands.Context) -> None:
+        """
+        group for status setting commands
+        """
 
         pass
 
-    @status.command(hidden=True, aliases=['listen', 'l'])
+    @status_command_group.command(
+        name='listening',
+        aliases=[],
+        description='set listening status',
+        help='set listening status ActivityType',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def listening(self, ctx: commands.Context, *text) -> None:
-        """sets status in listening ActivityType"""
+    async def listening_command(
+            self,
+            ctx: commands.Context,
+            *text: str,
+    ) -> None:
+        """
+        set listening status ActivityType
+        """
 
         status = ' '.join(text)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=status))
         msg = f'Listening to {status}'
         await self.bot.send_titled_msg(ctx, 'Set status to:', msg, 0x00aa00)
 
-    @status.command(hidden=True, aliases=['play', 'p'])
+    @status_command_group.command(
+        name='playing',
+        aliases=[],
+        description='set playing status',
+        help='set playing status ActivityType',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def playing(self, ctx: commands.Context, *text) -> None:
-        """sets status in playing ActivityType"""
+    async def playing_command(self, ctx: commands.Context, *text) -> None:
+        """
+        set playing status ActivityType
+        """
 
         status = ' '.join(text)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=status))
         msg = f'Playing {status}'
         await self.bot.send_titled_msg(ctx, 'Set status to:', msg, 0x00aa00)
 
-    @commands.command(aliases=['rt'])
+    @commands.command(
+        name='reload_test',
+        aliases=['rt'],
+        description='alias for command `reload test`',
+        help='alias for command `reload test`',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def reload_test_ext(self, ctx: commands.Context):
+    async def reload_test_command(self, ctx: commands.Context):
+        """
+        alias for command `reload test`
+        """
+
         await ctx.invoke(self.bot.get_command('reload'), 'test')
 
-    @commands.command(aliases=['rg'])
+    @commands.command(
+        name='reload_games',
+        aliases=['rg'],
+        description='alias for command `reload games`',
+        help='alias for command `reload games`',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def reload_games_ext(self, ctx: commands.Context):
+    async def reload_games_command(self, ctx: commands.Context):
+        """
+        alias for command `reload games`
+        """
+
         await ctx.invoke(self.bot.get_command('reload'), 'games')
 
-    @commands.command(aliases=['re'])
+    @commands.command(
+        name='reload_blackjack_embeds',
+        aliases=['re'],
+        description='alias for command `reload game.utils.embeds`',
+        help='alias for command `reload game.utils.embeds`',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def reload_games_utils_embeds(self, ctx: commands.Context):
+    async def reload_games_utils_embeds_command(self, ctx: commands.Context):
+        """
+        alias for command `reload game.utils.embeds`
+        """
+
         await ctx.invoke(self.bot.get_command('reload'), 'games.utils.embeds')
 
-    @commands.command(aliases=['rp'])
+    @commands.command(
+        name='reload_profanity',
+        aliases=['rp'],
+        description='alias for command `reload profanity`',
+        help='alias for command `reload profanity`',
+        hidden=True,
+    )
     @commands.is_owner()
     @print_context
-    async def reload_profanity(self, ctx: commands.Context):
+    async def reload_profanity_command(self, ctx: commands.Context):
+        """
+        alias for command `reload profanity`
+        """
+
         await ctx.invoke(self.bot.get_command('reload'), 'profanity')
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Owner(bot))

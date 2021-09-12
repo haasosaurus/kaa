@@ -15,8 +15,10 @@ from utils import print_context
 from ._codeformatter import CodeFormatter
 
 
-class Code(commands.Cog):
-    """helper commands for sending code"""
+class Code(commands.Cog, name='code'):
+    """
+    general code related commands
+    """
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -81,11 +83,17 @@ class Code(commands.Cog):
         return content
 
     @commands.command(
-        aliases=['codeblock', 'code_block', 'code', 'format']
+        name='block',
+        aliases=['format'],
+        description='blocks/formats target message code',
+        help='''\
+resend a message as a codeblock with syntax highlighting
+formats supported languages if specified
+if block indexes not specified it will send all blocks'''
     )
     @commands.guild_only()
     @print_context
-    async def block(
+    async def block_command(
             self,
             ctx: commands.Context,
             message: discord.Message,
@@ -93,8 +101,8 @@ class Code(commands.Cog):
             *block_indexes: int,
     ) -> None:
         """
-        resend someone's message as a codeblock with syntax highlighting
-        will format supported languages if specified
+        resend a message as a codeblock with syntax highlighting
+        formats supported languages if specified
         if block indexes not specified it will send all blocks
         """
 
@@ -119,10 +127,16 @@ class Code(commands.Cog):
                 msg = f'```{language}\n{content}\n```'
                 await ctx.send(msg)
 
-    @commands.command(aliases=['md'])
-    async def markdown(self, ctx: commands.Context):
+    @commands.command(
+        name='markdown',
+        aliases=['md'],
+        description='sends markdown instructions',
+        help='sends instructions for commonly used markdown: codeblock, syntax highlighting, and spoilers',
+    )
+    async def markdown_command(self, ctx: commands.Context):
         """
-        sends instructions for commonly used markdown
+        sends instructions for commonly used markdown:
+        codeblock, syntax highlighting, and spoilers
         """
 
         await ctx.send(self.markdown_text)

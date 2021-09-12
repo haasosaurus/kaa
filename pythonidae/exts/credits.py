@@ -32,11 +32,17 @@ class Credits(commands.Cog, name='credits'):
         pass
 
 
-    @commands.command(hidden=True)
+    @commands.command(
+        name='blacklist',
+        aliases=[],
+        description='blacklist user credits functionality',
+        help='blacklist user credits functionality',
+        hidden=True,
+    )
     @commands.guild_only()
     @commands.is_owner()
     @print_context
-    async def points_blacklist(
+    async def blacklist_command(
             self,
             ctx: commands.Context,
             member: discord.Member
@@ -52,12 +58,16 @@ class Credits(commands.Cog, name='credits'):
 
 
     @commands.command(
-        aliases=['give_points', 'point_give', 'give_point'],
-        cooldown_after_parsing=True)
+        name='credits_give',
+        aliases=[],
+        description='give a member points',
+        help='give a member points',
+        cooldown_after_parsing=True,
+    )
     @commands.guild_only()
     @commands.cooldown(1, 90, commands.BucketType.user)
     @print_context
-    async def points_give(
+    async def credits_give_command(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
@@ -123,8 +133,8 @@ class Credits(commands.Cog, name='credits'):
             )
 
 
-    @points_give.error
-    async def points_give_handler(
+    @credits_give_command.error
+    async def credits_give_command_handler(
             self,
             ctx: commands.Context,
             error: discord.DiscordException
@@ -138,12 +148,16 @@ class Credits(commands.Cog, name='credits'):
 
 
     @commands.command(
-        aliases=['show_points', 'show_point', 'point_show'],
+        name='credits_info',
+        aliases=[],
+        description='display user credit information',
+        help='display user credit information',
         ignore_extra=True,
+
     )
     @commands.guild_only()
     @print_context
-    async def points_show(
+    async def credits_info_command(
             self,
             ctx: commands.Context,
             member: discord.Member = None,
@@ -179,8 +193,8 @@ class Credits(commands.Cog, name='credits'):
             await ctx.send(f'**`{member.display_name} has {total_points} points`**')
 
 
-    @points_show.error
-    async def points_show_handler(
+    @credits_info_command.error
+    async def credits_info_command_handler(
             self,
             ctx: commands.Context,
             error: discord.DiscordException
@@ -192,8 +206,6 @@ class Credits(commands.Cog, name='credits'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Credits(bot))

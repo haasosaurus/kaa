@@ -19,15 +19,18 @@ class Admin(commands.Cog, name='admin'):
         self.bot = bot
 
     @commands.command(
-        aliases=['delete'],
-        cooldown_after_parsing=True,
+        name='rm_messages',
+        aliases=['rm'],
+        description='delete messages from a member',
+        help='delete messages from a member',
         hidden=True,
+        cooldown_after_parsing=True,
     )
     @commands.guild_only()
     @commands.has_guild_permissions(administrator=True)
     @commands.cooldown(1, 60, commands.BucketType.user)
     @print_context
-    async def rm(
+    async def rm_messages_command(
             self,
             ctx: commands.Context,
             member: discord.Member,
@@ -37,8 +40,8 @@ class Admin(commands.Cog, name='admin'):
 
         return await self._rm(ctx, member, count)
 
-    @rm.error
-    async def rm_handler(
+    @rm_messages_command.error
+    async def rm_messages_command_handler(
             self,
             ctx: commands.Context,
             error: commands.CommandError,
@@ -121,12 +124,18 @@ class Admin(commands.Cog, name='admin'):
         msg = f'deleted {i} messages'
         await self.bot.send_info_msg(ctx, msg)
 
-    @commands.command(aliases=['wipe_channel'], hidden=True)
+    @commands.command(
+        name='wipe_channel',
+        aliases=[],
+        description='remove all channel messages',
+        help='deletes a text channel and then creates a identical empty channel to remove all messages easily',
+        hidden=True,
+    )
     @commands.has_permissions(administrator=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    # @commands.bot_has_permissions(manage_channels=True)
     @commands.cooldown(1, 60, commands.BucketType.user)
     @print_context
-    async def reset_channel(
+    async def wipe_channel_command(
             self,
             ctx: commands.Context,
             channel: discord.TextChannel,
@@ -151,8 +160,6 @@ class Admin(commands.Cog, name='admin'):
 
 
 def setup(bot: PythonBot) -> None:
-    """
-    function the bot uses to load this extension
-    """
+    """function the bot uses to load this extension"""
 
     bot.add_cog(Admin(bot))
