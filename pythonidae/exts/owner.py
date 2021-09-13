@@ -3,7 +3,7 @@
 
 # standard library modules
 import sys
-#from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 # third-party packages - discord related
 import discord
@@ -15,7 +15,7 @@ from utils import print_context
 
 
 class Owner(commands.Cog, name='owner'):
-    """general commands for the bot owner"""
+    """general bot owner commands"""
 
     def __init__(self, bot: PythonBot) -> None:
         """initializer"""
@@ -23,8 +23,8 @@ class Owner(commands.Cog, name='owner'):
         self.bot = bot
 
     @commands.command(
-        name='shutdown',
-        aliases=['poweroff'],
+        name='poweroff',
+        aliases=['shutdown'],
         description='shuts down the bot',
         help='shuts down the bot and hopefully exits gracefully and entirely',
         hidden=True,
@@ -76,7 +76,9 @@ class Owner(commands.Cog, name='owner'):
             channel_name: str,
             *words: str,
     ) -> None:
-        """make kaa say whatever you want"""
+        """
+        make kaa say whatever you want
+        """
 
         if not words:
             msg = '!say SERVER CHANNEL *WORDS'
@@ -163,9 +165,9 @@ class Owner(commands.Cog, name='owner'):
         await self.bot.send_titled_msg(ctx, 'Set status to:', msg, 0x00aa00)
 
     @commands.command(
-        name='reload_test',
-        aliases=['rt'],
-        description='alias for command `reload test`',
+        name='rt',
+        aliases=[],
+        description='`reload test` alias',
         help='alias for command `reload test`',
         hidden=True,
     )
@@ -179,9 +181,9 @@ class Owner(commands.Cog, name='owner'):
         await ctx.invoke(self.bot.get_command('reload'), 'test')
 
     @commands.command(
-        name='reload_games',
-        aliases=['rg'],
-        description='alias for command `reload games`',
+        name='rg',
+        aliases=[],
+        description='`reload games` alias',
         help='alias for command `reload games`',
         hidden=True,
     )
@@ -195,9 +197,9 @@ class Owner(commands.Cog, name='owner'):
         await ctx.invoke(self.bot.get_command('reload'), 'games')
 
     @commands.command(
-        name='reload_blackjack_embeds',
-        aliases=['re'],
-        description='alias for command `reload game.utils.embeds`',
+        name='re',
+        aliases=[],
+        description='`reload game.utils.embeds` alias',
         help='alias for command `reload game.utils.embeds`',
         hidden=True,
     )
@@ -211,9 +213,9 @@ class Owner(commands.Cog, name='owner'):
         await ctx.invoke(self.bot.get_command('reload'), 'games.utils.embeds')
 
     @commands.command(
-        name='reload_profanity',
-        aliases=['rp'],
-        description='alias for command `reload profanity`',
+        name='rp',
+        aliases=[],
+        description='`reload profanity` alias',
         help='alias for command `reload profanity`',
         hidden=True,
     )
