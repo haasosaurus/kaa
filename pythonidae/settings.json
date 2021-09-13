@@ -30,14 +30,15 @@
     "default_extensions": [
         "exts.admin",
         "exts.code",
-        "exts.command_error_handler",
         "exts.documentation",
+        "exts.error_handler",
         "exts.extensions",
         "exts.games",
         "exts.listener",
         "exts.members",
         "exts.memes",
         "exts.owner",
+        "exts.python",
         "exts.resources",
         "exts.times"
     ]
