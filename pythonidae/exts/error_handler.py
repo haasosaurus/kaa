@@ -8,22 +8,40 @@ import traceback
 # third-party packages - discord related
 import discord
 from discord.ext import commands
+import dislash
 
 # local modules
 from pythonbot import PythonBot
 
 
 class CommandErrorHandler(commands.Cog, name='command_error_handler'):
-    """cog for handling errors that aren't caught by command specific error handlers"""
+    """
+    cog for handling errors that aren't caught by command specific error handlers
+    """
 
     def __init__(self, bot: PythonBot):
         """initializer"""
 
         self.bot = bot
 
+    @commands.Cog.listener(name='on_slash_command_error')
+    async def slash_error_handler(
+            self,
+            inter: dislash.SlashInteraction,
+            error: dislash.ApplicationCommandError
+    ) -> None:
+        """
+        general slash command error handler
+        """
+
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        await inter.reply(f'{type(error)}: {error}')
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: BaseException):
-        """triggered when an error is raised while invoking a command"""
+        """
+        general command error handler
+        """
 
         # All other Errors not returned come here... And we can just print the default TraceBack.
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
