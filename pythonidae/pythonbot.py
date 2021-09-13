@@ -12,19 +12,25 @@ from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 # third-party packages - discord related
 import discord
 from discord.ext import commands
-from pretty_help import PrettyHelp
+
+# local modules
+from kaa_help import KaaHelp
 
 
 class PythonBot(commands.Bot):
-    """commands.Bot sublass, trying to clean things up around here"""
+    """
+    discord.ext.commands.Bot subclass
+    """
 
     def __init__(self) -> None:
+        """initializer"""
+
         intents = discord.Intents.all()
         commands.Bot.__init__(
             self,
             command_prefix=PythonBot.prefixes_for,
             case_insensitive=True,
-            help_command=PrettyHelp(),
+            help_command=KaaHelp(),
             intents=intents,
         )
 
@@ -44,7 +50,9 @@ class PythonBot(commands.Bot):
     # test this to make sure it's using the cache
     @staticmethod
     async def prefixes_for(bot, message: discord.Message, guild_prefixes={}) -> Union[str, list]:
-        """A callable Prefix for our bot. This could be edited to allow per server prefixes."""
+        """
+        A callable Prefix for our bot. This could be edited to allow per server prefixes.
+        """
 
         # Only allow ! to be used in DMs, fix this up later
         if not message.guild:
@@ -98,7 +106,9 @@ class PythonBot(commands.Bot):
         return settings
 
     def load_extensions(self) -> None:
-        """load the default extensions specified by the settings file"""
+        """
+        load the default extensions specified by the settings file
+        """
 
         print()
         title = 'loading extensions'
@@ -120,7 +130,9 @@ class PythonBot(commands.Bot):
                 traceback.print_exc()
 
     async def get_owner(self) -> discord.User:
-        """returns owner discord.User object, caches it for reuse"""
+        """
+        returns owner discord.User object, caches it for reuse
+        """
 
         if not self._owner:
             app_info = await self.application_info()
@@ -131,7 +143,9 @@ class PythonBot(commands.Bot):
             self,
             obj: Union[str, discord.Member, discord.Guild]
     ) -> Optional[dict]:
-        """returns dict of guild specific settings"""
+        """
+        returns dict of guild specific settings
+        """
 
         guild_id = None
         if isinstance(obj, str):
@@ -153,6 +167,10 @@ class PythonBot(commands.Bot):
         return None
 
     async def send_titled_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, color: int) -> None:
+        """
+        sends a message embed to the given context - includes a title
+        """
+
         embed = discord.Embed(
             color=color,
         )
@@ -164,6 +182,10 @@ class PythonBot(commands.Bot):
         return await ctx.send(embed=embed)
 
     async def send_untitled_msg(self, ctx: Union[commands.Context, discord.User], msg: str, color: int, thumbnail: str = None) -> None:
+        """
+        sends a message embed to the given context
+        """
+
         embed = discord.Embed(
             color=color,
             description=msg
@@ -173,18 +195,38 @@ class PythonBot(commands.Bot):
         return await ctx.send(embed=embed)
 
     async def send_error_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0xaa0000) -> None:
+        """
+        sends an error message embed to the given context
+        """
+
         return await self.send_titled_msg(ctx, 'Error', msg, color)
 
     async def send_success_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x00aa00) -> None:
+        """
+        sends a success message embed to the given context
+        """
+
         return await self.send_titled_msg(ctx, 'Success', msg, color)
 
     async def send_usage_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x0000aa) -> None:
+        """
+        sends a usage message embed to the given context
+        """
+
         return await self.send_titled_msg(ctx, 'Usage', msg, color)
 
     async def send_info_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, thumbnail: str = None, color=0x0000aa) -> None:
+        """
+        sends an info message embed to the given context
+        """
+
         return await self.send_untitled_msg(ctx, msg, color, thumbnail)
 
     async def send_titled_info_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, *, color=0x0000aa) -> None:
+        """
+        sends an info message embed to the given context - includes a title
+        """
+
         return await self.send_titled_msg(ctx, title, msg, color)
 
     async def on_ready(self) -> None:
