@@ -6,14 +6,14 @@
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
 class General(commands.Cog, name='general'):
     """assorted non-guild specific commands"""
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -35,7 +35,7 @@ class General(commands.Cog, name='general'):
         await ctx.send_help()
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(General(bot))

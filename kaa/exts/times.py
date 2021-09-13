@@ -17,7 +17,7 @@ from discord.ext import commands
 from reactionmenu import ButtonsMenu, ComponentsButton
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 from better_menu import BetterMenu
 
@@ -27,7 +27,7 @@ class Times(commands.Cog, name='times'):
     commands for setting and checking guild member's local time
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -349,7 +349,7 @@ class Times(commands.Cog, name='times'):
         await ctx.send(embed=embed)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Times(bot))

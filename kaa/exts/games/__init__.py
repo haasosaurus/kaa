@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from pythonbot import PythonBot
+from kaa import Kaa
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     from ._cog import Games

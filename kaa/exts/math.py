@@ -15,7 +15,7 @@ import discord
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 from constants import Colors
 
@@ -23,7 +23,7 @@ from constants import Colors
 class Math(commands.Cog, name='math'):
     """math related commands"""
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -140,7 +140,7 @@ ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
         await ctx.invoke(self.bot.get_command('tex'), expression=expression)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Math(bot))

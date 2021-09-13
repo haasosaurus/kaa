@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context, load_texts
 
 
@@ -15,7 +15,7 @@ class Python(commands.Cog, name='python'):
     python specific commands
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -142,7 +142,7 @@ class Python(commands.Cog, name='python'):
             await ctx.send(page)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Python(bot))

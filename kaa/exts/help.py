@@ -29,7 +29,7 @@ import dislash
 from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle, slash_commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 import kaa_help
 from kaa_help import KaaHelp
@@ -42,7 +42,7 @@ class Help(commands.Cog, name='help'):
     help commands
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -149,7 +149,7 @@ class Help(commands.Cog, name='help'):
 
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     importlib.reload(kaa_help)

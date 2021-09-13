@@ -17,7 +17,7 @@ from discord.ext import commands
 from kaa_help import KaaHelp
 
 
-class PythonBot(commands.Bot):
+class Kaa(commands.Bot):
     """
     discord.ext.commands.Bot subclass
     """
@@ -28,7 +28,7 @@ class PythonBot(commands.Bot):
         intents = discord.Intents.all()
         commands.Bot.__init__(
             self,
-            command_prefix=PythonBot.prefixes_for,
+            command_prefix=Kaa.prefixes_for,
             case_insensitive=True,
             help_command=KaaHelp(),
             intents=intents,

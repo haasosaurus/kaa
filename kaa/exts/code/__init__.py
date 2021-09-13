@@ -6,10 +6,10 @@ import importlib
 
 # local modules
 from . import _codeformatter
-from pythonbot import PythonBot
+from kaa import Kaa
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     from ._cog import Code

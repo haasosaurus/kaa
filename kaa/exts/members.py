@@ -11,14 +11,14 @@ import dislash
 from dislash import slash_commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
 class Members(commands.Cog, name='members'):
     """general commands for server members"""
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -147,7 +147,7 @@ class Members(commands.Cog, name='members'):
         await ctx.send(msg)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Members(bot))

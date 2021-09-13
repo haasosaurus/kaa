@@ -13,7 +13,7 @@ import discord
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 
 
 class Speech(commands.Cog, name='speech'):
@@ -21,7 +21,7 @@ class Speech(commands.Cog, name='speech'):
     chatbot cog
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -53,7 +53,7 @@ class Speech(commands.Cog, name='speech'):
             await command_message.channel.send(reply)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Speech(bot))

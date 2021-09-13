@@ -3,11 +3,11 @@
 
 import importlib
 
-from pythonbot import PythonBot
+from kaa import Kaa
 from . import _meme_generator
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     importlib.reload(_meme_generator)

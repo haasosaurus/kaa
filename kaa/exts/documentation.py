@@ -51,7 +51,7 @@ from discord.ext import commands
 import dislash
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
@@ -113,7 +113,7 @@ class Documentation(commands.Cog, name='documentation'):
             order = title_order[1]
         return order
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -537,7 +537,7 @@ class Documentation(commands.Cog, name='documentation'):
         await ctx.send(msg)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Documentation(bot))

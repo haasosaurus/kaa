@@ -9,14 +9,14 @@ import traceback
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
 class Extensions(commands.Cog, name='extensions'):
     """cog with commands for extension management"""
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -147,7 +147,7 @@ class Extensions(commands.Cog, name='extensions'):
                 await self.bot.send_success_msg(ctx, msg)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Extensions(bot))

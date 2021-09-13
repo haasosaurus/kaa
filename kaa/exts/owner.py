@@ -10,14 +10,14 @@ import discord
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
 class Owner(commands.Cog, name='owner'):
     """general bot owner commands"""
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -229,7 +229,7 @@ class Owner(commands.Cog, name='owner'):
         await ctx.invoke(self.bot.get_command('reload'), 'profanity')
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Owner(bot))

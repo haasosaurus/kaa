@@ -11,7 +11,7 @@ from discord.ext import commands
 import dislash
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 
 
 class CommandErrorHandler(commands.Cog, name='command_error_handler'):
@@ -19,7 +19,7 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
     cog for handling errors that aren't caught by command specific error handlers
     """
 
-    def __init__(self, bot: PythonBot):
+    def __init__(self, bot: Kaa):
         """initializer"""
 
         self.bot = bot
@@ -91,7 +91,7 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
             return await self.bot.send_error_msg(ctx, msg)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(CommandErrorHandler(bot))

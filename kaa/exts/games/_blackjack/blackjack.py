@@ -20,7 +20,7 @@ import dislash
 from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 
 # local modules - game
 from .._cards import Card, Deck
@@ -53,7 +53,7 @@ class Blackjack:
 
     def __init__(
         self,
-        bot: PythonBot,
+        bot: Kaa,
         message: discord.Message,
         embed_data: dict,
         emojis: dict,

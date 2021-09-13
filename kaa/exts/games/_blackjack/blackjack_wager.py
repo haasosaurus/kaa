@@ -23,7 +23,7 @@ import dislash
 from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 
 # local modules - game stuff
 from .._cards import Card, Deck

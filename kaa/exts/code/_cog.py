@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 from ._codeformatter import CodeFormatter
 
@@ -20,7 +20,7 @@ class Code(commands.Cog, name='code'):
     general code related commands
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot

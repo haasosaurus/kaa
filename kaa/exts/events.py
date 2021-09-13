@@ -10,12 +10,12 @@ import discord
 from discord.ext import commands, tasks
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 
 
 class Events(commands.Cog, name='events'):
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
@@ -114,7 +114,7 @@ class Events(commands.Cog, name='events'):
         await ctx.send(debug_msg, embed=embed)
 
 
-def setup(bot: PythonBot) -> None:
+def setup(bot: Kaa) -> None:
     """function the bot uses to load this extension"""
 
     bot.add_cog(Events(bot))

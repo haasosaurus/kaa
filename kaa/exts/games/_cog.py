@@ -17,7 +17,7 @@ import dislash
 from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from utils import print_context
 from ._blackjack import Blackjack
 
@@ -27,7 +27,7 @@ class Games(commands.Cog, name='games'):
     game commands
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot

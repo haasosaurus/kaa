@@ -14,7 +14,7 @@ import dislash
 from dislash import slash_commands, InteractionClient, Option, OptionType, OptionParam, SlashInteraction
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 from ._meme_generator import MemeGenerator
 from utils import print_context
 
@@ -24,7 +24,7 @@ class Memes(commands.Cog, name='memes'):
     create and send memes
     """
 
-    def __init__(self, bot: PythonBot) -> None:
+    def __init__(self, bot: Kaa) -> None:
         """initializer"""
 
         self.bot = bot
