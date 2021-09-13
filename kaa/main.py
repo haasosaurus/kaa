@@ -15,13 +15,13 @@ from dotenv import load_dotenv
 from dislash import SlashClient
 
 # local modules
-from pythonbot import PythonBot
+from kaa import Kaa
 
 
 async def handle_sigint(
         signal: signal.Signals,
         loop: AbstractEventLoop,
-        bot: PythonBot
+        bot: Kaa
     ) -> None:
     print('\n' + '-' * 30)
     inp = input('Shutdown? [N/y] ').lower()
@@ -33,7 +33,7 @@ async def handle_sigint(
 def main() -> None:
     load_dotenv()
     token = os.getenv('DISCORD_TOKEN')
-    bot = PythonBot()
+    bot = Kaa()
 
     # required for dislash
     slash = SlashClient(bot)
