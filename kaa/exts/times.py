@@ -18,6 +18,7 @@ from reactionmenu import ButtonsMenu, ComponentsButton
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 from better_menu import BetterMenu
 
@@ -125,7 +126,7 @@ class Times(commands.Cog, name='times'):
     @print_context
     async def timezone_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             timezone: str = None,
     ) -> None:
         """
@@ -136,7 +137,7 @@ class Times(commands.Cog, name='times'):
             timezone = timezone.strip()
             if timezone not in pytz.all_timezones_set:
                 msg = f"'{timezone}' is not a valid timezone"
-                return self.bot.send_error_msg(ctx, msg)
+                return await ctx.send_error_msg(msg)
             else:
                 return await self.set_user_timezone(ctx, timezone)
 
@@ -205,7 +206,7 @@ class Times(commands.Cog, name='times'):
     @timezone_command.error
     async def timezone_command_handler(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             error: commands.CommandError,
     ):
         """
@@ -214,11 +215,11 @@ class Times(commands.Cog, name='times'):
 
         if isinstance(error, commands.MaxConcurrencyReached):
             msg = f"max concurrency reached for '{ctx.command}'."
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
 
     async def set_user_timezone(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             timezone: str
     ) -> None:
         """
@@ -227,7 +228,7 @@ class Times(commands.Cog, name='times'):
         self.bot.user_timezones[ctx.author.id] = timezone
         await self.save_user_timezones()
         msg = f"Set your timezone to '{timezone}'"
-        await self.bot.send_info_msg(ctx, msg, color=self.embed_color)
+        await ctx.send_info_msg(msg, color=self.embed_color)
 
     async def save_user_timezones(self) -> None:
         """
@@ -296,7 +297,7 @@ class Times(commands.Cog, name='times'):
     @print_context
     async def time(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             user_or_timezone: Union[discord.Member, discord.User, str],
     ) -> None:
         """
@@ -307,12 +308,12 @@ class Times(commands.Cog, name='times'):
         timezone_str = None
         if isinstance(user_or_timezone, str):
             if user_or_timezone not in pytz.all_timezones_set:
-                return await self.bot.send_error_msg(ctx, f"'{user_or_timezone}' is not a valid timezone")
+                return await ctx.send_error_msg(f"'{user_or_timezone}' is not a valid timezone")
             else:
                 timezone_str = user_or_timezone
         else:
             if user_or_timezone.id not in self.bot.user_timezones:
-                return await self.bot.send_error_msg(ctx, "user's timezone not saved")
+                return await ctx.send_error_msg("user's timezone not saved")
             timezone_str = self.bot.user_timezones[user_or_timezone.id]
 
         # setup flag

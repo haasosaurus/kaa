@@ -11,6 +11,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -44,7 +45,7 @@ class Credits(commands.Cog, name='credits'):
     @print_context
     async def blacklist_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member
     ) -> None:
         """blacklist a member from using the points system"""
@@ -69,7 +70,7 @@ class Credits(commands.Cog, name='credits'):
     @print_context
     async def credits_give_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member = None,
             points: int = None,
             *reason: str,
@@ -136,7 +137,7 @@ class Credits(commands.Cog, name='credits'):
     @credits_give_command.error
     async def credits_give_command_handler(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             error: discord.DiscordException
     ) -> None:
         """error handler for points_give"""
@@ -159,7 +160,7 @@ class Credits(commands.Cog, name='credits'):
     @print_context
     async def credits_info_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member = None,
     ) -> None:
         """display a member's points"""
@@ -196,7 +197,7 @@ class Credits(commands.Cog, name='credits'):
     @credits_info_command.error
     async def credits_info_command_handler(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             error: discord.DiscordException
     ) -> None:
         """error handler for points_show"""

@@ -18,6 +18,7 @@ from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 from ._blackjack import Blackjack
 
@@ -89,7 +90,7 @@ class Games(commands.Cog, name='games'):
         help='make wager in blackjack',
     )
     @print_context
-    async def blackjack_wager_command(self, ctx: commands.Context, wager: int) -> None:
+    async def blackjack_wager_command(self, ctx: Kaantext, wager: int) -> None:
         """
         make wager in blackjack
         """
@@ -118,7 +119,7 @@ class Games(commands.Cog, name='games'):
     )
     @commands.is_owner()
     @print_context
-    async def blackjack_command(self, ctx: commands.Context):
+    async def blackjack_command(self, ctx: Kaantext):
         """
         start a multiplayer blackjack game
         """
@@ -173,7 +174,7 @@ class Games(commands.Cog, name='games'):
     @print_context
     async def dice_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             amount: int = None,
             sides: int = None,
     ) -> None:
@@ -185,10 +186,10 @@ class Games(commands.Cog, name='games'):
         sides = sides if sides else 6
         if (0 < amount <= 100) and (1 < sides <= 1000):
             msg = ', '.join(str(random.randint(1, sides)) for _ in range(amount))
-            await self.bot.send_info_msg(ctx, msg)
+            await ctx.send_info_msg(msg)
         else:
             msg = 'ranges are: 0 < AMOUNT <= 100, 1 < SIDES <= 1000'
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
 
 
     @commands.command(
@@ -198,10 +199,10 @@ class Games(commands.Cog, name='games'):
         help='flip a coin',
     )
     @print_context
-    async def coin_command(self, ctx: commands.Context) -> None:
+    async def coin_command(self, ctx: Kaantext) -> None:
         """
         flip a coin
         """
 
         msg = random.choice(['heads', 'tails'])
-        await self.bot.send_info_msg(ctx, msg)
+        await ctx.send_info_msg(msg)

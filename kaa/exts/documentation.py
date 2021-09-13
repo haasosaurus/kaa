@@ -52,6 +52,7 @@ import dislash
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -191,7 +192,7 @@ class Documentation(commands.Cog, name='documentation'):
     @print_context
     async def pydocs_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *members: str,
     ) -> None:
         """python documentation"""
@@ -209,7 +210,7 @@ class Documentation(commands.Cog, name='documentation'):
             error_msg = f"module '{module}' is unsupported"
             errored = True
         if errored:
-            await self.bot.send_error_msg(ctx, error_msg)
+            await ctx.send_error_msg(error_msg)
             await self.send_supported_modules(ctx)
             await self.send_usage(ctx)
             return
@@ -221,7 +222,7 @@ class Documentation(commands.Cog, name='documentation'):
             member_name = members.popleft()
             if member_name not in dir(target):
                 error_msg = f"'{target_name}' has no member '{member_name}'"
-                self.bot.send_error_msg(ctx, error_msg)
+                await ctx.send_error_msg(error_msg)
                 member_list_header = f"**`{target_name}'s members:`**"
                 await ctx.send(member_list_header)
                 await self.send_members(ctx, target)
@@ -233,16 +234,16 @@ class Documentation(commands.Cog, name='documentation'):
 
         if not target:
             error_msg = f"failed to get docs for '{target_name}', sorry about that..."
-            await self.bot.send_error_msg(error_msg)
+            await ctx.send_error_msg(error_msg)
             return
 
         await self.send_docs_and_members(ctx, target, target_name, '', '')
 
-    async def send_usage(self, ctx: commands.Context) -> None:
+    async def send_usage(self, ctx: Kaantext) -> None:
         """send usage information"""
 
         usage = '**`Usage: !docs module[.| ]members...`**'
-        await self.bot.send_info_msg(ctx, usage)
+        await ctx.send_info_msg(usage)
 
     async def make_docs(
             self,
@@ -291,7 +292,7 @@ class Documentation(commands.Cog, name='documentation'):
 
     async def send_docs_and_members(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             target,
             target_name: str,
             obj=None,  # str
@@ -303,19 +304,19 @@ class Documentation(commands.Cog, name='documentation'):
         lines = await self.make_docs(target, target_name, obj, method)
         if not lines:
             error_msg = f"Docs for '{target_name}' not found, attempting to get members..."
-            await self.bot.send_error_msg(ctx, error_msg)
+            await ctx.send_error_msg(error_msg)
         await self.send_docs(ctx, lines)
 
         # members
         await self.send_members(ctx, target)
 
-    async def send_docs(self, ctx: commands.Context, lines: List[str]) -> None:
+    async def send_docs(self, ctx: Kaantext, lines: List[str]) -> None:
         """paginate lines of docs and send the pages"""
 
         pages = await self.paginate_lines(lines)
         await self.send_pages(ctx, pages)
 
-    async def send_members(self, ctx: commands.Context, target) -> None:
+    async def send_members(self, ctx: Kaantext, target) -> None:
         """analyze members, paginate, and send pages"""
 
         member_kinds = await self.analyze_members(target)
@@ -422,7 +423,7 @@ class Documentation(commands.Cog, name='documentation'):
 
         return kinds
 
-    async def send_supported_modules(self, ctx: commands.Context) -> None:
+    async def send_supported_modules(self, ctx: Kaantext) -> None:
         """sends supported modules list to ctx"""
 
         lines = await self.format_member_kind(self.supported_modules, indent=4)
@@ -518,7 +519,7 @@ class Documentation(commands.Cog, name='documentation'):
 
         return pages
 
-    async def send_pages(self, ctx: commands.Context, pages: List[str]) -> None:
+    async def send_pages(self, ctx: Kaantext, pages: List[str]) -> None:
         for page in pages:
             await ctx.send(page)
 
@@ -530,7 +531,7 @@ class Documentation(commands.Cog, name='documentation'):
         hidden=True,
     )
     @print_context
-    async def this_command(self, ctx: commands.Context) -> None:
+    async def this_command(self, ctx: Kaantext) -> None:
         """send this"""
 
         msg = '```\n' + codecs.decode(this.s, 'rot13') + '```'

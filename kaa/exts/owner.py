@@ -11,6 +11,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -31,14 +32,14 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def shutdown_command(self, ctx: commands.Context) -> None:
+    async def shutdown_command(self, ctx: Kaantext) -> None:
         """
         shuts down the bot and hopefully exits gracefully and entirely
         """
 
         msg = 'Shutting down, goodbye...'
         print(msg)
-        await self.bot.send_info_msg(ctx, msg)
+        await ctx.send_info_msg(msg)
         await ctx.bot.close()
 
     @commands.command(
@@ -50,7 +51,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def flush_command(self, ctx: commands.Context) -> None:
+    async def flush_command(self, ctx: Kaantext) -> None:
         """
         flushes stdout and stderr buffers
         """
@@ -58,7 +59,7 @@ class Owner(commands.Cog, name='owner'):
         sys.stdout.flush()
         sys.stderr.flush()
         msg = 'Flushed stdout and stderr'
-        await self.bot.send_success_msg(ctx, msg)
+        await ctx.send_success_msg(msg)
 
     @commands.command(
         name='say',
@@ -71,7 +72,7 @@ class Owner(commands.Cog, name='owner'):
     @print_context
     async def say_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             target: str,
             channel_name: str,
             *words: str,
@@ -88,19 +89,19 @@ class Owner(commands.Cog, name='owner'):
         guild_settings = await self.bot.get_guild_settings(target)
         if not guild_settings:
             msg = 'Target settings not found'
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
             return
 
         guild = discord.utils.get(self.bot.guilds, id=guild_settings['id'])
         if not guild:
             msg = 'Target not found'
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
             return
 
         channel = discord.utils.get(guild.text_channels, name=channel_name.lower())
         if not channel:
             msg = 'Channel not found'
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
             return
 
         msg = ' '.join('I' if word == 'i' else word for word in words)
@@ -115,7 +116,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def status_command_group(self, ctx: commands.Context) -> None:
+    async def status_command_group(self, ctx: Kaantext) -> None:
         """
         group for status setting commands
         """
@@ -133,7 +134,7 @@ class Owner(commands.Cog, name='owner'):
     @print_context
     async def listening_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *text: str,
     ) -> None:
         """
@@ -154,7 +155,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def playing_command(self, ctx: commands.Context, *text) -> None:
+    async def playing_command(self, ctx: Kaantext, *text) -> None:
         """
         set playing status ActivityType
         """
@@ -173,7 +174,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def reload_test_command(self, ctx: commands.Context):
+    async def reload_test_command(self, ctx: Kaantext):
         """
         alias for command `reload test`
         """
@@ -189,7 +190,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def reload_games_command(self, ctx: commands.Context):
+    async def reload_games_command(self, ctx: Kaantext):
         """
         alias for command `reload games`
         """
@@ -205,7 +206,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def reload_games_utils_embeds_command(self, ctx: commands.Context):
+    async def reload_games_utils_embeds_command(self, ctx: Kaantext):
         """
         alias for command `reload game.utils.embeds`
         """
@@ -221,7 +222,7 @@ class Owner(commands.Cog, name='owner'):
     )
     @commands.is_owner()
     @print_context
-    async def reload_profanity_command(self, ctx: commands.Context):
+    async def reload_profanity_command(self, ctx: Kaantext):
         """
         alias for command `reload profanity`
         """

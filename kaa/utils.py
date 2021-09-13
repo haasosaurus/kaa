@@ -10,12 +10,15 @@ from typing import Callable
 import discord
 from discord.ext import commands
 
+# local modules
+from kaantext import Kaantext
+
 
 def print_context(func: Callable) -> Callable:
     @functools.wraps(func)
     async def inner(*args, **kwargs):
         for arg in args[1:]:
-            if isinstance(arg, commands.Context):
+            if isinstance(arg, Kaantext):
                 print(
                     f"{arg.author}: '{arg.message.clean_content}' - "
                     f'author id: {arg.author.id}, '

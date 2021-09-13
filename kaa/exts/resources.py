@@ -10,6 +10,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context, load_texts
 
 
@@ -39,7 +40,7 @@ class Resources(commands.Cog, name='resources'):
         help='sites for practicing programming'
     )
     @print_context
-    async def practice_command(self, ctx: commands.Context) -> None:
+    async def practice_command(self, ctx: Kaantext) -> None:
         """
         sites for practicing programming
         """
@@ -54,7 +55,7 @@ class Resources(commands.Cog, name='resources'):
         help='game project ideas',
     )
     @print_context
-    async def game_projects_command(self, ctx: commands.Context) -> None:
+    async def game_projects_command(self, ctx: Kaantext) -> None:
         """
         game project ideas
         """
@@ -69,7 +70,7 @@ class Resources(commands.Cog, name='resources'):
         help='project idea resources',
     )
     @print_context
-    async def projects_command(self, ctx: commands.Context) -> None:
+    async def projects_command(self, ctx: Kaantext) -> None:
         """
         project idea resources
         """
@@ -84,7 +85,7 @@ class Resources(commands.Cog, name='resources'):
         help='helpful download sites',
     )
     @print_context
-    async def downloading_command(self, ctx: commands.Context) -> None:
+    async def downloading_command(self, ctx: Kaantext) -> None:
         """
         helpful download sites
         """

@@ -7,6 +7,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context, load_texts
 
 
@@ -39,7 +40,7 @@ class Python(commands.Cog, name='python'):
         help='python specific reference materials',
         )
     @print_context
-    async def reference_command(self, ctx: commands.Context) -> None:
+    async def reference_command(self, ctx: Kaantext) -> None:
         """
         python specific reference materials
         """
@@ -54,7 +55,7 @@ class Python(commands.Cog, name='python'):
         help='python specific standard library curriculum',
     )
     @print_context
-    async def path_command(self, ctx: commands.Context) -> None:
+    async def path_command(self, ctx: Kaantext) -> None:
         """
         python specific standard library curriculum
         """
@@ -69,7 +70,7 @@ class Python(commands.Cog, name='python'):
         help='python specific game development resources',
     )
     @print_context
-    async def gamedev_command(self, ctx: commands.Context) -> None:
+    async def gamedev_command(self, ctx: Kaantext) -> None:
         """
         python specific game development resources
         """
@@ -84,7 +85,7 @@ class Python(commands.Cog, name='python'):
         help='python specific (mostly) useful vs code extensions',
     )
     @print_context
-    async def vscode_command(self, ctx: commands.Context) -> None:
+    async def vscode_command(self, ctx: Kaantext) -> None:
         """
         python specific (mostly) useful vs code extensions
         """
@@ -99,7 +100,7 @@ class Python(commands.Cog, name='python'):
         help='standard python ides',
     )
     @print_context
-    async def ides_command(self, ctx: commands.Context) -> None:
+    async def ides_command(self, ctx: Kaantext) -> None:
         """
         standard python ides
         """
@@ -114,7 +115,7 @@ class Python(commands.Cog, name='python'):
         help='python discord bot resources',
     )
     @print_context
-    async def discord_command(self, ctx: commands.Context) -> None:
+    async def discord_command(self, ctx: Kaantext) -> None:
         """
         python discord bot resources
         """
@@ -129,7 +130,7 @@ class Python(commands.Cog, name='python'):
         help='vs code python snippets',
     )
     @print_context
-    async def snippets_command(self, ctx: commands.Context) -> None:
+    async def snippets_command(self, ctx: Kaantext) -> None:
         """
         vs code python snippets
         """

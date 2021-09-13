@@ -30,6 +30,7 @@ from dislash import ActionRow, Button, SelectMenu, SelectOption, ButtonStyle, sl
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 import kaa_help
 from kaa_help import KaaHelp
@@ -56,7 +57,7 @@ class Help(commands.Cog, name='help'):
         hidden=True,
     )
     @commands.is_owner()
-    async def help_owner_command(self, ctx: commands.Context, *, args: str) -> None:
+    async def help_owner_command(self, ctx: Kaantext, *, args: str) -> None:
         """full help docs for owner"""
 
         self.bot.help_command = KaaHelp(owner=True)
@@ -74,7 +75,7 @@ class Help(commands.Cog, name='help'):
     @commands.is_owner()
     async def default_help_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
     ) -> None:
         """
         set default help command
@@ -120,14 +121,14 @@ class Help(commands.Cog, name='help'):
     )
     @commands.is_owner()
     @print_context
-    async def reload_help_command(self, ctx: commands.Context) -> None:
+    async def reload_help_command(self, ctx: Kaantext) -> None:
         """
         this command updates Kaa's help command to the current code
         """
 
         await self._reload_help()
         msg = 'reloaded the help command code'
-        return await self.bot.send_success_msg(ctx, msg)
+        return await ctx.send_success_msg(msg)
 
 
 

@@ -10,6 +10,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -32,7 +33,7 @@ class Extensions(commands.Cog, name='extensions'):
     @print_context
     async def load_extensions(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *extensions: str,
     ) -> None:
         """
@@ -59,10 +60,10 @@ class Extensions(commands.Cog, name='extensions'):
                     file=sys.stderr,
                 )
                 msg = f'{type(e).__name__} - {e}'
-                await self.bot.send_error_msg(ctx, msg)
+                await ctx.send_error_msg(msg)
             else:
                 msg = f'Loaded: {extension}'
-                await self.bot.send_success_msg(ctx, msg)
+                await ctx.send_success_msg(msg)
 
     @commands.command(
         name='unload',
@@ -75,7 +76,7 @@ class Extensions(commands.Cog, name='extensions'):
     @print_context
     async def unload_extensions(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *extensions: str,
     ) -> None:
         """
@@ -96,10 +97,10 @@ class Extensions(commands.Cog, name='extensions'):
                     file=sys.stderr,
                 )
                 msg = f'{type(e).__name__} - {e}'
-                await self.bot.send_error_msg(ctx, msg)
+                await ctx.send_error_msg(msg)
             else:
                 msg = f'Unloaded: {extension}'
-                await self.bot.send_success_msg(ctx, msg)
+                await ctx.send_success_msg(msg)
 
     @commands.command(
         name='reload',
@@ -112,7 +113,7 @@ class Extensions(commands.Cog, name='extensions'):
     @print_context
     async def reload_extensions(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *extensions: str,
     ) -> None:
         """
@@ -141,10 +142,10 @@ class Extensions(commands.Cog, name='extensions'):
                     file=sys.stderr,
                 )
                 msg = f'{type(e).__name__} - {e}'
-                await self.bot.send_error_msg(ctx, msg)
+                await ctx.send_error_msg(msg)
             else:
                 msg = f'Reloaded: {extension}'
-                await self.bot.send_success_msg(ctx, msg)
+                await ctx.send_success_msg(msg)
 
 
 def setup(bot: Kaa) -> None:

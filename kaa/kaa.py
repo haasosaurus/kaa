@@ -15,6 +15,7 @@ from discord.ext import commands
 
 # local modules
 from kaa_help import KaaHelp
+from kaantext import Kaantext
 
 
 class Kaa(commands.Bot):
@@ -46,6 +47,13 @@ class Kaa(commands.Bot):
         # assorted
         self.blackjack_players = {}
         self.message_counts = {}
+
+    async def get_context(self, message, *, cls=Kaantext):
+        """
+        overridden to use custom kaantext
+        """
+
+        return await super().get_context(message, cls=cls)
 
     # test this to make sure it's using the cache
     @staticmethod
@@ -165,69 +173,6 @@ class Kaa(commands.Bot):
             if guild_settings['id'] == guild_id:
                 return copy.deepcopy(guild_settings)
         return None
-
-    async def send_titled_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, color: int) -> None:
-        """
-        sends a message embed to the given context - includes a title
-        """
-
-        embed = discord.Embed(
-            color=color,
-        )
-        embed.add_field(
-            name=title,
-            value=msg,
-            inline=False
-        )
-        return await ctx.send(embed=embed)
-
-    async def send_untitled_msg(self, ctx: Union[commands.Context, discord.User], msg: str, color: int, thumbnail: str = None) -> None:
-        """
-        sends a message embed to the given context
-        """
-
-        embed = discord.Embed(
-            color=color,
-            description=msg
-        )
-        if thumbnail is not None:
-            embed.set_thumbnail(url=thumbnail)
-        return await ctx.send(embed=embed)
-
-    async def send_error_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0xaa0000) -> None:
-        """
-        sends an error message embed to the given context
-        """
-
-        return await self.send_titled_msg(ctx, 'Error', msg, color)
-
-    async def send_success_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x00aa00) -> None:
-        """
-        sends a success message embed to the given context
-        """
-
-        return await self.send_titled_msg(ctx, 'Success', msg, color)
-
-    async def send_usage_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, color=0x0000aa) -> None:
-        """
-        sends a usage message embed to the given context
-        """
-
-        return await self.send_titled_msg(ctx, 'Usage', msg, color)
-
-    async def send_info_msg(self, ctx: Union[commands.Context, discord.User], msg: str, *, thumbnail: str = None, color=0x0000aa) -> None:
-        """
-        sends an info message embed to the given context
-        """
-
-        return await self.send_untitled_msg(ctx, msg, color, thumbnail)
-
-    async def send_titled_info_msg(self, ctx: Union[commands.Context, discord.User], title: str, msg: str, *, color=0x0000aa) -> None:
-        """
-        sends an info message embed to the given context - includes a title
-        """
-
-        return await self.send_titled_msg(ctx, title, msg, color)
 
     async def on_ready(self) -> None:
         """

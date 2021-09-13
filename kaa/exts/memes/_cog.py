@@ -15,6 +15,7 @@ from dislash import slash_commands, InteractionClient, Option, OptionType, Optio
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from ._meme_generator import MemeGenerator
 from utils import print_context
 
@@ -39,7 +40,7 @@ class Memes(commands.Cog, name='memes'):
     @print_context
     async def skyrim_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             skill: str,
             level: str,
             *args: str,
@@ -58,7 +59,7 @@ class Memes(commands.Cog, name='memes'):
         help='generate simply meme',
     )
     @print_context
-    async def simply_command(self, ctx: commands.Context, *words: str) -> None:
+    async def simply_command(self, ctx: Kaantext, *words: str) -> None:
         """
         generate and send simply meme
         """
@@ -74,7 +75,7 @@ class Memes(commands.Cog, name='memes'):
         help='generate aliens meme',
     )
     @print_context
-    async def aliens_command(self, ctx: commands.Context, *words: str) -> None:
+    async def aliens_command(self, ctx: Kaantext, *words: str) -> None:
         """
         generate and send aliens meme
         """
@@ -90,7 +91,7 @@ class Memes(commands.Cog, name='memes'):
         help='generate and send buzz meme',
     )
     @print_context
-    async def buzz_command(self, ctx: commands.Context, *text: str) -> None:
+    async def buzz_command(self, ctx: Kaantext, *text: str) -> None:
         """
         generate and send buzz meme
         """

@@ -7,6 +7,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -32,7 +33,7 @@ class Admin(commands.Cog, name='admin'):
     @print_context
     async def rm_messages_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member,
             count: int = 1,
     ) -> None:
@@ -43,7 +44,7 @@ class Admin(commands.Cog, name='admin'):
     @rm_messages_command.error
     async def rm_messages_command_handler(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             error: commands.CommandError,
     ) -> None:
         """error handler for rm"""
@@ -59,23 +60,23 @@ class Admin(commands.Cog, name='admin'):
             # if the user who called the command isn't the owner
             else:
                 msg = f"you can't do that for {round(error.retry_after)} seconds"
-                await self.bot.send_error_msg(ctx, msg)
+                await ctx.send_error_msg(msg)
 
         # if member or count conversion failed
         elif isinstance(error, commands.BadArgument):
             msg = f'{error}'
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
 
         # member doesn't have permission
         elif isinstance(error, commands.MissingPermissions):
             msg = f"You don't have permission to run '{ctx.command}'."
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
 
         # user tries to use command in a private message
         elif isinstance(error, commands.NoPrivateMessage):
             try:
                 msg = f"'{ctx.command}' can't be used in private messages."
-                return await self.bot.send_error_msg(ctx, msg)
+                return await ctx.send_error_msg(msg)
             except:
                 pass
 
@@ -85,7 +86,7 @@ class Admin(commands.Cog, name='admin'):
 
     async def _rm(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member,
             count: int,
     ) -> None:
@@ -101,7 +102,7 @@ class Admin(commands.Cog, name='admin'):
         message_limit = 50
         if count > message_limit:
             msg = f'max messages that can be deleted per usage is {message_limit}, limiting count...'
-            sent_msg = await self.bot.send_info_msg(ctx, msg)
+            sent_msg = await ctx.send_info_msg(msg)
             if sent_msg:
                 message_blacklist.add(sent_msg)
             count = message_limit
@@ -122,7 +123,7 @@ class Admin(commands.Cog, name='admin'):
 
         # send amount of messages actually deleted
         msg = f'deleted {i} messages'
-        await self.bot.send_info_msg(ctx, msg)
+        await ctx.send_info_msg(msg)
 
     @commands.command(
         name='wipe_channel',
@@ -137,7 +138,7 @@ class Admin(commands.Cog, name='admin'):
     @print_context
     async def wipe_channel_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             channel: discord.TextChannel,
     ) -> None:
         """
@@ -156,7 +157,7 @@ class Admin(commands.Cog, name='admin'):
 
         # send success message
         msg = f'Wiped channel {clone.mention}'
-        await self.bot.send_success_msg(ctx, msg)
+        await ctx.send_success_msg(msg)
 
 
 def setup(bot: Kaa) -> None:

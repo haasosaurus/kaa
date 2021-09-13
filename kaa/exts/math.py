@@ -16,6 +16,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 from constants import Colors
 
@@ -42,7 +43,7 @@ ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
     @print_context
     async def tex_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *,
             expression: str
     ) -> None:
@@ -62,7 +63,7 @@ ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
                 print_formula=False,
             )
         except (TypeError, SyntaxError):
-            return await self.bot.send_error_msg(ctx, 'Expression could not be processed')
+            return await ctx.send_error_msg('Expression could not be processed')
 
         # convert latex to png and save to buffer
         buffer = io.BytesIO()
@@ -131,7 +132,7 @@ ex: !tex x = 2 * sqrt(2 * pi * k * T_e / m_e) * (DeltaE / (k * T_e))**2 * a_0**2
     )
     @commands.is_owner()
     @print_context
-    async def tex_test_command(self, ctx: commands.Context) -> None:
+    async def tex_test_command(self, ctx: Kaantext) -> None:
         """
         test for the tex command
         """

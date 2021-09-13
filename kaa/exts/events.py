@@ -11,6 +11,7 @@ from discord.ext import commands, tasks
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -29,7 +30,7 @@ class Events(commands.Cog, name='events'):
     )
     @commands.is_owner()
     @print_context
-    async def taskgen_command(self, ctx: commands.Context, seconds: int) -> None:
+    async def taskgen_command(self, ctx: Kaantext, seconds: int) -> None:
         """
         testing creating a Task factory
         """
@@ -57,7 +58,7 @@ class Events(commands.Cog, name='events'):
     )
     @commands.is_owner()
     @print_context
-    async def local_time_command(self, ctx: commands.Context, *, future_datetime: str):
+    async def local_time_command(self, ctx: Kaantext, *, future_datetime: str):
         """
         dateparser test
         """
@@ -66,7 +67,7 @@ class Events(commands.Cog, name='events'):
         timezone = self.bot.user_timezones.get(ctx.author.id, None)
         if timezone is None:
             msg = "Your timezone isn't registered with the bot, set it with the timezone command"
-            return await self.bot.send_error_msg(ctx, msg)
+            return await ctx.send_error_msg(msg)
 
         # parse future_datetime str argument
         local_dt = dateparser.parse(

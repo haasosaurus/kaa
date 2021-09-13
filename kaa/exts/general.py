@@ -7,6 +7,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -27,7 +28,7 @@ class General(commands.Cog, name='general'):
     )
     @commands.is_owner()
     @print_context
-    async def help_command(self, ctx: commands.Context):
+    async def help_command(self, ctx: Kaantext):
         """
         old new help command test
         """

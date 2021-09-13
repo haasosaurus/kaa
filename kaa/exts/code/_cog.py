@@ -11,6 +11,7 @@ from discord.ext import commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 from ._codeformatter import CodeFormatter
 
@@ -95,7 +96,7 @@ if block indexes not specified it will send all blocks'''
     @print_context
     async def block_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             message: discord.Message,
             language: str = '',
             *block_indexes: int,
@@ -133,7 +134,7 @@ if block indexes not specified it will send all blocks'''
         description='sends markdown instructions',
         help='sends instructions for commonly used markdown: codeblock, syntax highlighting, and spoilers',
     )
-    async def markdown_command(self, ctx: commands.Context):
+    async def markdown_command(self, ctx: Kaantext):
         """
         sends instructions for commonly used markdown:
         codeblock, syntax highlighting, and spoilers

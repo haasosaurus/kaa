@@ -12,6 +12,7 @@ import dislash
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 
 
 class CommandErrorHandler(commands.Cog, name='command_error_handler'):
@@ -38,7 +39,7 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
         await inter.reply(f'{type(error)}: {error}')
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error: BaseException):
+    async def on_command_error(self, ctx: Kaantext, error: BaseException):
         """
         general command error handler
         """
@@ -62,33 +63,33 @@ class CommandErrorHandler(commands.Cog, name='command_error_handler'):
 
         elif isinstance(error, commands.DisabledCommand):
             msg = f"'{ctx.command}' has been disabled."
-            return await self.bot.send_error_msg(ctx, msg)
+            return await ctx.send_error_msg(msg)
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:
                 msg = f"'{ctx.command}' can't be used in private messages."
-                return await self.bot.send_error_msg(ctx, msg)
+                return await ctx.send_error_msg(msg)
             except:
                 pass
 
         elif isinstance(error, commands.PrivateMessageOnly):
             try:
                 msg = f"'{ctx.command}' can only be used in private messages."
-                return await self.bot.send_error_msg(ctx, msg)
+                return await ctx.send_error_msg(msg)
             except:
                 pass
 
         elif isinstance(error, commands.NotOwner):
             msg = f"You must be the bot's owner to run '{ctx.command}'."
-            return await self.bot.send_error_msg(ctx, msg)
+            return await ctx.send_error_msg(msg)
 
         elif isinstance(error, commands.MissingRole):
             msg = f"You're missing a role required to run '{ctx.command}'."
-            return await self.bot.send_error_msg(ctx, msg)
+            return await ctx.send_error_msg(msg)
 
         elif isinstance(error, commands.MissingPermissions):
             msg = f"You don't have permission to run '{ctx.command}'."
-            return await self.bot.send_error_msg(ctx, msg)
+            return await ctx.send_error_msg(msg)
 
 
 def setup(bot: Kaa) -> None:

@@ -12,6 +12,7 @@ from dislash import slash_commands
 
 # local modules
 from kaa import Kaa
+from kaantext import Kaantext
 from utils import print_context
 
 
@@ -33,7 +34,7 @@ class Members(commands.Cog, name='members'):
     @print_context
     async def joined_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             member: discord.Member = None,
     ) -> None:
         """
@@ -54,14 +55,14 @@ class Members(commands.Cog, name='members'):
     @joined_command.error
     async def joined_command_handler(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             error: commands.CommandError,
     ) -> None:
         """error handling for joined command"""
 
         if isinstance(error, commands.BadArgument):
             msg = str(error)
-            await self.bot.send_error_msg(ctx, msg)
+            await ctx.send_error_msg(msg)
 
     @commands.command(
         name='avatar',
@@ -70,7 +71,7 @@ class Members(commands.Cog, name='members'):
         help='sends user avatar url',
     )
     @print_context
-    async def avatar_command(self, ctx: commands.Context, user: Union[discord.Member, discord.User] = None) -> None:
+    async def avatar_command(self, ctx: Kaantext, user: Union[discord.Member, discord.User] = None) -> None:
         """
         sends user avatar url
         """
@@ -113,7 +114,7 @@ class Members(commands.Cog, name='members'):
     @print_context
     async def google_command(
             self,
-            ctx: commands.Context,
+            ctx: Kaantext,
             *obvious_keywords: str,
     ) -> None:
         """
@@ -126,7 +127,7 @@ class Members(commands.Cog, name='members'):
         else:
             keywords = '+'.join(obvious_keywords)
             msg = ':link: http://letmegooglethat.com/?q=' + keywords
-            await self.bot.send_info_msg(ctx, msg)
+            await ctx.send_info_msg(msg)
 
     @commands.command(
         name='hello',
@@ -137,7 +138,7 @@ class Members(commands.Cog, name='members'):
     )
     @commands.guild_only()
     @print_context
-    async def hello_command(self, ctx: commands.Context) -> None:
+    async def hello_command(self, ctx: Kaantext) -> None:
         """A simple command which only responds to the owner of the bot."""
 
         if ctx.author.id == self.bot.owner_id:
