@@ -2,12 +2,16 @@
 
 
 # standard library modules
+import base64
+import io
 import sys
 import traceback
 
 # third-party packages - discord related
 import discord
 from discord.ext import commands
+import dislash
+from dislash import slash_commands, InteractionClient, Option, OptionType, OptionParam, SlashInteraction
 
 # local modules
 from pythonbot import PythonBot
@@ -86,12 +90,36 @@ class Memes(commands.Cog, name='memes'):
         help='generate and send buzz meme',
     )
     @print_context
-    async def buzz_command(self, ctx: commands.Context, *words: str) -> None:
+    async def buzz_command(self, ctx: commands.Context, *text: str) -> None:
         """
         generate and send buzz meme
         """
 
-        text = ' '.join(words)
-        img_buf = self.generator.toy_story_meme(text)
+        text = ' '.join(text)
+        img_buf = await self.generator.toy_story_meme(text)
         file = discord.File(fp=img_buf, filename='image.png')
         await ctx.send(file=file)
+
+    @slash_commands.is_owner()
+    @slash_commands.slash_command(
+        name='buzz',
+        description='generate and send buzz meme',
+    )
+    async def buzz_slash(
+            self,
+            inter: dislash.MessageInteraction,
+            text: str = OptionParam(
+                default=None,
+                name='text',
+                description='the text for kaa to say',
+            ),
+    ) -> None:
+        """
+        generate and send buzz meme
+        """
+
+        buffer = await self.generator.toy_story_meme(text)
+        file = discord.File(fp=buffer, filename='meme.png')
+        await inter.reply('generating meme...')
+        await inter.channel.send(file=file)
+        await inter.delete()

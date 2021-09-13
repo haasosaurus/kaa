@@ -152,42 +152,32 @@ class MemeGenerator:
         buf.seek(0)
         return buf
 
-    def toy_story_meme(self, text: str, jpg=False) -> io.BytesIO:
+    async def toy_story_meme(self, text: str) -> io.BytesIO:
         """toystory meme"""
 
         text = text[:100]
-        img = self.toystory_bg.copy()
-        draw = ImageDraw.Draw(img)
+        image = self.toystory_bg.copy()
+        draw = ImageDraw.Draw(image)
         w, h = draw.textsize(text, self.toystory_font)
         w1, h1 = draw.textsize(text + ' Everywhere', self.toystory_font)
         self.draw_text_with_outline(
             draw,
             str(text).capitalize(),
-            img.width / 2 - w / 2,
+            image.width / 2 - w / 2,
             2,
             self.toystory_font
         )
         self.draw_text_with_outline(
             draw,
             str(text).capitalize() + ' Everywhere',
-            img.width / 2 - w1 / 2,
+            image.width / 2 - w1 / 2,
             250,
             self.toystory_font
         )
-        buf = io.BytesIO()
-        save_kwargs = {
-            'format': 'png',
-        }
-        if jpg:
-            save_kwargs.update({
-                'format': 'jpeg',
-                'quality': 80,
-                'optimize': True,
-                'progressive': True,
-            })
-        img.save(buf, **save_kwargs)
-        buf.seek(0)
-        return buf
+        buffer = io.BytesIO()
+        image.save(fp=buffer, format='png')
+        buffer.seek(0)
+        return buffer
 
     def draw_text_with_outline(
             self,
